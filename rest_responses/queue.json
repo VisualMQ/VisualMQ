@@ -1,0 +1,73 @@
+{
+    "cluster": {
+        "namelist": "",
+        "name": "",
+        "workloadQueueUse": "asQmgr",
+        "workloadPriority": 0,
+        "transmissionQueueForChannelName": "",
+        "workloadRank": 0
+    },
+    "timestamps": {
+        "created": "2021-06-03T15:05:23.000Z",
+        "altered": "2021-06-07T16:07:14.000Z"
+    },
+    "storage": {
+        "maximumDepth": 5000,
+        "maximumMessageLength": 4194304,
+        "messageDeliverySequence": "priority",
+        "nonPersistentMessageClass": "normal"
+    },
+    "trigger": {
+        "initiationQueueName": "",
+        "depth": 1,
+        "data": "",
+        "processName": "",
+        "messagePriority": 0,
+        "type": "first",
+        "enabled": false
+    },
+    "type": "local",
+    "extended": {
+        "allowSharedInput": true,
+        "enableMediaImageOperations": "asQmgr",
+        "backoutRequeueQueueName": "",
+        "custom": "",
+        "supportDistributionLists": false,
+        "backoutThreshold": 0
+    },
+    "applicationDefaults": {
+        "putResponse": "synchronous",
+        "messagePriority": 0,
+        "messagePersistence": "nonPersistent",
+        "clusterBind": "onOpen",
+        "sharedInput": true,
+        "readAhead": "no",
+        "messagePropertyControl": "compatible"
+    },
+    "general": {
+        "inhibitPut": false,
+        "inhibitGet": false,
+        "isTransmissionQueue": false,
+        "description": ""
+    },
+    "name": "DEV.QUEUE.1",
+    "dataCollection": {
+        "accounting": "asQmgr",
+        "monitoring": "asQmgr",
+        "statistics": "asQmgr"
+    },
+    "events": {
+        "serviceInterval": {
+            "duration": 999999999,
+            "okEnabled": false,
+            "highEnabled": false
+        },
+        "depth": {
+            "lowPercentage": 20,
+            "highPercentage": 80,
+            "lowEnabled": false,
+            "fullEnabled": true,
+            "highEnabled": false
+        }
+    }
+}

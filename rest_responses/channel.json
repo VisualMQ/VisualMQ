@@ -1,0 +1,65 @@
+{
+    "transmissionSecurity": {
+        "cipherSpecification": "",
+        "requirePartnerCertificate": true,
+        "certificateLabel": "",
+        "certificatePeerName": ""
+    },
+    "timestamps": {
+        "altered": "2021-06-03T15:05:21.000Z"
+    },
+    "batch": {
+        "nonPersistentMessageSpeedFast": true,
+        "messageLimit": 50
+    },
+    "type": "receiver",
+    "receiverSecurity": {
+        "channelAgentUserId": "",
+        "putAuthority": "default"
+    },
+    "extended": {
+        "sequenceNumberWrap": 999999999,
+        "resetSequenceNumber": 0
+    },
+    "general": {
+        "description": "",
+        "maximumMessageLength": 4194304
+    },
+    "failedDelivery": {
+        "useDeadLetterQueue": true,
+        "retry": {
+            "count": 10,
+            "interval": 1000
+        }
+    },
+    "exits": {
+        "receive": [],
+        "security": {
+            "userData": "",
+            "name": ""
+        },
+        "messageRetry": {
+            "userData": "",
+            "name": ""
+        },
+        "message": [],
+        "send": []
+    },
+    "name": "SYSTEM.DEF.RECEIVER",
+    "connectionManagement": {
+        "keepAliveInterval": -1,
+        "heartbeatInterval": 300
+    },
+    "compression": {
+        "header": [
+            "none"
+        ],
+        "message": [
+            "none"
+        ]
+    },
+    "dataCollection": {
+        "monitoring": "asQmgr",
+        "statistics": "asQmgr"
+    }
+}

@@ -1,0 +1,9 @@
+{
+    "name": "QM1",
+    "state": "running",
+    "extended": {
+        "installationName": "Installation1",
+        "permitStandby": "permitted",
+        "isDefaultQmgr": true
+    }
+}
