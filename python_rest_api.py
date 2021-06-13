@@ -40,4 +40,4 @@ def getChannels(qmgr):
 
 
 # print(getQueue("QM1", "DEV.QUEUE.1"))
-print(json.dumps(getChannels("QM1")[0]))
+print(json.dumps(getQueueManager("QM1")[0]))
