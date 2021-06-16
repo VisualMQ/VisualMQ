@@ -1,0 +1,10 @@
+.DS_Store
+.vscode/launch.json
+.vscode/tasks.json
+cSharpExample/.vscode/launch.json
+cSharpExample/.vscode/tasks.json
+cSharpExample/bin/
+cSharpExample/obj/
+
+
+
