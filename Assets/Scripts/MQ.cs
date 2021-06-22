@@ -96,8 +96,7 @@ namespace MQ
         {
             return GetRequest("/ibmmq/rest/v1/admin/qmgr/" + qmgr + "/queue/" + queue + "?attributes=*");
         }
-
-
+        
     }
 
     public class QueueManagerTest
