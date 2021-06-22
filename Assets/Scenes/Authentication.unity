@@ -814,7 +814,6 @@ GameObject:
   - component: {fileID: 530539719}
   - component: {fileID: 530539718}
   - component: {fileID: 530539717}
-  - component: {fileID: 530539716}
   m_Layer: 5
   m_Name: ButtonConfirm
   m_TagString: Untagged
@@ -842,21 +841,6 @@ RectTransform:
   m_AnchoredPosition: {x: -176, y: 20}
   m_SizeDelta: {x: 350, y: 45}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &530539716
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 530539714}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c601752e85ee14d49afdba62d814003b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  confirmButton: {fileID: 530539717}
-  scriptName: {fileID: 0}
-  scriptAPI: {fileID: 0}
 --- !u!114 &530539717
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1030,7 +1014,6 @@ GameObject:
   - component: {fileID: 670539758}
   - component: {fileID: 670539757}
   - component: {fileID: 670539756}
-  - component: {fileID: 670539755}
   m_Layer: 5
   m_Name: InputFieldWithURL
   m_TagString: Untagged
@@ -1060,20 +1043,6 @@ RectTransform:
   m_AnchoredPosition: {x: 192, y: -277}
   m_SizeDelta: {x: 288, y: 48}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &670539755
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 670539753}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: be5f914236e9447cda135d537be2bead, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  userName: {fileID: 1823014594}
-  warningText: {fileID: 0}
 --- !u!114 &670539756
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1403,7 +1372,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: QM
+  m_Text: Queue Manager Name
 --- !u!222 &808720620
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1505,7 +1474,6 @@ GameObject:
   - component: {fileID: 867883246}
   - component: {fileID: 867883245}
   - component: {fileID: 867883244}
-  - component: {fileID: 867883243}
   m_Layer: 5
   m_Name: ButtonCancel
   m_TagString: Untagged
@@ -1533,19 +1501,6 @@ RectTransform:
   m_AnchoredPosition: {x: 175, y: -379}
   m_SizeDelta: {x: 350, y: 45}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &867883243
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 867883241}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 518d783df1397470a8738213084a3190, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cancelButton: {fileID: 867883244}
 --- !u!114 &867883244
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1861,7 +1816,6 @@ GameObject:
   - component: {fileID: 956711634}
   - component: {fileID: 956711633}
   - component: {fileID: 956711632}
-  - component: {fileID: 956711635}
   m_Layer: 5
   m_Name: InputFieldWithUserName
   m_TagString: Untagged
@@ -1988,20 +1942,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 956711630}
   m_CullTransparentMesh: 1
---- !u!114 &956711635
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 956711630}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: be5f914236e9447cda135d537be2bead, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  userName: {fileID: 1171019790}
-  warningText: {fileID: 0}
 --- !u!1 &1048667899
 GameObject:
   m_ObjectHideFlags: 0
@@ -2014,7 +1954,6 @@ GameObject:
   - component: {fileID: 1048667904}
   - component: {fileID: 1048667903}
   - component: {fileID: 1048667902}
-  - component: {fileID: 1048667901}
   m_Layer: 5
   m_Name: InputFieldWithQM
   m_TagString: Untagged
@@ -2044,20 +1983,6 @@ RectTransform:
   m_AnchoredPosition: {x: 510, y: -276}
   m_SizeDelta: {x: 288, y: 48}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1048667901
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1048667899}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: be5f914236e9447cda135d537be2bead, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  userName: {fileID: 483001764}
-  warningText: {fileID: 0}
 --- !u!114 &1048667902
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2367,7 +2292,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: API
+  m_Text: API Key
 --- !u!222 &1182797788
 CanvasRenderer:
   m_ObjectHideFlags: 0

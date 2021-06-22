@@ -23,7 +23,7 @@ public class AuthenticationController : MonoBehaviour
     {   
 
         Debug.Log("Initialising the authentication field...");
-
+        
         // Listen to button activity
         submit.onClick.AddListener(ConfirmButtonClicked);
         cancel.onClick.AddListener(CancelButtonClicked);
