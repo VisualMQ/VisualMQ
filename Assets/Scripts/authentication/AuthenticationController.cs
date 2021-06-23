@@ -6,24 +6,28 @@ using MQ;
 
 public class AuthenticationController : MonoBehaviour
 {
+    // UI Object
     public InputField userName, apiKey;
     public InputField urlInput, QMInput;
     public GameObject Authentication;
     public GameObject ToggleQM1;
     public GameObject ToggleQM2;
     
-
     public Button submit, cancel;
     public Text userUpLabel, userDownLabel;
     public Text apiUpLabel, apiDownLabel;
 
+    // Variables for make a connection
     private string userNameT = "yuexu";
     private string apiKeyT = "uKnxScu6GXxkbEAWLIGMPCPp5hl1ZPco553uDtWOD620";
     private string MQURLT = "https://web-qm1-3628.qm.eu-gb.mq.appdomain.cloud:443";
     private string QMNameT = "QM1";
+    
+    // Show QM
     public int clickTime;
     public List<GameObject> toggleList = new List<GameObject>();
     
+
     // Start is called before the first frame update
     void Start()
     {   
@@ -66,7 +70,6 @@ public class AuthenticationController : MonoBehaviour
         QueueManager queue_manager = new QueueManager(MQURLT, QMNameT, userNameT, apiKeyT);
         string queueInfo = queue_manager.GetQueue("DEV.QUEUE.1");
         Debug.Log(queueInfo);
-        
         
     }
 

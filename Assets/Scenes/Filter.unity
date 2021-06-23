@@ -425,10 +425,10 @@ RectTransform:
   m_Father: {fileID: 242729847}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 29, y: 339}
-  m_SizeDelta: {x: -781, y: -376}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 69, y: 336}
+  m_SizeDelta: {x: -161, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &185940571
 MonoBehaviour:
@@ -445,6 +445,8 @@ MonoBehaviour:
   qmDropdown: {fileID: 1389568149}
   queueNameDropdown: {fileID: 852477683}
   queueTypeDropdown: {fileID: 896750477}
+  confirmFilter: {fileID: 1663236532}
+  cancelFilter: {fileID: 699254436}
 --- !u!1 &242729843
 GameObject:
   m_ObjectHideFlags: 0
@@ -498,7 +500,7 @@ MonoBehaviour:
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 800, y: 600}
   m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
+  m_MatchWidthOrHeight: 1
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
@@ -1306,7 +1308,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10917, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 0}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
