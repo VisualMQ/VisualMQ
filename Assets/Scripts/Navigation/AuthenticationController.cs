@@ -17,6 +17,9 @@ public class AuthenticationController : MonoBehaviour
     public Text userUpLabel, userDownLabel;
     public Text apiUpLabel, apiDownLabel;
 
+    public GameObject errorNotification;
+    public GameObject successNotification;
+
     // Variables for make a connection
     private string userNameT = "yuexu";
     private string apiKeyT = "uKnxScu6GXxkbEAWLIGMPCPp5hl1ZPco553uDtWOD620";
@@ -57,8 +60,8 @@ public class AuthenticationController : MonoBehaviour
         Debug.Log("xxxxxx Authentication Should Disappear xxxxxx");
 
         // ToggleQM1.SetActive(true);
-        toggleList[clickTime].SetActive(true);
-        clickTime++;
+        //toggleList[clickTime].SetActive(true);
+        //clickTime++;
 
 
         Debug.Log("xxxxxx Comfirm Button clicked xxxxx");
@@ -68,13 +71,27 @@ public class AuthenticationController : MonoBehaviour
         QMNameT = QMInput.text;
         Debug.Log(apiKeyT);
 
-        QueueManager queue_manager = new QueueManager(MQURLT, QMNameT, userNameT, apiKeyT);
-        string queueInfo = queue_manager.GetQueue("DEV.QUEUE.1");
-        Debug.Log(queueInfo);
-        
+        try
+        {
+            QueueManager queue_manager = new QueueManager(MQURLT, QMNameT, userNameT, apiKeyT);
+            string allqueue = queue_manager.GetAllQueues(); 
+            Debug.Log(allqueue);
+        }
+        catch
+        {
+            Debug.Log("Error");
+            errorNotification.SetActive(true);
+            return;
+        }
+
+        //string queueInfo = queue_manager.GetQueue("DEV.QUEUE.1");
+        successNotification.SetActive(true);
+        Authentication.SetActive(false);
     }
 
-    // Cancel Button Clicked
+
+    /* Cancel Button Clicked
+    */
     void CancelButtonClicked()
     {
         Debug.Log("xxxxxx Cancel Button clicked xxxxxx");
