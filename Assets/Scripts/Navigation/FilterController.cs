@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class FilterController : MonoBehaviour
 {
+    public GameObject FilterWindow;
     // UI Objects
     public Dropdown qmDropdown;
     public Dropdown queueNameDropdown;
@@ -24,11 +25,13 @@ public class FilterController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        // Window
+        FilterWindow.SetActive(false);
 
         // Listen to button activity
         confirmFilter.onClick.AddListener(ConfirmButtonClicked);
         cancelFilter.onClick.AddListener(CancelButtonClicked);
-
+        
         // Dropdown Listener
         qmDropdown.onValueChanged.AddListener(delegate {
             DropdownValueChangedQM(qmDropdown);
@@ -81,6 +84,7 @@ public class FilterController : MonoBehaviour
     // Cancel Button Clicked
     void CancelButtonClicked()
     {
-        Debug.Log("Cancel Button CLicked");
+        Debug.Log("Cancel Button Clicked");
+        FilterWindow.SetActive(false);
     }
 }
