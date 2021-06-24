@@ -35,6 +35,7 @@ public class AuthenticationController : MonoBehaviour
         toggleList.Add(ToggleQM2);
 
         Debug.Log("Initialising the authentication field...");
+        CleanAllInputField();
         
         // Listen to button activity
         submit.onClick.AddListener(ConfirmButtonClicked);
@@ -78,6 +79,7 @@ public class AuthenticationController : MonoBehaviour
     {
         Debug.Log("xxxxxx Cancel Button clicked xxxxxx");
         CleanAllInputField();
+        Authentication.SetActive(false);
     }
     
     void CleanAllInputField()
