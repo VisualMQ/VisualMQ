@@ -100,6 +100,7 @@ namespace MQ
         
     }
 
+
     //////Below are classes used for internal state representation
     public class QueuesInfo //TODO: 1. make a list of queues? 2.parse extended attributes
     {
