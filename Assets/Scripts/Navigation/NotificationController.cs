@@ -18,14 +18,15 @@ public class NotificationController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        // Init to False
         successNotification.SetActive(false);
         errorNotification.SetActive(false);
         infoNotification.SetActive(false);
         warningNotification.SetActive(false);
         
         closeSuccessNotification.onClick.AddListener(closeWindowSuccess);
+        closeErrorNotification.onClick.AddListener(closeWindowError);
 
-        //closeErrorNotification.onClick.AddListener(closeWindow);
         //closeinfoNotification.onClick.AddListener(closeWindow);
         //closewarningNotification.onClick.AddListener(closeWindow);
 
@@ -51,6 +52,13 @@ public class NotificationController : MonoBehaviour
     void closeWindowSuccess()
     {
         Debug.Log("Success Window closed.");
+        successNotification.SetActive(false);
+    }
+
+    void closeWindowError()
+    {
+        Debug.Log("Error Window CLosed");
+        errorNotification.SetActive(false);
     }
     
 }

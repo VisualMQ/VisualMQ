@@ -20,7 +20,8 @@ public class NavigationController : MonoBehaviour
         //addFilter.SetActive(false);
 
         leftPanel.SetActive(false);
-        
+        expandPanelButton.onClick.AddListener(leftPanelButtonClicked);
+
 
     }
 
@@ -30,8 +31,22 @@ public class NavigationController : MonoBehaviour
         
     }
 
+    /*
+    * Click to open the left panel
+    * Click to hide the left panel
+    */
     void leftPanelButtonClicked()
     {
-
+        
+        if (leftPanel.activeSelf == true)
+        {
+            leftPanel.SetActive(false);
+            Debug.Log("Left Panel: Close");
+        }
+        else
+        {
+            leftPanel.SetActive(true);
+            Debug.Log("Left Panel: Expand");
+        }
     }
 }
