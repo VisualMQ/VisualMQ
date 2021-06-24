@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using Newtonsoft.Json;
+using UnityEngine;
 
 // Library for communication with IBM MQ system
 namespace MQ
@@ -109,6 +110,9 @@ namespace MQ
         public List<String> type {get; set;}
         public QueueRemote remote {get; set;}
         public List<QueueStorage> storage{get; set;}
+
+        /*public GameObject obj; TODO WHERE TO ADD THIS*/
+
         public QueuesInfo() {}
 
         public QueuesInfo(string info)
@@ -149,6 +153,7 @@ namespace MQ
 
     public class QueueStorage
     {
+        public GameObject obj;
         public string maximumDepth {get; set;}
     }
 
@@ -158,6 +163,8 @@ namespace MQ
         public string name {get; set;}
         public string state {get; set;}
         public QMExtended extended {get; set;}
+
+        public GameObject obj;
         public QMInfo() {}
         public QMInfo(string info)
         {
