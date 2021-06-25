@@ -14,8 +14,8 @@ public class AuthenticationController : MonoBehaviour
     public GameObject ToggleQM2;
     
     public Button submit, cancel;
-    public Text userUpLabel, userDownLabel;
-    public Text apiUpLabel, apiDownLabel;
+    public Text userDownLabel;
+    public Text apiDownLabel;
 
     public GameObject errorNotification;
     public GameObject successNotification;
