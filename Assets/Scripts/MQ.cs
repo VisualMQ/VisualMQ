@@ -266,7 +266,7 @@ namespace MQ
                     Console.WriteLine(internalState.MessagesInfo[i].messages.Length); //Current number of messages in each queue
                 } else {
                     Console.WriteLine(-1); //If the messages fiels is null, then the queue is a remote queue
-                }  
+                }
             }
         }
     }
