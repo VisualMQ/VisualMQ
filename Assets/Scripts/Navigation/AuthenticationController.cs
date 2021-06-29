@@ -8,7 +8,7 @@ public class AuthenticationController : MonoBehaviour
 {
     // This Authentication Object
     public GameObject Authentication;
-    
+
     // Four Input Fields
     public InputField userName, apiKey;
     public InputField urlInput, QMInput;
@@ -19,10 +19,6 @@ public class AuthenticationController : MonoBehaviour
     public Text warningUserName;
     public Text warningQueueName;
 
-    
-    //public GameObject ToggleQM1;
-    //public GameObject ToggleQM2;
-    
     // Buttons
     public Button submit, cancel;
 
@@ -36,9 +32,11 @@ public class AuthenticationController : MonoBehaviour
     private string MQURLT = "https://web-qm1-3628.qm.eu-gb.mq.appdomain.cloud:443";
     private string QMNameT = "";
     
-    // Show QM
-    public int clickTime;
-    public List<GameObject> toggleList = new List<GameObject>();
+    //Show QM
+    //public GameObject ToggleQM1;
+    //public GameObject ToggleQM2;
+    //public int clickTime;
+    //public List<GameObject> toggleList = new List<GameObject>();
     
 
     // Start is called before the first frame update
@@ -55,35 +53,34 @@ public class AuthenticationController : MonoBehaviour
     // Confirm Button Clicked
     void ConfirmButtonClicked()
     {   
-
         Debug.Log("NOTICE: Comfirm Button clicked");
+
+        // Get Current Input Text and Form Checking
         userNameT = userName.text;
         apiKeyT = apiKey.text;
         MQURLT = urlInput.text;
         QMNameT = QMInput.text;
-        //Debug.Log(apiKeyT);
         if (submitFormCheck(userNameT, apiKeyT, MQURLT, QMNameT) == false){
-            Debug.Log("HHIHIHIHI");
+            Debug.Log("ERROR: Form Check Fails");
             return;
         }
 
-
+        // Connect to Queue Manager
         QueueManager queue_manager;
-        try
-        {
+        try{
             queue_manager = new QueueManager(MQURLT, QMNameT, userNameT, apiKeyT);
             // string allqueue = queue_manager.GetAllQueues(); 
             // Debug.Log(allqueue);
         }
-        catch
-        {
-            Debug.Log("Error");
+        catch{
+            Debug.Log("Error: Fail to connect to the Queue Manager");
             errorNotification.SetActive(true);
             return;
         }
 
         successNotification.SetActive(true);
         Authentication.SetActive(false);
+
         QueueInitilisation(queue_manager);
     }
 
