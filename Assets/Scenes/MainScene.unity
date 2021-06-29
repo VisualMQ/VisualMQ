@@ -1213,7 +1213,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: User name Warning
+  m_Text: The user name for the API key
 --- !u!222 &153574234
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1506,7 +1506,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: User name Warning
+  m_Text: The API key of the user
 --- !u!222 &192893920
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1866,7 +1866,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: User name Warning
+  m_Text: Your QM name
 --- !u!222 &218592858
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -5392,10 +5392,10 @@ RectTransform:
   m_Father: {fileID: 1178655713}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 2054.4429, y: -695.6564}
-  m_SizeDelta: {x: -2073.9941, y: -933.5167}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 1843, y: 216}
+  m_SizeDelta: {x: -959.99, y: 540}
   m_Pivot: {x: 0.49999997, y: 0.49999964}
 --- !u!114 &900674139
 MonoBehaviour:
@@ -6505,7 +6505,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: User name Warning
+  m_Text: The URL to your Queue Manager
 --- !u!222 &1029174913
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -8023,7 +8023,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -170.1, y: 22.2}
+  m_AnchoredPosition: {x: -170.09998, y: 22.19983}
   m_SizeDelta: {x: 340.68347, y: 45}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1332434896
@@ -9885,11 +9885,11 @@ RectTransform:
   m_Father: {fileID: 900674138}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -2004, y: 909}
-  m_SizeDelta: {x: 826, y: 254}
-  m_Pivot: {x: 0.58071464, y: 1.410463}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 106, y: -1134}
+  m_SizeDelta: {x: 672, y: 400}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1687075807
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10147,7 +10147,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -19, y: -17}
+  m_AnchoredPosition: {x: -11, y: -3}
   m_SizeDelta: {x: 672, y: 566}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1708901306
@@ -10162,21 +10162,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6664e9cfe99494be19c5efe9481ca94c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Authentication: {fileID: 378342413}
   userName: {fileID: 847271561}
   apiKey: {fileID: 1525594883}
   urlInput: {fileID: 18777670}
   QMInput: {fileID: 979857371}
-  Authentication: {fileID: 378342413}
-  ToggleQM1: {fileID: 0}
-  ToggleQM2: {fileID: 0}
+  warningURL: {fileID: 1029174912}
+  warningAPI: {fileID: 192893919}
+  warningUserName: {fileID: 153574233}
+  warningQueueName: {fileID: 218592857}
   submit: {fileID: 1353421220}
   cancel: {fileID: 515702774}
-  userDownLabel: {fileID: 153574233}
-  apiDownLabel: {fileID: 192893919}
   errorNotification: {fileID: 1947913815}
   successNotification: {fileID: 778607042}
-  clickTime: 0
-  toggleList: []
 --- !u!114 &1708901307
 MonoBehaviour:
   m_ObjectHideFlags: 0
