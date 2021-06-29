@@ -71,11 +71,12 @@ public class AuthenticationController : MonoBehaviour
         QMNameT = QMInput.text;
         Debug.Log(apiKeyT);
 
+        QueueManager queue_manager;
         try
         {
-            QueueManager queue_manager = new QueueManager(MQURLT, QMNameT, userNameT, apiKeyT);
-            string allqueue = queue_manager.GetAllQueues(); 
-            Debug.Log(allqueue);
+            queue_manager = new QueueManager(MQURLT, QMNameT, userNameT, apiKeyT);
+            // string allqueue = queue_manager.GetAllQueues(); 
+            // Debug.Log(allqueue);
         }
         catch
         {
@@ -87,6 +88,29 @@ public class AuthenticationController : MonoBehaviour
         //string queueInfo = queue_manager.GetQueue("DEV.QUEUE.1");
         successNotification.SetActive(true);
         Authentication.SetActive(false);
+
+
+        //Step two: create QMInfo, QueuesInfo, and List of MessagesInfo objects
+        string QMInfo = queue_manager.GetQmgr();
+        QMInfo QM1 = new QMInfo(QMInfo);
+
+        string allqueue = queue_manager.GetAllQueues();
+        QueuesInfo Qs1 = new QueuesInfo(allqueue);
+
+        List<MessagesInfo> allQMessages = new List<MessagesInfo>();
+        
+
+        //Step three: create a state object that consists of the three objects/list of objects in step three
+        State internalState = new State(QM1, Qs1, allQMessages);
+
+        // Display this current QM1
+
+        CreateVisual.VisualizeQM(QM1);
+
+        foreach(QueueStorage storage in internalState.QueuesInfo.storage)
+        {
+            CreateVisual.VisualizeQueue(QM1, storage);
+        }
     }
 
     /*
