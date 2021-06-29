@@ -89,6 +89,18 @@ public class AuthenticationController : MonoBehaviour
         Authentication.SetActive(false);
     }
 
+    /*
+    Check the authentication form before submit
+    1. Empty check
+    2. Format check
+    3. 
+    */
+    bool submitFormCheck(string username, string apikey, string url, string qm)
+    {
+
+        return true;
+    }
+
 
     /* Cancel Button Clicked
     */
