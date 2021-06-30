@@ -29,7 +29,7 @@ public class AuthenticationController : MonoBehaviour
     // Variables for make a connection
     private string userNameT = "";
     private string apiKeyT = "";
-    private string MQURLT = "https://web-qm1-3628.qm.eu-gb.mq.appdomain.cloud:443";
+    private string MQURLT = "";
     private string QMNameT = "";
     
     //Show QM
