@@ -110,15 +110,42 @@ namespace MQ
 
     //////Below are classes used for internal state representation
 
+    public class Parser
+    {
+        
+    }
+
     public class Queue
     {
         public String name {get; set;}
         public String type {get; set;}
-        public QueueRemote remote {get; set;}
-        public QueueStorage storage {get; set;}
+        
+        public int maxLimit {get; set;}
+        // public int size {get; set;}
         public MessagesInfo messages {get; set;}
         
     }
+
+    public class RemoteQueue : Queue
+    {
+        
+    }
+
+    public class TransmissionQueue : Queue
+    {
+        
+    }
+    public class AliasQueue : Queue
+    {
+        
+    }
+    public class LocalQueue : Queue
+    {
+        
+    }
+
+
+
     public class QueuesFactory //TODO: 1.parse extended attributes
     {
         public Dictionary<string, object>[] queue {get; set;}
@@ -140,7 +167,7 @@ namespace MQ
                 if (t.queue[i].ContainsKey("storage")) {
                     string storageFields = t.queue[i]["storage"].ToString();
                     Dictionary<string, string> stor = JsonConvert.DeserializeObject<Dictionary<string, string>>(storageFields);
-                    QueueStorage tt = new QueueStorage();
+                    QueueStorage tt = new QueueStorage(); //TODO: use fields instead
                     tt.maximumDepth = stor["maximumDepth"];
                     q.storage = tt;
                 } else { //some queues doesn't have 'storage' attribute, so maximum depth is set to 0
@@ -234,7 +261,7 @@ namespace MQ
     }
 
     ///// Internal QueueManager Representation
-    public class QueueManager
+    public class QueueManager //TODO: incorporate QMInfo class
     {
         public QMInfo QMInfo {get; set;}
         public List<Queue> Queues {get; set;}
