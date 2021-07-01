@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Text;
 using System.Collections.Generic;
-using Newtonsoft.Json;
 using UnityEngine;
 
 
 public class State : MonoBehaviour
 {
-
-    List<QueueManager> queueManagers;
 
 
     void Start()
@@ -23,10 +19,10 @@ public class State : MonoBehaviour
         string testQmgr = "QM1";
 
         //Step one+: create a second Http client
-        QMClient qmClient;
+        MQ.QMClient qmClient;
         try
         {
-            qmClient = new QMClient(testQMUrl, testQmgr, testUsername, testAPIKey);
+            qmClient = new MQ.QMClient(testQMUrl, testQmgr, testUsername, testAPIKey);
             Debug.Log("Authentication succeeded.");
         }
         catch (Exception)
@@ -38,13 +34,18 @@ public class State : MonoBehaviour
 
 
         ////Step two: create QMInfo, QueuesFactory(for making queues), and inset MessagesInfo objects to each queue
-        QueueManager qmgr = qmClient.GetQmgr();
-        List<Queue> queues = qmClient.GetAllQueues();
+        MQ.QueueManager qmgr = qmClient.GetQmgr();
+        List<MQ.Queue> queues = qmClient.GetAllQueues();
+
+        GameObject qmgrGameObject = new GameObject(qmgr.qmgrName, typeof(QueueManager));
+        QueueManager qmgrComponent = qmgrGameObject.GetComponent(typeof(QueueManager)) as QueueManager;
+        qmgrComponent.queueManager = qmgr;
+        qmgrComponent.queues = queues;
 
         //_QueueManagerJson qm = JsonConvert.DeserializeObject<_QueueManagerJson>(qmJson);
         //Debug.Log(qm.qmgr[0].name);
-        Debug.Log(qmgr.qmgrName);
-        Debug.Log(queues[0].queueName);
+        //Debug.Log(qmgr.qmgrName);
+        //Debug.Log(queues[0].queueName);
 
         //_QueueResponseJson qm = JsonUtility.FromJson<_QueueResponseJson>(queuesJson);
         //Debug.Log(qm.queue[0].name);
