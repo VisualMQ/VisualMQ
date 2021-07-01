@@ -4,12 +4,11 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using Newtonsoft.Json;
-using UnityEngine;
 
 // Library for communication with IBM MQ system
 namespace MQ
 {
-    // QueueManager class - API for communication with QMs
+    // QMClient class - API for communication with QMs
     // It can get the following info:
     // 1. Messaging
     //      1.1 Retrieve all message IDs in a specific queue
@@ -21,7 +20,7 @@ namespace MQ
     //      3.1 Retrieve information on all queues residing on QM
     //      3.2 Retrieve information on specific queue
 
-    public class QueueManager
+    public class QMClient
     {
         private HttpClient client;
         private readonly string baseUrl;
@@ -29,7 +28,7 @@ namespace MQ
         private readonly string apikey;
         private readonly string qmgr;
 
-        public QueueManager(string url, string qmgr, string username, string apikey)
+        public QMClient(string url, string qmgr, string username, string apikey)
         {
             this.baseUrl = url;
             this.qmgr = qmgr;
@@ -50,6 +49,9 @@ namespace MQ
             string body = "{\"username\":\"" + username + "\",\"password\":\"" + apikey + "\"}";
             request.Content = new StringContent(body, Encoding.UTF8, "application/json");
             HttpResponseMessage response = client.SendAsync(request).Result;
+            if (!response.IsSuccessStatusCode) { //Invalid credentials or API endpoints
+                throw new Exception();
+            }
         }
 
         private string GetRequest(string endpoint)
@@ -59,7 +61,7 @@ namespace MQ
                 string responseBody = response.Content.ReadAsStringAsync().Result;
                 return responseBody;
             } else {
-                return "Bad Request";
+                throw new Exception();
             }
 
         }
@@ -72,7 +74,12 @@ namespace MQ
 
         public string GetAllMessageIds(string queue)
         {
-            return GetRequest("/ibmmq/rest/v1/messaging/qmgr/" + qmgr + "/queue/" + queue + "/messagelist");
+            try {
+                return GetRequest("/ibmmq/rest/v1/messaging/qmgr/" + qmgr + "/queue/" + queue + "/messagelist");
+            } catch (Exception) {
+                return "Not supported for this type of queue.";
+            }
+            
         }
 
 
@@ -90,7 +97,7 @@ namespace MQ
 
         public string GetAllQueues() //Only DEV queues.
         {
-            return GetRequest("/ibmmq/rest/v1/admin/qmgr/" + qmgr + "/queue?name=DEV.*&attributes=storage");
+            return GetRequest("/ibmmq/rest/v1/admin/qmgr/" + qmgr + "/queue?name=DEV*&attributes=*&status=*");
         }
 
 
@@ -101,32 +108,33 @@ namespace MQ
         
     }
 
-
     //////Below are classes used for internal state representation
-    public class QueuesInfo //TODO: 1. make a list of queues? 2.parse extended attributes
+
+    public class Queue
+    {
+        public String name {get; set;}
+        public String type {get; set;}
+        public QueueRemote remote {get; set;}
+        public QueueStorage storage {get; set;}
+        public MessagesInfo messages {get; set;}
+        
+    }
+    public class QueuesFactory //TODO: 1.parse extended attributes
     {
         public Dictionary<string, object>[] queue {get; set;}
-        public List<String> name {get; set;}
-        public List<String> type {get; set;}
-        public QueueRemote remote {get; set;}
-        public List<QueueStorage> storage{get; set;}
 
-        /*public GameObject obj; TODO WHERE TO ADD THIS*/
+        public QueuesFactory() {}
 
-        public QueuesInfo() {}
-
-        public QueuesInfo(string info)
+        public List<Queue> makeQueues(string info)
         {
-            QueuesInfo t = new QueuesInfo();
-            t = JsonConvert.DeserializeObject<QueuesInfo>(info);
-
-            this.name = new List<string>();
-            this.type = new List<string>();
-            this.storage = new List<QueueStorage>();
+            List<Queue> Queues = new List<Queue>();
+            QueuesFactory t = new QueuesFactory();
+            t = JsonConvert.DeserializeObject<QueuesFactory>(info);
 
             for (int i = 0; i < t.queue.Length; i++) {
-                this.name.Add(t.queue[i]["name"].ToString());
-                this.type.Add(t.queue[i]["type"].ToString());
+                Queue q = new Queue();
+                q.name = t.queue[i]["name"].ToString();
+                q.type = t.queue[i]["type"].ToString();
 
                 //storage
                 if (t.queue[i].ContainsKey("storage")) {
@@ -134,26 +142,42 @@ namespace MQ
                     Dictionary<string, string> stor = JsonConvert.DeserializeObject<Dictionary<string, string>>(storageFields);
                     QueueStorage tt = new QueueStorage();
                     tt.maximumDepth = stor["maximumDepth"];
-                    this.storage.Add(tt);
-                } else {
+                    q.storage = tt;
+                } else { //some queues doesn't have 'storage' attribute, so maximum depth is set to 0
                     QueueStorage tt = new QueueStorage();
                     tt.maximumDepth = "0";
-                    this.storage.Add(tt);
+                    q.storage = tt;
                 }
 
+                //remote
+                if (t.queue[i].ContainsKey("remote")) {
+                    string remoteFields = t.queue[i]["remote"].ToString();
+                    Dictionary<string, string> remo = JsonConvert.DeserializeObject<Dictionary<string, string>>(remoteFields);
+                    QueueRemote tt = new QueueRemote();
+                    tt.queueName = remo["queueName"];
+                    tt.transmissionQueueName = remo["transmissionQueueName"];
+                    tt.qmgrName = remo["qmgrName"];
+                    q.remote = tt;
+                } else { //local queues doesn't have 'remote' attribute
+                    q.remote = null;
+                }
+                //add queue to Queues
+                Queues.Add(q);
             }
-
+            return Queues;
         }
     }
 
     public class QueueRemote //Remote queue info (QM, mapping, etc)
     {
+        public string queueName {get; set;}
+        public string transmissionQueueName {get; set;}
+        public string qmgrName {get; set;}
 
     }
 
     public class QueueStorage
     {
-        public GameObject obj;
         public string maximumDepth {get; set;}
     }
 
@@ -164,7 +188,6 @@ namespace MQ
         public string state {get; set;}
         public QMExtended extended {get; set;}
 
-        public GameObject obj;
         public QMInfo() {}
         public QMInfo(string info)
         {
@@ -210,64 +233,89 @@ namespace MQ
         }
     }
 
-    ///// Internal State Representation
-    public class State
+    ///// Internal QueueManager Representation
+    public class QueueManager
     {
         public QMInfo QMInfo {get; set;}
-        public QueuesInfo QueuesInfo {get; set;}
-        public List<MessagesInfo> MessagesInfo {get; set;}
+        public List<Queue> Queues {get; set;}
+        // public List<MessagesInfo> MessagesInfo {get; set;}
 
-        public State(QMInfo QMInfo, QueuesInfo QueuesInfo, List<MessagesInfo> MessagesInfo)
+        public QueueManager(QMInfo QMInfo, List<Queue> Queues)
         {
             this.QMInfo = QMInfo;
-            this.QueuesInfo = QueuesInfo;
-            this.MessagesInfo = MessagesInfo;
+            this.Queues = Queues;
+            // this.MessagesInfo = MessagesInfo;
         }
     }
-    /////
+    ///// Internal State Representation
+
+    public class State
+    {
+        public List<QueueManager> QMs {get; set;}
+        //TODO: add channels
+        public State(List<QueueManager> QMs)
+        {
+            this.QMs = QMs;
+        }
+    }
 
     public class QueueManagerTest
     {
         static void Main(string[] args)
         {
-            //Step one: create an Http client (QueueManager class), remember to set the username and apikey
-            string testUsername = "REPLACE WITH YOUR USERNAME";
-            string testAPIKey = "REPLACE WITH YOUR API KEY";
+            //Step one: create an Http client (QMClient class), remember to set the username and apikey
+            string testUsername = "shuchengtian";
+            string testAPIKey = "aCPHZ4ys0Tnn2xQLPsHc6lEz4CTenKmNsyW9q0MoQ0bf";
             string testQMUrl = "https://web-qm1-3628.qm.eu-gb.mq.appdomain.cloud:443";
             string testQmgr = "QM1";
-            QueueManager mq = new QueueManager(testQMUrl, testQmgr, testUsername, testAPIKey);
 
-            //Step two: create QMInfo, QueuesInfo, and List of MessagesInfo objects
+            //Step one+: create a second Http client
+            QMClient mq, mq2;
+            string testQMUrl2 = "https://web-qm2-3628.qm.eu-gb.mq.appdomain.cloud:443";
+            string testQmgr2 = "qm2";
+            try {
+                mq = new QMClient(testQMUrl, testQmgr, testUsername, testAPIKey);
+                mq2 = new QMClient(testQMUrl2, testQmgr2, testUsername, testAPIKey);
+            } catch (Exception) {
+                Console.WriteLine("Authentication failed.");
+                return;
+            }
+
+            //Step two: create QMInfo, QueuesFactory(for making queues), and inset MessagesInfo objects to each queue
             string QMInfo = mq.GetQmgr();
             QMInfo QM1 = new QMInfo(QMInfo);
 
-            string allqueue = mq.GetAllQueues();
-            QueuesInfo Qs1 = new QueuesInfo(allqueue);
+            string QMInfo2 = mq2.GetQmgr();
+            QMInfo QM2 = new QMInfo(QMInfo2);
 
-            List<MessagesInfo> allQMessages = new List<MessagesInfo>();
-            for (int i = 0; i < Qs1.name.Count; i++) {
-                string messageInfo = mq.GetAllMessageIds(Qs1.name[i]);
-                allQMessages.Add(new MessagesInfo(Qs1.name[i], messageInfo));
+            string allqueue = mq.GetAllQueues();
+            QueuesFactory Qs1 = new QueuesFactory();
+            List<Queue> Queues1 = Qs1.makeQueues(allqueue);
+
+            string allqueue2 = mq2.GetAllQueues();
+            QueuesFactory Qs2 = new QueuesFactory();
+            List<Queue> Queues2 = Qs2.makeQueues(allqueue2);
+
+            for (int i = 0; i < Queues1.Count; i++) {
+                string messageInfo = mq.GetAllMessageIds(Queues1[i].name);
+                Queues1[i].messages = new MessagesInfo(Queues1[i].name, messageInfo);
+            }
+
+            for (int i = 0; i < Queues2.Count; i++) {
+                string messageInfo = mq2.GetAllMessageIds(Queues2[i].name);
+                Queues2[i].messages = new MessagesInfo(Queues2[i].name, messageInfo);
             }
             
-            //Step three: create a state object that consists of the three objects/list of objects in step three
-            State internalState = new State(QM1, Qs1, allQMessages);
-
-            //Example of how to accesss the fields/information
-            internalState.QueuesInfo.name.ForEach(Console.WriteLine); //Names of all queues in this queue manageer
-            Console.WriteLine("");
-            internalState.QueuesInfo.type.ForEach(Console.WriteLine); //Type of all queues in this queue manageer
-            Console.WriteLine("");
-            internalState.QueuesInfo.storage.ForEach(n => Console.WriteLine(n.maximumDepth)); //Depth of all queues in this queue manageer
-            Console.WriteLine("");
-
-            for (int i = 0 ; i < internalState.MessagesInfo.Count; i++){
-                if (internalState.MessagesInfo[i].messages != null) { //right now, it is essential to check for null references
-                    Console.WriteLine(internalState.MessagesInfo[i].messages.Length); //Current number of messages in each queue
-                } else {
-                    Console.WriteLine(-1); //If the messages fiels is null, then the queue is a remote queue
-                }  
-            }
+            //Step three: create a QueueManager object that consists QMinfo and list of queues
+            //Maybe store the QMClient in the QueueManager Object as well?
+            QueueManager QueueManager1 = new QueueManager(QM1, Queues1);
+            QueueManager QueueManager2 = new QueueManager(QM2, Queues2);
+            
+            //Step four: create a list of QueueManagers and create an internal state object
+            List<QueueManager> qms = new List<QueueManager>();
+            qms.Add(QueueManager1);
+            qms.Add(QueueManager2);
+            State internalState = new State(qms);
         }
     }
 }
