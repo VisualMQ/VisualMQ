@@ -69,12 +69,12 @@ public class AuthenticationController : MonoBehaviour
         // Connect to Queue Manager
         try
         {
-            MQ.QMClient qmClient = new MQ.QMClient(MQURLT, QMNameT, userNameT, apiKeyT);
+            MQ.Client qmClient = new MQ.Client(MQURLT, QMNameT, userNameT, apiKeyT);
             Debug.Log("Authentication succeeded.");
 
             GameObject stateGameObject = GameObject.Find("State");
             State stateComponent = stateGameObject.GetComponent(typeof(State)) as State;
-            stateComponent.qmClient = qmClient;
+            stateComponent.AddNewMqClient(qmClient);
         }
         catch
         {

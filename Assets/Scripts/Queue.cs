@@ -8,6 +8,7 @@ public class Queue : MonoBehaviour
     public Vector3 position;
     public MQ.Queue queue;
 
+
     // Use this for initialization
     void Start()
     {

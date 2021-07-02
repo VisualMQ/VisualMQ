@@ -6,61 +6,83 @@ using UnityEngine;
 public class State : MonoBehaviour
 {
 
-    private const float API_CHECK_MAXTIME = 10.0f; // 10 * 60.0f; ten minutes
-    private float apiCheckCountdown = API_CHECK_MAXTIME;
-    public MQ.QMClient qmClient = null;
+    private const float UPDATE_INTERVAL = 10.0f; // 10 seconds
+    private float updateCountdown = UPDATE_INTERVAL;
 
-    private GameObject renderedQmgr = null;
+    // Main dictionary keeping all connection and their rendered counterparts
+    private Dictionary<MQ.Client, GameObject> qmgrs = new Dictionary<MQ.Client, GameObject>();
 
-    //Step one: create an Http client (QMClient class), remember to set the username and apikey
 
-    //public string testUsername = "lukascerny20";
-    //public string testAPIKey = "xxxxxxx";
-    //public string testQMUrl = "https://web-qm1-3628.qm.eu-gb.mq.appdomain.cloud:443";
-    //public string testQmgr = "QM1";
+    // Use this method for adding new Mq connections (aka connections to different Qmgrs)
+    public void AddNewMqClient(MQ.Client newMqClient)
+    {
+        qmgrs.Add(newMqClient, null);
+    }
+
 
     void Start()
     {
 
-
-
     }
+
 
     void Update()
     {
+        // If there are no MQ client and no Qmgrs rendered, there is nothing to update
+        if (qmgrs.Count == 0) return;
 
-        if (renderedQmgr == null && qmClient == null) return;
-
-        if (renderedQmgr == null && qmClient != null)
+        // If we have a new MQ connection that has not been rendered yet, render it
+        // This relies on the fact that adding new Qmgr for visualisation can be
+        // achieved by adding (MQ.Client, null) via the AddNewMqClient method
+        if (qmgrs.ContainsValue(null))
         {
-            Debug.Log("Script has started.");
+            Debug.Log("Rendering new Qmgr.");
 
-            ////Step two: create QMInfo, QueuesFactory(for making queues), and inset MessagesInfo objects to each queue
-            MQ.QueueManager qmgr = qmClient.GetQmgr();
-            List<MQ.Queue> queues = qmClient.GetAllQueues();
+            // Get data
+            MQ.Client newMqClient = null;
+            foreach (KeyValuePair<MQ.Client, GameObject> entry in qmgrs)
+            {
+                if (entry.Value == null) {
+                    newMqClient = entry.Key;
+                    break;
+                }
 
-            GameObject qmgrGameObject = new GameObject(qmgr.qmgrName, typeof(QueueManager));
+            }
+            MQ.QueueManager newQmgr = newMqClient.GetQmgr();
+            List<MQ.Queue> newQueues = newMqClient.GetAllQueues();
+
+            // Render queue manager. Note that data is stored in Component (ie Script) not in GameObject!
+            // GameObject is just an Entity/Container for Components that perform the real functionality
+            GameObject qmgrGameObject = new GameObject(newQmgr.qmgrName, typeof(QueueManager));
             QueueManager qmgrComponent = qmgrGameObject.GetComponent(typeof(QueueManager)) as QueueManager;
-            qmgrComponent.queueManager = qmgr;
-            qmgrComponent.queues = queues;
-            renderedQmgr = qmgrGameObject;
+            qmgrComponent.queues = newQueues;
+
+            qmgrs[newMqClient] = qmgrGameObject;
             return;
         }
-        
-        apiCheckCountdown -= Time.deltaTime;
-        // Periodically check the status
-        if (apiCheckCountdown <= 0)
+
+
+        // Otherwise periodically update all Queue managers
+        updateCountdown -= Time.deltaTime;
+        if (updateCountdown <= 0)
         {
             Debug.Log("Updating state...");
 
-            List<MQ.Queue> queues = qmClient.GetAllQueues();
-            QueueManager qmgrComponent = renderedQmgr.GetComponent(typeof(QueueManager)) as QueueManager;
-            qmgrComponent.UpdateQueues(queues);
+            foreach (KeyValuePair<MQ.Client, GameObject> entry in qmgrs)
+            {
+                MQ.Client mqClient = entry.Key;
+                GameObject renderedQmgr = entry.Value;
 
-            apiCheckCountdown = API_CHECK_MAXTIME;
+                List<MQ.Queue> queues = mqClient.GetAllQueues();
+                QueueManager qmgrComponent = renderedQmgr.GetComponent(typeof(QueueManager)) as QueueManager;
+                qmgrComponent.UpdateQueues(queues);
+
+            }
+
+            updateCountdown = UPDATE_INTERVAL;
         }
 
-
     }
+
 }
 

@@ -10,7 +10,7 @@ namespace MQ
 {
 
     // Library for communication with IBM MQ system
-    public class QMClient
+    public class Client
     {
         private HttpClient client;
         private readonly string baseUrl;
@@ -18,7 +18,7 @@ namespace MQ
         private readonly string apikey;
         private readonly string qmgr;
 
-        public QMClient(string url, string qmgr, string username, string apikey)
+        public Client(string url, string qmgr, string username, string apikey)
         {
             this.baseUrl = url;
             this.qmgr = qmgr;
