@@ -6,6 +6,11 @@ using UnityEngine;
 public class State : MonoBehaviour
 {
 
+    private const float API_CHECK_MAXTIME = 10.0f; // 10 * 60.0f; ten minutes
+    private float apiCheckCountdown = API_CHECK_MAXTIME;
+    private MQ.QMClient qmClient;
+
+    private GameObject renderedQmgr;
 
     void Start()
     {
@@ -19,7 +24,6 @@ public class State : MonoBehaviour
         string testQmgr = "QM1";
 
         //Step one+: create a second Http client
-        MQ.QMClient qmClient;
         try
         {
             qmClient = new MQ.QMClient(testQMUrl, testQmgr, testUsername, testAPIKey);
@@ -41,33 +45,25 @@ public class State : MonoBehaviour
         QueueManager qmgrComponent = qmgrGameObject.GetComponent(typeof(QueueManager)) as QueueManager;
         qmgrComponent.queueManager = qmgr;
         qmgrComponent.queues = queues;
-
-        //_QueueManagerJson qm = JsonConvert.DeserializeObject<_QueueManagerJson>(qmJson);
-        //Debug.Log(qm.qmgr[0].name);
-        //Debug.Log(qmgr.qmgrName);
-        //Debug.Log(queues[0].queueName);
-
-        //_QueueResponseJson qm = JsonUtility.FromJson<_QueueResponseJson>(queuesJson);
-        //Debug.Log(qm.queue[0].name);
-
-
-        //string allqueue = mq.GetAllQueues();
-        //QueuesFactory Qs1 = new QueuesFactory();
-        //List<Queue> Queues1 = Qs1.makeQueues(allqueue);
-
-
-        //for (int i = 0; i < Queues1.Count; i++)
-        //{
-        //    string messageInfo = mq.GetAllMessageIds(Queues1[i].name);
-        //    Queues1[i].messages = new MessagesInfo(Queues1[i].name, messageInfo);
-        //}
+        renderedQmgr = qmgrGameObject;
 
     }
 
     void Update()
     {
 
+        apiCheckCountdown -= Time.deltaTime;
+        // Periodically check the status
+        if (apiCheckCountdown <= 0)
+        {
+            Debug.Log("Updating state...");
 
+            List<MQ.Queue> queues = qmClient.GetAllQueues();
+            QueueManager qmgrComponent = renderedQmgr.GetComponent(typeof(QueueManager)) as QueueManager;
+            qmgrComponent.UpdateQueues(queues);
+
+            apiCheckCountdown = API_CHECK_MAXTIME;
+        }
 
 
     }

@@ -29,7 +29,8 @@ public class Queue : MonoBehaviour
             prefabName = "LocalQueue";
         }
         GameObject queuePrefab = Resources.Load(prefabName) as GameObject;
-        Instantiate(queuePrefab, position, Quaternion.identity);
+        GameObject instantiatedQueue = Instantiate(queuePrefab, position, Quaternion.identity) as GameObject;
+        instantiatedQueue.transform.parent = this.transform;
     }
 
     // Update is called once per frame
