@@ -8,50 +8,45 @@ public class State : MonoBehaviour
 
     private const float API_CHECK_MAXTIME = 10.0f; // 10 * 60.0f; ten minutes
     private float apiCheckCountdown = API_CHECK_MAXTIME;
-    private MQ.QMClient qmClient;
+    public MQ.QMClient qmClient = null;
 
-    private GameObject renderedQmgr;
+    private GameObject renderedQmgr = null;
+
+    //Step one: create an Http client (QMClient class), remember to set the username and apikey
+
+    //public string testUsername = "lukascerny20";
+    //public string testAPIKey = "iQMpxJY2miYYv3q-Z9KBDzuqG8JUGkQpZ4dqAjOYud6s";
+    //public string testQMUrl = "https://web-qm1-3628.qm.eu-gb.mq.appdomain.cloud:443";
+    //public string testQmgr = "QM1";
 
     void Start()
     {
 
-        Debug.Log("Script has started.");
 
-        //Step one: create an Http client (QMClient class), remember to set the username and apikey
-        string testUsername = "lukascerny20";
-        string testAPIKey = "B4HnZeDYfykU-4PfpxFLbLaayjkKTBlIhZHCrlIQqVJp";
-        string testQMUrl = "https://web-qm1-3628.qm.eu-gb.mq.appdomain.cloud:443";
-        string testQmgr = "QM1";
-
-        //Step one+: create a second Http client
-        try
-        {
-            qmClient = new MQ.QMClient(testQMUrl, testQmgr, testUsername, testAPIKey);
-            Debug.Log("Authentication succeeded.");
-        }
-        catch (Exception)
-        {
-            Debug.Log("Authentication failed.");
-            return;
-        }
-
-
-
-        ////Step two: create QMInfo, QueuesFactory(for making queues), and inset MessagesInfo objects to each queue
-        MQ.QueueManager qmgr = qmClient.GetQmgr();
-        List<MQ.Queue> queues = qmClient.GetAllQueues();
-
-        GameObject qmgrGameObject = new GameObject(qmgr.qmgrName, typeof(QueueManager));
-        QueueManager qmgrComponent = qmgrGameObject.GetComponent(typeof(QueueManager)) as QueueManager;
-        qmgrComponent.queueManager = qmgr;
-        qmgrComponent.queues = queues;
-        renderedQmgr = qmgrGameObject;
 
     }
 
     void Update()
     {
 
+        if (renderedQmgr == null && qmClient == null) return;
+
+        if (renderedQmgr == null && qmClient != null)
+        {
+            Debug.Log("Script has started.");
+
+            ////Step two: create QMInfo, QueuesFactory(for making queues), and inset MessagesInfo objects to each queue
+            MQ.QueueManager qmgr = qmClient.GetQmgr();
+            List<MQ.Queue> queues = qmClient.GetAllQueues();
+
+            GameObject qmgrGameObject = new GameObject(qmgr.qmgrName, typeof(QueueManager));
+            QueueManager qmgrComponent = qmgrGameObject.GetComponent(typeof(QueueManager)) as QueueManager;
+            qmgrComponent.queueManager = qmgr;
+            qmgrComponent.queues = queues;
+            renderedQmgr = qmgrGameObject;
+            return;
+        }
+        
         apiCheckCountdown -= Time.deltaTime;
         // Periodically check the status
         if (apiCheckCountdown <= 0)
