@@ -15,7 +15,7 @@ public class State : MonoBehaviour
     //Step one: create an Http client (QMClient class), remember to set the username and apikey
 
     //public string testUsername = "lukascerny20";
-    //public string testAPIKey = "iQMpxJY2miYYv3q-Z9KBDzuqG8JUGkQpZ4dqAjOYud6s";
+    //public string testAPIKey = "xxxxxxx";
     //public string testQMUrl = "https://web-qm1-3628.qm.eu-gb.mq.appdomain.cloud:443";
     //public string testQmgr = "QM1";
 
