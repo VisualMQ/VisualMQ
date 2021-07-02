@@ -6,15 +6,20 @@ public static class CreateVisual
 {   
     public static Dictionary<string, QMRender> renderedQMs = new Dictionary<string, QMRender>();
     public static State internalState;
+    private static Dictionary<string, int> numberQueues = new Dictionary<string, int>();
+    private static int numberManagers = 0;
+    private static readonly PrimitiveType QMObject = PrimitiveType.Cube;
+    private static readonly PrimitiveType QueueObject = PrimitiveType.Cylinder;
+    static int QMXVALUE = 15;
 
     public class QMRender{
         public GameObject renderedObject;
-        public QueueManager QMinfo;
+        public QueueManager QMInfo;
         public Dictionary<string, QueueRender> renderedQueues;
 
         public QMRender(QueueManager QMinfo, GameObject renderedObject){
             this.renderedObject = renderedObject;
-            this.QMinfo = QMinfo;
+            this.QMInfo = QMinfo;
             this.renderedQueues = new Dictionary<string, QueueRender>();
 
         }
@@ -24,18 +29,18 @@ public static class CreateVisual
     public class QueueRender{
 
         public QMRender parentQM;
-        public Queue queueInfo;
+        public MQ.Queue queueInfo;
         public GameObject renderedObject;
-        public int positionRank; // TODO later
+        public int positionRank = 1; // TODO later
 
-        public QueueRender(QMRender parentQM, Queue queueInfo, GameObject renderedObject){
+        public QueueRender(QMRender parentQM, MQ.Queue queueInfo, GameObject renderedObject){
             this.parentQM = parentQM;
             this.queueInfo = queueInfo;
             this.renderedObject = renderedObject;
         }
     }
 
-
+    
     public static void VisualizeQM(QueueManager manager)
     {   
         GameObject managerObj = GameObject.CreatePrimitive(QMObject);
@@ -52,16 +57,17 @@ public static class CreateVisual
     
     
 
-    public static void VisualizeQueue(QueueManager manager, Queue queueInfo)
+    public static void VisualizeQueue(QueueManager manager, MQ.Queue queueInfo)
     {
+        QMRender parentQM = renderedQMs[manager.QMInfo.name];
+
         GameObject queueObj = GameObject.CreatePrimitive(QueueObject);
-        queueObj.transform.parent = manager.obj.transform;
-        queueObj.transform.localPosition = new Vector3(0.0f, 5.33f, (-0.45f) + 0.1f * (numberQueues.ContainsKey(manager.name) ? numberQueues[manager.name] : 0));
+        queueObj.transform.parent = parentQM.renderedObject.transform;
+        queueObj.transform.localPosition = new Vector3(0.0f, 5.33f, (-0.45f) + 0.1f * (numberQueues.ContainsKey(manager.QMInfo.name) ? numberQueues[manager.QMInfo.name] : 0));
         queueObj.transform.localScale = new Vector3(0.1f, 5.0f, 0.05f);
         /* Now add the render */
         // THIS SHOULD NEVER GO WRONG ENSURE THIS:
-        QMRender parentQM = renderedQMs[manager.QMInfo.name]
-        QueueRender queuerender = new QueueRender(parentQM, queueInfo, queueObj)
+        QueueRender queuerender = new QueueRender(parentQM, queueInfo, queueObj);
         
 
         Increment(numberQueues, manager.QMInfo.name);
@@ -77,12 +83,13 @@ public static class CreateVisual
             }
             QMRender qmrender = renderedQMs[manager.QMInfo.name];
             
-            foreach (Queue queue in manager.Queues)
+            foreach (MQ.Queue queue in manager.Queues)
             {
                 if(!qmrender.renderedQueues.ContainsKey(queue.name)){
                     VisualizeQueue(manager,queue);
                 }
             }
+            // 1 2,3,4, 
         }
     }
 
