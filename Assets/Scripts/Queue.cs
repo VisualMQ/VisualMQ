@@ -24,6 +24,10 @@ public class Queue : MonoBehaviour
         {
             prefabName = "TransmissionQueue";
         }
+        else if (queue is MQ.AliasQueue)
+        {
+            prefabName = "AliasQueue";
+        }
         else
         {
             prefabName = "LocalQueue";
