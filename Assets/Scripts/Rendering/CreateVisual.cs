@@ -95,7 +95,6 @@ public static class CreateVisual
 
 
     
-
     // Helper function   
     public static void Increment<T>(this Dictionary<T, int> dictionary, T key)
     {

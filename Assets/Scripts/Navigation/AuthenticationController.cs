@@ -85,13 +85,14 @@ public class AuthenticationController : MonoBehaviour
     }
 
     /* ---- QueueInitilisation ----
+    * 
     * If authentication succeeded -> Visualise
     */
     void QueueInitilisation(QueueManager queue_manager){
         //Step two: create QMInfo, QueuesInfo, and List of MessagesInfo objects
         string QMInfo = queue_manager.GetQmgr();
         QMInfo QM1 = new QMInfo(QMInfo);
-
+        
         string allqueue = queue_manager.GetAllQueues();
         QueuesInfo Qs1 = new QueuesInfo(allqueue);
 
