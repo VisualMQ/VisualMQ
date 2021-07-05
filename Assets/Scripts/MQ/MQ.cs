@@ -194,7 +194,7 @@ namespace MQ
 
     /// 
     /// Below are JSON data representation objects
-    /// They are used just for deserialising JSON API responses
+    /// They are used just for serialising JSON API responses
     /// and then Parser class parses them into our internal data
     /// representation.
     /// 
