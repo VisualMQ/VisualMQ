@@ -19,10 +19,35 @@ public class State : MonoBehaviour
         qmgrs.Add(newMqClient, null);
     }
 
+    /* 
+    * Get Number of QM Registered -> For Navigation Check box
+    */
+    public int GetNumberMQ()
+    {
+        return qmgrs.Count; 
+    }
+    
+    /* 
+    * Get MQ Name List -> For Navigation Check box
+    */
+    public List<string> MQList()
+    {
+        List<string> mqlist = new List<string>();
+
+        foreach (MQ.Client client in qmgrs.Keys) 
+        {
+            mqlist.Add(client.GetClientName());
+        }
+
+        //Debug.Log("PRINT: All Queue Manager Names: ");
+        //Debug.Log(String.Join(", ", mqlist));
+        return mqlist;
+    }
+
 
     void Start()
     {
-
+        
     }
 
 

@@ -37,7 +37,7 @@ public class Queue : MonoBehaviour
         GameObject instantiatedQueue = Instantiate(queuePrefab, position, Quaternion.identity) as GameObject;
         instantiatedQueue.transform.parent = this.transform;
     }
-
+    
 
     // Update is called once per frame
     void Update()
