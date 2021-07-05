@@ -29,7 +29,7 @@ namespace MQ
 
     public class TransmissionQueue : Queue
     {
-
+        public int currentDepth;
     }
 
 
@@ -41,7 +41,7 @@ namespace MQ
 
     public class LocalQueue : Queue
     {
-
+        public int currentDepth;
     }
 
 }
