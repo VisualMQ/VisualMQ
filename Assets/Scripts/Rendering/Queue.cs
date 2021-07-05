@@ -38,6 +38,7 @@ public class Queue : MonoBehaviour
         instantiatedQueue.transform.parent = this.transform;
     }
 
+
     // Update is called once per frame
     void Update()
     {

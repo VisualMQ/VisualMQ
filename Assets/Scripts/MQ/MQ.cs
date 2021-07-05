@@ -190,7 +190,10 @@ namespace MQ
 
 
     /// 
-    /// These are JSON data representation
+    /// Below are JSON data representation objects
+    /// They are used just for deserialising JSON API responses
+    /// and then Parser class parses them into our internal data
+    /// representation.
     /// 
     [Serializable]
     public class _QueueManagerResponseJson
@@ -263,58 +266,5 @@ namespace MQ
         public int maximumDepth;
         public int maximumMessageLength;
     }
-
-
-
-
-    /// 
-    /// Internal data representation
-    /// 
-
-
-
-    public class RemoteQueue : Queue
-    {
-        public string targetQueueName;
-        public string targetQmgrName;
-        public string transmissionQueueName;
-
-    }
-
-    public class TransmissionQueue : Queue
-    {
-
-    }
-
-    public class AliasQueue : Queue
-    {
-        public string targetQueueName;
-    }
-
-    public class LocalQueue : Queue
-    {
-
-    }
-
-
-
-    public class MessagesInfo //TODO: improve error handling in API and Parsing
-    {
-        public Dictionary<string, string>[] messages { get; set; }
-        public string name { get; set; }
-        public MessagesInfo() { }
-        public MessagesInfo(string name, string info)
-        {
-            //MessagesInfo t = new MessagesInfo();
-            //try { 
-            //    t = JsonConvert.DeserializeObject<MessagesInfo>(info);
-            //    this.messages = t.messages;
-            //} catch (Exception) {
-            //}
-
-            this.name = name;
-        }
-    }
-
 
 }

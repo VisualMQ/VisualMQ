@@ -18,6 +18,7 @@ public class QueueManager : MonoBehaviour
         blockPrefab = Resources.Load("Block") as GameObject;
     }
 
+
     void Start()
     {
         Debug.Log("Rendering " + queues.Count + " queues.");
@@ -40,6 +41,7 @@ public class QueueManager : MonoBehaviour
             renderedQueues.Add(queue.queueName, queueGameObject);
         }
     }
+
 
     void Update()
     {

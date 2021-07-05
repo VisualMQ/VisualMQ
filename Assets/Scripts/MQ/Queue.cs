@@ -17,5 +17,32 @@ namespace MQ
 
     }
 
+
+    public class RemoteQueue : Queue
+    {
+        public string targetQueueName;
+        public string targetQmgrName;
+        public string transmissionQueueName;
+
+    }
+
+
+    public class TransmissionQueue : Queue
+    {
+
+    }
+
+
+    public class AliasQueue : Queue
+    {
+        public string targetQueueName;
+    }
+
+
+    public class LocalQueue : Queue
+    {
+
+    }
+
 }
 
