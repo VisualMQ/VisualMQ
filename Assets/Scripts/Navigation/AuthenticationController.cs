@@ -31,20 +31,20 @@ public class AuthenticationController : MonoBehaviour
     private string apiKeyT = "";
     private string MQURLT = "";
     private string QMNameT = "";
-    
+
     //Show QM
     //public GameObject ToggleQM1;
     //public GameObject ToggleQM2;
     //public int clickTime;
     //public List<GameObject> toggleList = new List<GameObject>();
-    
+
 
     // Start is called before the first frame update
     void Start()
-    {   
+    {
         Debug.Log("NOTICE: Initialising the authentication field");
         Reset();
-        
+
         // Listen to button activity
         submit.onClick.AddListener(ConfirmButtonClicked);
         cancel.onClick.AddListener(CancelButtonClicked);
@@ -52,7 +52,7 @@ public class AuthenticationController : MonoBehaviour
 
     // Confirm Button Clicked
     void ConfirmButtonClicked()
-    {   
+    {
         Debug.Log("NOTICE: Comfirm Button clicked");
 
         // Get Current Input Text and Form Checking
@@ -60,19 +60,24 @@ public class AuthenticationController : MonoBehaviour
         apiKeyT = apiKey.text;
         MQURLT = urlInput.text;
         QMNameT = QMInput.text;
-        if (submitFormCheck(userNameT, apiKeyT, MQURLT, QMNameT) == false){
+        if (submitFormCheck(userNameT, apiKeyT, MQURLT, QMNameT) == false)
+        {
             Debug.Log("ERROR: Form Check Fails");
             return;
         }
 
         // Connect to Queue Manager
-        QueueManager queue_manager;
-        try{
-            queue_manager = new QueueManager(MQURLT, QMNameT, userNameT, apiKeyT);
-            // string allqueue = queue_manager.GetAllQueues(); 
-            // Debug.Log(allqueue);
+        try
+        {
+            MQ.Client qmClient = new MQ.Client(MQURLT, QMNameT, userNameT, apiKeyT);
+            Debug.Log("Authentication succeeded.");
+
+            GameObject stateGameObject = GameObject.Find("State");
+            State stateComponent = stateGameObject.GetComponent(typeof(State)) as State;
+            stateComponent.AddNewMqClient(qmClient);
         }
-        catch{
+        catch
+        {
             Debug.Log("Error: Fail to connect to the Queue Manager");
             errorNotification.SetActive(true);
             return;
@@ -81,31 +86,6 @@ public class AuthenticationController : MonoBehaviour
         successNotification.SetActive(true);
         Authentication.SetActive(false);
 
-        QueueInitilisation(queue_manager);
-    }
-
-    /* ---- QueueInitilisation ----
-    * If authentication succeeded -> Visualise
-    */
-    void QueueInitilisation(QueueManager queue_manager){
-        //Step two: create QMInfo, QueuesInfo, and List of MessagesInfo objects
-        string QMInfo = queue_manager.GetQmgr();
-        QMInfo QM1 = new QMInfo(QMInfo);
-
-        string allqueue = queue_manager.GetAllQueues();
-        QueuesInfo Qs1 = new QueuesInfo(allqueue);
-
-        List<MessagesInfo> allQMessages = new List<MessagesInfo>();
-
-        //Step three: create a state object that consists of the three objects/list of objects in step three
-        State internalState = new State(QM1, Qs1, allQMessages);
-
-        // Display this current QM1
-        CreateVisual.VisualizeQM(QM1);
-        foreach(QueueStorage storage in internalState.QueuesInfo.storage)
-        {
-            CreateVisual.VisualizeQueue(QM1, storage);
-        }
     }
 
     /* ---- submitFormCheck ----
@@ -114,10 +94,12 @@ public class AuthenticationController : MonoBehaviour
     * Return false: exist empty
     * Could Add more form check conditions in this method
     */
-    bool submitFormCheck(string username, string apikey, string url, string qm){
+    bool submitFormCheck(string username, string apikey, string url, string qm)
+    {
         bool passFormCheck = true;
         // Exist Empty
-        if(EmptyCheck(username, apikey, url, qm)){
+        if (EmptyCheck(username, apikey, url, qm))
+        {
             passFormCheck = false;
         }
         return passFormCheck;
@@ -127,28 +109,29 @@ public class AuthenticationController : MonoBehaviour
     * Perform Empty Check & Update the warning labels
     * Return true: exist empty field
     */
-    bool EmptyCheck(string username, string apikey, string url, string qm){
+    bool EmptyCheck(string username, string apikey, string url, string qm)
+    {
         bool existEmpty = false;
 
-        if(string.IsNullOrEmpty(username))
+        if (string.IsNullOrEmpty(username))
         {
             warningUserName.text = "Please ";
             warningUserName.color = Color.red;
             existEmpty = true;
         }
-        if(string.IsNullOrEmpty(apikey))
+        if (string.IsNullOrEmpty(apikey))
         {
             warningAPI.text = "Please";
             warningAPI.color = Color.red;
             existEmpty = true;
         }
-        if(string.IsNullOrEmpty(username))
+        if (string.IsNullOrEmpty(username))
         {
             warningUserName.text = "Please";
             warningUserName.color = Color.red;
             existEmpty = true;
         }
-        if(string.IsNullOrEmpty(qm))
+        if (string.IsNullOrEmpty(qm))
         {
             warningQueueName.text = "Please";
             warningQueueName.color = Color.red;
@@ -163,20 +146,23 @@ public class AuthenticationController : MonoBehaviour
     * 2. Reset the labels to initial status
     * 3. Hide Window
     */
-    void CancelButtonClicked(){
+    void CancelButtonClicked()
+    {
         Debug.Log("NOTICE: Cancel Button clicked");
         Reset();
         Authentication.SetActive(false); // Hide the authentication window
     }
 
     // Reset: Includes below two functions
-    void Reset(){
+    void Reset()
+    {
         CleanAllInputField();
         WarningLabelsInitStatus();
     }
 
     // Clean all input fields
-    void CleanAllInputField(){
+    void CleanAllInputField()
+    {
         userName.text = "";
         apiKey.text = "";
         urlInput.text = "";
@@ -184,7 +170,8 @@ public class AuthenticationController : MonoBehaviour
     }
 
     // The Initial state of all warning labels
-    void WarningLabelsInitStatus(){
+    void WarningLabelsInitStatus()
+    {
         warningAPI.text = "User's API Key";
         warningAPI.color = Color.gray;
 
