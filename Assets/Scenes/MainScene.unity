@@ -9178,6 +9178,7 @@ MonoBehaviour:
   connectNewQMButton: {fileID: 1153602268}
   addFilterButton: {fileID: 1026284904}
   expandPanelButton: {fileID: 405700912}
+  Authentication: {fileID: 378342413}
   leftPanel: {fileID: 969929348}
   checkboxItem: {fileID: 894515002}
 --- !u!1 &1493061138

@@ -45,6 +45,7 @@ public class AuthenticationController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Authentication.SetActive(false);
         Debug.Log("NOTICE: Initialising the authentication field");
         Reset();
 
@@ -82,16 +83,21 @@ public class AuthenticationController : MonoBehaviour
         catch
         {
             Debug.Log("Error: Fail to connect to the Queue Manager. Please check your credentials, url, and queue manager's name.");
-            errorNotification.SetActive(true);
-            //generateErrorWindow(errorMessage);
+            generateErrorWindow(errorMessage);
+            Authentication.SetActive(false);
+            Reset(); // Reset all input fields & Warning Label
             return;
         }
         
         Debug.Log("Authentication succeeded.");
         generateSuccessWindow(successMessage);
         Authentication.SetActive(false);
+        Reset();
     }
 
+    /*  
+    * Notification Window Generation as a whole
+    */
     void generateSuccessWindow(string message)
     {
         successTimeText.text = (DateTime.Now).ToString();

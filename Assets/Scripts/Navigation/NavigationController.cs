@@ -5,10 +5,12 @@ using UnityEngine.UI;
 
 public class NavigationController : MonoBehaviour
 {
-    //public GameObject AuthenticationWindow;
+    
     public Button connectNewQMButton;
     public Button addFilterButton;
     public Button expandPanelButton;
+
+    public GameObject Authentication;
 
     // Left Panel: QM Check Selector
     public GameObject leftPanel;
@@ -20,11 +22,13 @@ public class NavigationController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //AuthenticationWindow.SetActive(false);
         //connectNewQM.SetActive(false);
         //addFilter.SetActive(false);
 
+        Authentication.SetActive(false);  // Default: Hide Auth Window
         leftPanel.SetActive(false);
+
+        // Button Listener
         expandPanelButton.onClick.AddListener(leftPanelButtonClicked);
     }
 
@@ -70,4 +74,5 @@ public class NavigationController : MonoBehaviour
         }
 
     }
+
 }
