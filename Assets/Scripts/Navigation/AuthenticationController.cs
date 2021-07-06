@@ -73,11 +73,10 @@ public class AuthenticationController : MonoBehaviour
         try
         {
             MQ.Client qmClient = new MQ.Client(MQURLT, QMNameT, userNameT, apiKeyT);
+            //Debug.Log(stateComponent.GetNumberMQ());
             GameObject stateGameObject = GameObject.Find("State");
             State stateComponent = stateGameObject.GetComponent(typeof(State)) as State;
             stateComponent.AddNewMqClient(qmClient);
-
-            //Debug.Log(stateComponent.GetNumberMQ());
         }
         catch
         {
