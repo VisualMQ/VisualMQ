@@ -1282,6 +1282,15 @@ MonoBehaviour:
   closeErrorNotification: {fileID: 1230953372}
   closeinfoNotification: {fileID: 1064512151}
   closewarningNotification: {fileID: 1438839717}
+  timeSuccessNotification: {fileID: 891513148}
+  timeErrorNotification: {fileID: 171629601}
+  timeInfoNotification: {fileID: 547851711}
+  timeWarningNotification: {fileID: 1686876988}
+  messageSuccess: {fileID: 637527462}
+  messageError: {fileID: 571596629}
+  messageInfo: {fileID: 376304485}
+  messageWarning: {fileID: 939358009}
+  example: hello
 --- !u!1 &171629599
 GameObject:
   m_ObjectHideFlags: 0
@@ -1812,7 +1821,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!224 &218592856
 RectTransform:
@@ -1825,12 +1834,12 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 393965075}
-  m_RootOrder: 2
+  m_Father: {fileID: 1000608755}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 5.7, y: -34.2}
+  m_AnchoredPosition: {x: 0.70109844, y: 0.37397385}
   m_SizeDelta: {x: 288, y: 16}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &218592857
@@ -2580,7 +2589,6 @@ RectTransform:
   m_Children:
   - {fileID: 979857370}
   - {fileID: 1000608755}
-  - {fileID: 218592856}
   m_Father: {fileID: 1708901305}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -6243,7 +6251,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!224 &1000608755
 RectTransform:
@@ -6255,7 +6263,8 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 218592856}
   m_Father: {fileID: 393965075}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -10176,6 +10185,10 @@ MonoBehaviour:
   cancel: {fileID: 515702774}
   errorNotification: {fileID: 1947913815}
   successNotification: {fileID: 778607042}
+  successMainText: {fileID: 637527462}
+  successTimeText: {fileID: 891513148}
+  errorMainText: {fileID: 571596629}
+  errorTimeText: {fileID: 171629601}
 --- !u!114 &1708901307
 MonoBehaviour:
   m_ObjectHideFlags: 0

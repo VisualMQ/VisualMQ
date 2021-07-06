@@ -1,4 +1,5 @@
 using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,21 +11,21 @@ public class AuthenticationController : MonoBehaviour
     public GameObject Authentication;
 
     // Four Input Fields
-    public InputField userName, apiKey;
-    public InputField urlInput, QMInput;
+    public InputField userName, apiKey, urlInput, QMInput;
 
     // Four Warning Text Fields
-    public Text warningURL;
-    public Text warningAPI;
-    public Text warningUserName;
-    public Text warningQueueName;
+    public Text warningURL, warningAPI, warningUserName, warningQueueName;
 
     // Buttons
     public Button submit, cancel;
 
     // Notification
-    public GameObject errorNotification;
-    public GameObject successNotification;
+    public GameObject errorNotification, successNotification;
+    public Text successMainText, successTimeText, errorMainText, errorTimeText;
+
+
+    private string successMessage = "A New Queue Manager Added.";
+    private string errorMessage = "Fail to add this Queue Manager. Please try later.";
 
     // Variables for make a connection
     private string userNameT = "";
@@ -38,6 +39,8 @@ public class AuthenticationController : MonoBehaviour
     //public int clickTime;
     //public List<GameObject> toggleList = new List<GameObject>();
 
+    // Reference NotificationController
+    private NotificationController notificationScript;
 
     // Start is called before the first frame update
     void Start()
@@ -70,25 +73,37 @@ public class AuthenticationController : MonoBehaviour
         try
         {
             MQ.Client qmClient = new MQ.Client(MQURLT, QMNameT, userNameT, apiKeyT);
-
             GameObject stateGameObject = GameObject.Find("State");
             State stateComponent = stateGameObject.GetComponent(typeof(State)) as State;
             stateComponent.AddNewMqClient(qmClient);
 
             //Debug.Log(stateComponent.GetNumberMQ());
-            
         }
         catch
         {
             Debug.Log("Error: Fail to connect to the Queue Manager");
-            errorNotification.SetActive(true);
-            return;
+            generateErrorWindow(errorMessage);
+            Authentication.SetActive(false);
+            throw;
         }
-
+        
         Debug.Log("Authentication succeeded.");
-        successNotification.SetActive(true);
+        generateSuccessWindow(successMessage);
         Authentication.SetActive(false);
+    }
 
+    void generateSuccessWindow(string message)
+    {
+        successTimeText.text = (DateTime.Now).ToString();
+        successMainText.text = message;
+        successNotification.SetActive(true);
+    }
+
+    void generateErrorWindow(string message)
+    {
+        errorTimeText.text = (DateTime.Now).ToString();
+        errorMainText.text = message;
+        errorNotification.SetActive(true);
     }
 
     /* ---- submitFormCheck ----
