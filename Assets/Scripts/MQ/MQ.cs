@@ -32,6 +32,10 @@ namespace MQ
             Authenticate();
         }
 
+        public string GetQueueManagerName(){
+            return this.qmgr;
+        }
+
         // Post request to the Login endpoint, which create cookies for authentication
         public void Authenticate()
         {
@@ -57,7 +61,6 @@ namespace MQ
             {
                 throw new Exception();
             }
-
         }
 
         public string GetAllChannels()
@@ -270,9 +273,13 @@ namespace MQ
         public int maximumMessageLength;
     }
 
+<<<<<<< HEAD
     [Serializable]
     public class _QueueStatusJson
     {
         public int currentDepth;
     }
 }
+=======
+}
+>>>>>>> 0c1da7238ae4c8bd589673ab3d19d25d68ed88d9
