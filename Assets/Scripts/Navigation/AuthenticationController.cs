@@ -73,17 +73,18 @@ public class AuthenticationController : MonoBehaviour
         try
         {
             MQ.Client qmClient = new MQ.Client(MQURLT, QMNameT, userNameT, apiKeyT);
-            //Debug.Log(stateComponent.GetNumberMQ());
+            qmClient.GetAllChannels();
+
             GameObject stateGameObject = GameObject.Find("State");
             State stateComponent = stateGameObject.GetComponent(typeof(State)) as State;
             stateComponent.AddNewMqClient(qmClient);
         }
         catch
         {
-            Debug.Log("Error: Fail to connect to the Queue Manager");
-            generateErrorWindow(errorMessage);
-            Authentication.SetActive(false);
-            throw;
+            Debug.Log("Error: Fail to connect to the Queue Manager. Please check your credentials, url, and queue manager's name.");
+            errorNotification.SetActive(true);
+            //generateErrorWindow(errorMessage);
+            return;
         }
         
         Debug.Log("Authentication succeeded.");
