@@ -70,6 +70,7 @@ public class AuthenticationController : MonoBehaviour
         try
         {
             MQ.Client qmClient = new MQ.Client(MQURLT, QMNameT, userNameT, apiKeyT);
+            qmClient.GetAllChannels();
 
             GameObject stateGameObject = GameObject.Find("State");
             State stateComponent = stateGameObject.GetComponent(typeof(State)) as State;
@@ -80,7 +81,7 @@ public class AuthenticationController : MonoBehaviour
         }
         catch
         {
-            Debug.Log("Error: Fail to connect to the Queue Manager");
+            Debug.Log("Error: Fail to connect to the Queue Manager. Please check your credentials, url, and queue manager's name.");
             errorNotification.SetActive(true);
             return;
         }
