@@ -43,7 +43,7 @@ public class Queue : MonoBehaviour
 
         TextMesh textMesh = textObj.AddComponent<TextMesh>();
         textMesh.text = queue.queueName;
-        textMesh.characterSize = 0.4;
+        textMesh.characterSize = 0.4f;
         textMesh.anchor = TextAnchor.MiddleCenter;
         textMesh.alignment = TextAlignment.Center;
         textMesh.transform.position = new Vector3(instantiatedQueue.transform.position.x, instantiatedQueue.transform.position.y + 5, instantiatedQueue.transform.position.z);
