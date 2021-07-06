@@ -60,7 +60,7 @@ public class NavigationController : MonoBehaviour
         State stateComponent = stateGameObject.GetComponent(typeof(State)) as State;
         //checkBoxNumber = stateComponent.GetNumberMQ();
         
-        List<string> mqlist = stateComponent.MQList();
+        List<string> mqlist = stateComponent.RegisteredQMNameList();
         Debug.Log(string.Join(",", mqlist));
 
         // Default to true, all mq is visiable

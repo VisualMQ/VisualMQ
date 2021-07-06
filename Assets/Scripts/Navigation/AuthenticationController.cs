@@ -75,7 +75,6 @@ public class AuthenticationController : MonoBehaviour
             State stateComponent = stateGameObject.GetComponent(typeof(State)) as State;
             stateComponent.AddNewMqClient(qmClient);
 
-
             //Debug.Log(stateComponent.GetNumberMQ());
             
         }

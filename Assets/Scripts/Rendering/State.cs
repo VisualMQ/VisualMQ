@@ -22,7 +22,7 @@ public class State : MonoBehaviour
     /* 
     * Get Number of QM Registered -> For Navigation Check box
     */
-    public int GetNumberMQ()
+    public int GetNumberOfRegisteredQM()
     {
         return qmgrs.Count; 
     }
@@ -30,17 +30,16 @@ public class State : MonoBehaviour
     /* 
     * Get MQ Name List -> For Navigation Check box
     */
-    public List<string> MQList()
+    public List<string> RegisteredQMNameList()
     {
         List<string> mqlist = new List<string>();
 
         foreach (MQ.Client client in qmgrs.Keys) 
         {
-            mqlist.Add(client.GetClientName());
+            mqlist.Add(client.GetQueueManagerName());
         }
 
-        //Debug.Log("PRINT: All Queue Manager Names: ");
-        //Debug.Log(String.Join(", ", mqlist));
+        //Debug.Log("PRINT: All Queue Manager Names: " + String.Join(", ", mqlist));
         return mqlist;
     }
 

@@ -32,7 +32,7 @@ namespace MQ
             Authenticate();
         }
 
-        public string GetClientName(){
+        public string GetQueueManagerName(){
             return this.qmgr;
         }
 
