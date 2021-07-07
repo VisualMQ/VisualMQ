@@ -28,7 +28,6 @@ public class QMDetailsRightViewController : MonoBehaviour
         // !!! TEST !!!
         testButton.onClick.AddListener(clicked);
 
-
         // Buttons & Listener
         closeButton.onClick.AddListener(CloseButtonClicked);
         toDetails.onClick.AddListener(toDetailsClicked);
@@ -60,6 +59,8 @@ public class QMDetailsRightViewController : MonoBehaviour
             RectTransform recTransform = item.GetComponent<RectTransform>();
             recTransform.anchoredPosition = new Vector2(5, -rowHeight * i + startY);
             item.gameObject.SetActive(true);
+
+            item.Find("TextQueueName").GetComponent<Text>().text = names[i];
         }
     }
 
