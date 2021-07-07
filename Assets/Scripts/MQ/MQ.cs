@@ -28,8 +28,9 @@ namespace MQ
             client = new HttpClient();
             client.BaseAddress = new Uri(baseUrl);
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
+            
             Authenticate();
+
         }
 
         public string GetQueueManagerName(){
@@ -43,6 +44,9 @@ namespace MQ
             string body = "{\"username\":\"" + username + "\",\"password\":\"" + apikey + "\"}";
             request.Content = new StringContent(body, Encoding.UTF8, "application/json");
             HttpResponseMessage response = client.SendAsync(request).Result;
+            
+            Debug.Log(response); // test response
+
             if (!response.IsSuccessStatusCode)
             { //Invalid credentials or API endpoints
                 throw new Exception();

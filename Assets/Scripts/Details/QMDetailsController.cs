@@ -20,12 +20,17 @@ public class QMDetailsController : MonoBehaviour
     
     void Start()
     {
+        // Initialise with all details
+        queueManagerInfoInit("QM1");
         
     }
 
-    void queueManagerInfoInit(){
+    void queueManagerInfoInit(string selectedQMName){
+
         
     }
+
+
 
     /*
     * Button Listener

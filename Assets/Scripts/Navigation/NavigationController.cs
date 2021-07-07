@@ -5,10 +5,13 @@ using UnityEngine.UI;
 
 public class NavigationController : MonoBehaviour
 {
-    //public GameObject AuthenticationWindow;
+    
     public Button connectNewQMButton;
     public Button addFilterButton;
     public Button expandPanelButton;
+
+    public GameObject Authentication;
+    public GameObject FilterWindow;
 
     // Left Panel: QM Check Selector
     public GameObject leftPanel;
@@ -20,12 +23,16 @@ public class NavigationController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //AuthenticationWindow.SetActive(false);
         //connectNewQM.SetActive(false);
         //addFilter.SetActive(false);
 
+        Authentication.SetActive(false);  // Default: Hide Auth Window
         leftPanel.SetActive(false);
+        FilterWindow.SetActive(false);
+
+        // Button Listener
         expandPanelButton.onClick.AddListener(leftPanelButtonClicked);
+        addFilterButton.onClick.AddListener(addFilterButtonClicked);
     }
 
     // Update is called once per frame
@@ -52,6 +59,11 @@ public class NavigationController : MonoBehaviour
         }
     }
 
+    void addFilterButtonClicked()
+    {
+        FilterWindow.SetActive(true);
+    }
+
     void GenerateCheckBox()
     {
         // Get Current Number of Check Box
@@ -70,4 +82,5 @@ public class NavigationController : MonoBehaviour
         }
 
     }
+
 }
