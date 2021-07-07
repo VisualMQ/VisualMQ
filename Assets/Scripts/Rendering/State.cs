@@ -66,7 +66,7 @@ public class State : MonoBehaviour
         updateCountdown -= Time.deltaTime;
         if (updateCountdown <= 0)
         {
-            Debug.Log("Updating state...");
+            //Debug.Log("Updating state...");
 
             foreach (KeyValuePair<MQ.Client, GameObject> entry in qmgrs)
             {
@@ -137,7 +137,7 @@ public class State : MonoBehaviour
     public List<string> GetALLQueuesNames(string selectedQMName)
     {
         List<string> queuesList = new List<string>();
-        Debug.Log("QUEUE TABLE TESTING");
+        //Debug.Log("QUEUE TABLE TESTING");
 
         foreach (MQ.Client client in qmgrs.Keys) 
         {
@@ -146,6 +146,7 @@ public class State : MonoBehaviour
                 List<MQ.Queue> queues = client.GetAllQueues();
                 foreach (MQ.Queue queue in queues)
                 {
+                    //Debug.Log(queue.queueName);
                     queuesList.Add(queue.queueName);
                 }
                 break;

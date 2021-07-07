@@ -709,6 +709,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   QMDetailsRightWindow: {fileID: 82359487}
+  toDetails: {fileID: 1015680261}
+  toQueueLists: {fileID: 1415385241}
+  closeButton: {fileID: 2145708061}
+  testButton: {fileID: 1054246171}
 --- !u!114 &82359490
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7265,7 +7269,7 @@ GameObject:
   - component: {fileID: 1015680262}
   - component: {fileID: 1015680261}
   m_Layer: 5
-  m_Name: ButtonQMDetails
+  m_Name: ButtonQMDetails2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9323,7 +9327,6 @@ GameObject:
   - component: {fileID: 1287581812}
   - component: {fileID: 1287581811}
   - component: {fileID: 1287581810}
-  - component: {fileID: 1287581809}
   m_Layer: 5
   m_Name: ButtonConfirm
   m_TagString: Untagged
@@ -9351,18 +9354,6 @@ RectTransform:
   m_AnchoredPosition: {x: -167.61751, y: 32.25}
   m_SizeDelta: {x: 335.235, y: 64.5}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1287581809
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1287581807}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 697f84c9bb07845b7b7bdd0f12f29c81, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1287581810
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10010,7 +10001,7 @@ GameObject:
   - component: {fileID: 1415385242}
   - component: {fileID: 1415385241}
   m_Layer: 5
-  m_Name: ButtonQueueList
+  m_Name: ButtonQueueList2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10838,6 +10829,7 @@ MonoBehaviour:
   checkboxItem: {fileID: 894515002}
   showQMDetailsButton: {fileID: 1054246171}
   QMDetailsWindow: {fileID: 1469389120}
+  QMDetailsRightWindow: {fileID: 82359487}
 --- !u!1 &1525594881
 GameObject:
   m_ObjectHideFlags: 0
@@ -12644,7 +12636,6 @@ GameObject:
   - component: {fileID: 1838408074}
   - component: {fileID: 1838408073}
   - component: {fileID: 1838408072}
-  - component: {fileID: 1838408071}
   m_Layer: 5
   m_Name: ButtonCancel
   m_TagString: Untagged
@@ -12672,18 +12663,6 @@ RectTransform:
   m_AnchoredPosition: {x: 169.21, y: -534.25}
   m_SizeDelta: {x: 335.11, y: 63.5}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1838408071
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1838408069}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 697f84c9bb07845b7b7bdd0f12f29c81, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1838408072
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14020,7 +13999,7 @@ GameObject:
   - component: {fileID: 2145708062}
   - component: {fileID: 2145708061}
   m_Layer: 5
-  m_Name: ButtonClose
+  m_Name: ButtonClose2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -28,10 +28,10 @@ public class AuthenticationController : MonoBehaviour
     private string errorMessage = "Fail to add this Queue Manager. Please try later.";
 
     // Variables for make a connection
-    private string userNameT = "";
-    private string apiKeyT = "";
-    private string MQURLT = "";
-    private string QMNameT = "";
+    private string userNameT = "yuexu";
+    private string apiKeyT = "72L4nsHoYzLRiSecPgJbkNp1imOp0ZeZcUcOoNxoVSvV";
+    private string MQURLT = "https://web-qm1-3628.qm.eu-gb.mq.appdomain.cloud:443";
+    private string QMNameT = "QM1";
 
     //Show QM
     //public GameObject ToggleQM1;
@@ -46,24 +46,29 @@ public class AuthenticationController : MonoBehaviour
     void Start()
     {
         //Authentication.SetActive(false);
-        Debug.Log("NOTICE: Initialising the authentication field");
+        //Debug.Log("NOTICE: Initialising the authentication field");
         Reset();
 
         // Listen to button activity
         submit.onClick.AddListener(ConfirmButtonClicked);
         cancel.onClick.AddListener(CancelButtonClicked);
+
+        // TEST
+        ConfirmButtonClicked();
     }
 
     // Confirm Button Clicked
     void ConfirmButtonClicked()
     {
-        Debug.Log("NOTICE: Comfirm Button clicked");
+        //Debug.Log("NOTICE: Comfirm Button clicked");
 
         // Get Current Input Text and Form Checking
+        /*
         userNameT = userName.text;
         apiKeyT = apiKey.text;
         MQURLT = urlInput.text;
         QMNameT = QMInput.text;
+        */
         if (submitFormCheck(userNameT, apiKeyT, MQURLT, QMNameT) == false)
         {
             Debug.Log("ERROR: Form Check Fails");
@@ -172,7 +177,7 @@ public class AuthenticationController : MonoBehaviour
     */
     void CancelButtonClicked()
     {
-        Debug.Log("NOTICE: Cancel Button clicked");
+        //Debug.Log("NOTICE: Cancel Button clicked");
         Reset();
         Authentication.SetActive(false); // Hide the authentication window
     }

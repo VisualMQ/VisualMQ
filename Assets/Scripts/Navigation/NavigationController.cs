@@ -25,10 +25,12 @@ public class NavigationController : MonoBehaviour
     // Testing: QM Details Panel
     public Button showQMDetailsButton;
     public GameObject QMDetailsWindow;
+    public GameObject QMDetailsRightWindow;
 
     void showQMDetailsButtonClicked()
     {
-        QMDetailsWindow.SetActive(true);
+        //QMDetailsWindow.SetActive(true);
+        QMDetailsRightWindow.SetActive(true);
     }
 
     // Start is called before the first frame update
@@ -39,7 +41,9 @@ public class NavigationController : MonoBehaviour
         Authentication.SetActive(false);  
         leftPanel.SetActive(false);
         FilterWindow.SetActive(false);
+
         QMDetailsWindow.SetActive(false);
+        QMDetailsRightWindow.SetActive(false);
 
         // Button Listener
         expandPanelButton.onClick.AddListener(leftPanelButtonClicked);

@@ -13,21 +13,37 @@ public class QMDetailsRightViewController : MonoBehaviour
     private Transform container;
 
     // Buttons
-    private Button toDetails, toQueueLists;
-    private Button closeButton;
+    public Button toDetails, toQueueLists;
+    public Button closeButton;
 
+    // !!! TEST !!!
+    public Button testButton;
+    void clicked(){
+        getQueueNames("QM1");
+    }
 
     // Start is called before the first frame update
     void Start()
     {   
+        // !!! TEST !!!
+        testButton.onClick.AddListener(clicked);
+
+
         // Buttons & Listener
-        closeButton = GameObject.Find("ButtonClose").GetComponent<Button>();
-        toDetails = GameObject.Find("ButtonQMDetails").GetComponent<Button>();
-        toQueueLists = GameObject.Find("ButtonQueueList").GetComponent<Button>();
         closeButton.onClick.AddListener(CloseButtonClicked);
         toDetails.onClick.AddListener(toDetailsClicked);
         toQueueLists.onClick.AddListener(toQueueListsClicked);
+        
+    }
 
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
+
+    void generateQueueList(int size, List<string> names)
+    {
         // Container and Row Item
         container = transform.Find("QueueRowContainer");
         QueueRowItem = container.Find("QueueRowItem");
@@ -38,23 +54,13 @@ public class QMDetailsRightViewController : MonoBehaviour
         float rowHeight = 45f;
         float startY = -32f;
 
-        // Generate Table Items
-
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < size; i++)
         {
             Transform item = Instantiate(QueueRowItem, container);
             RectTransform recTransform = item.GetComponent<RectTransform>();
             recTransform.anchoredPosition = new Vector2(5, -rowHeight * i + startY);
             item.gameObject.SetActive(true);
         }
-
-        getQueueNames("QM1");
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     void getQueueNames(string selectedQM)
@@ -67,7 +73,8 @@ public class QMDetailsRightViewController : MonoBehaviour
 
         queueNames = stateComponent.GetALLQueuesNames(selectedQM);
 
-        Debug.Log("GET ALL QUEUE NAMES" + String.Join(", ", queueNames));
+        Debug.Log("GET ALL QUEUE NAMES");
+        generateQueueList(queueNames.Count, queueNames);
     }
 
     void CloseButtonClicked()
