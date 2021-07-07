@@ -29,7 +29,7 @@ public class AuthenticationController : MonoBehaviour
 
     // Variables for make a connection
     private string userNameT = "yuexu";
-    private string apiKeyT = "72L4nsHoYzLRiSecPgJbkNp1imOp0ZeZcUcOoNxoVSvV";
+    private string apiKeyT = "";
     private string MQURLT = "https://web-qm1-3628.qm.eu-gb.mq.appdomain.cloud:443";
     private string QMNameT = "QM1";
 
@@ -53,8 +53,6 @@ public class AuthenticationController : MonoBehaviour
         submit.onClick.AddListener(ConfirmButtonClicked);
         cancel.onClick.AddListener(CancelButtonClicked);
 
-        // TEST
-        ConfirmButtonClicked();
     }
 
     // Confirm Button Clicked
@@ -63,12 +61,11 @@ public class AuthenticationController : MonoBehaviour
         //Debug.Log("NOTICE: Comfirm Button clicked");
 
         // Get Current Input Text and Form Checking
-        /*
         userNameT = userName.text;
         apiKeyT = apiKey.text;
         MQURLT = urlInput.text;
         QMNameT = QMInput.text;
-        */
+
         if (submitFormCheck(userNameT, apiKeyT, MQURLT, QMNameT) == false)
         {
             Debug.Log("ERROR: Form Check Fails");
