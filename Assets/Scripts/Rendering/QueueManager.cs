@@ -26,7 +26,8 @@ public class QueueManager : MonoBehaviour
         // Render Qmgr plane from blocks
         for (int x = 0; x < queues.Count; ++x)
         {   
-            Instantiate(blockPrefab, new Vector3(2.5f*x, 0, 0), Quaternion.identity);
+            GameObject block = Instantiate(blockPrefab, new Vector3(2.5f*x, 0, 0), Quaternion.identity);
+            block.transform.parent = this.transform;
         }
 
         // Render inidividual queues
@@ -37,7 +38,7 @@ public class QueueManager : MonoBehaviour
             Queue queueComponent = queueGameObject.GetComponent(typeof(Queue)) as Queue;
             queueComponent.position = new Vector3(2.5f*x, 0.25f, 0);
             queueComponent.queue = queue;
-            // TEST CODE DELETE LATER
+            // DELETE: TEST CODE
             if (queue is MQ.LocalQueue)
             {
                 Debug.Log(queue.queueName + " currently has " + ((MQ.LocalQueue)queue).currentDepth + " messages.");
@@ -45,7 +46,10 @@ public class QueueManager : MonoBehaviour
             {
                 Debug.Log(queue.queueName + " currently has " + ((MQ.TransmissionQueue)queue).currentDepth + " messages.");
             }
-        renderedQueues.Add(queue.queueName, queueGameObject);
+            //
+            renderedQueues.Add(queue.queueName, queueGameObject);
+
+            queueGameObject.transform.parent = this.transform;
         }
     }
 
@@ -78,6 +82,7 @@ public class QueueManager : MonoBehaviour
                 queueComponent.queue = queue;
 
                 renderedQueues.Add(queue.queueName, queueGameObject);
+                queueGameObject.transform.parent = this.transform;
             }
         }
 
