@@ -1,4 +1,5 @@
 using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,21 +11,21 @@ public class AuthenticationController : MonoBehaviour
     public GameObject Authentication;
 
     // Four Input Fields
-    public InputField userName, apiKey;
-    public InputField urlInput, QMInput;
+    public InputField userName, apiKey, urlInput, QMInput;
 
     // Four Warning Text Fields
-    public Text warningURL;
-    public Text warningAPI;
-    public Text warningUserName;
-    public Text warningQueueName;
+    public Text warningURL, warningAPI, warningUserName, warningQueueName;
 
     // Buttons
     public Button submit, cancel;
 
     // Notification
-    public GameObject errorNotification;
-    public GameObject successNotification;
+    public GameObject errorNotification, successNotification;
+    public Text successMainText, successTimeText, errorMainText, errorTimeText;
+
+
+    private string successMessage = "A New Queue Manager Added.";
+    private string errorMessage = "Fail to add this Queue Manager. Please try later.";
 
     // Variables for make a connection
     private string userNameT = "";
@@ -38,10 +39,13 @@ public class AuthenticationController : MonoBehaviour
     //public int clickTime;
     //public List<GameObject> toggleList = new List<GameObject>();
 
+    // Reference NotificationController
+    private NotificationController notificationScript;
 
     // Start is called before the first frame update
     void Start()
     {
+        //Authentication.SetActive(false);
         Debug.Log("NOTICE: Initialising the authentication field");
         Reset();
 
@@ -76,23 +80,42 @@ public class AuthenticationController : MonoBehaviour
         try
         {
             MQ.Client qmClient = new MQ.Client(MQURLT, QMNameT, userNameT, apiKeyT);
-            qmClient.GetAllChannels(); // the validity of the QM's name can only be checked by performing a valid request
+            qmClient.GetAllChannels();
 
             GameObject stateGameObject = GameObject.Find("State");
             State stateComponent = stateGameObject.GetComponent(typeof(State)) as State;
-            stateComponent.AddNewMqClient(qmClient);            
+            stateComponent.AddNewMqClient(qmClient);
         }
         catch
         {
             Debug.Log("Error: Fail to connect to the Queue Manager. Please check your credentials, url, and queue manager's name.");
-            errorNotification.SetActive(true);
+            generateErrorWindow(errorMessage);
+            Authentication.SetActive(false);
+            Reset(); // Reset all input fields & Warning Label
             return;
         }
-
+        
         Debug.Log("Authentication succeeded.");
-        successNotification.SetActive(true);
+        generateSuccessWindow(successMessage);
         Authentication.SetActive(false);
+        Reset();
+    }
 
+    /*  
+    * Notification Window Generation as a whole
+    */
+    void generateSuccessWindow(string message)
+    {
+        successTimeText.text = (DateTime.Now).ToString();
+        successMainText.text = message;
+        successNotification.SetActive(true);
+    }
+
+    void generateErrorWindow(string message)
+    {
+        errorTimeText.text = (DateTime.Now).ToString();
+        errorMainText.text = message;
+        errorNotification.SetActive(true);
     }
 
     /* ---- submitFormCheck ----
