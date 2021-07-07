@@ -19,56 +19,7 @@ public class State : MonoBehaviour
         qmgrs.Add(newMqClient, null);
     }
 
-    /*
-    * For Information Panel
-    */
-
-    // Get Number of QM Registered -> For Navigation Check box
-    public int GetNumberOfRegisteredQM()
-    {
-        return qmgrs.Count; 
-    }
     
-    // Get MQ Name List -> For Navigation Check box
-    public List<string> RegisteredQMNameList()
-    {
-        List<string> mqlist = new List<string>();
-
-        foreach (MQ.Client client in qmgrs.Keys) 
-        {
-            mqlist.Add(client.GetQueueManagerName());
-        }
-
-        //Debug.Log("PRINT: All Queue Manager Names: " + String.Join(", ", mqlist));
-        return mqlist;
-    }
-
-    // Return the details of selected QM
-    public List<string> GetSelectedQMDetails(string selectedQMName)
-    {
-
-        List<string> qmDetails = new List<string>(10){"","","","","","","","","",""};
-        Debug.Log(selectedQMName);
-
-        foreach (MQ.Client client in qmgrs.Keys) 
-        {
-            Debug.Log("GET NAME:"+client.GetQueueManagerName());
-            if (client.GetQueueManagerName() == selectedQMName)
-            {
-                MQ.QueueManager newQmgr = client.GetQmgr();
-                // Get more properties here
-                qmDetails[0] = newQmgr.qmgrName;
-                qmDetails[1] = newQmgr.state;
-                /*
-                GET MORE HERE
-                */
-                break;
-            }
-        }
-        return qmDetails;
-    }
-
-
     void Start()
     {
         
@@ -131,6 +82,79 @@ public class State : MonoBehaviour
             updateCountdown = UPDATE_INTERVAL;
         }
 
+    }
+
+
+    /*
+    * For Information Panel
+    */
+
+    // Get Number of QM Registered -> For Navigation Check box
+    public int GetNumberOfRegisteredQM()
+    {
+        return qmgrs.Count; 
+    }
+    
+    // Get MQ Name List -> For Navigation Check box
+    public List<string> RegisteredQMNameList()
+    {
+        List<string> mqlist = new List<string>();
+
+        foreach (MQ.Client client in qmgrs.Keys) 
+        {
+            mqlist.Add(client.GetQueueManagerName());
+        }
+
+        //Debug.Log("PRINT: All Queue Manager Names: " + String.Join(", ", mqlist));
+        return mqlist;
+    }
+
+    // Return the details of selected QM
+    public List<string> GetSelectedQMDetails(string selectedQMName)
+    {
+
+        List<string> qmDetails = new List<string>(10){"","","","","","","","","",""};
+
+        foreach (MQ.Client client in qmgrs.Keys) 
+        {
+            Debug.Log("GET NAME:"+client.GetQueueManagerName());
+            if (client.GetQueueManagerName() == selectedQMName)
+            {
+                MQ.QueueManager newQmgr = client.GetQmgr();
+                // Get more properties here
+                qmDetails[0] = newQmgr.qmgrName;
+                qmDetails[1] = newQmgr.state;
+                /*
+                GET MORE HERE
+                */
+                break;
+            }
+        }
+        return qmDetails;
+    }
+
+    // Return List of queue names for the table of queues of a QM
+    public List<string> GetALLQueuesNames(string selectedQMName)
+    {
+        List<string> queuesList = new List<string>();
+        Debug.Log("QUEUE TABLE TESTING");
+
+        foreach (MQ.Client client in qmgrs.Keys) 
+        {
+            if (client.GetQueueManagerName() == selectedQMName)
+            {/*
+                List<Queue> queues = client.GetAllQueues();
+                foreach (MQ.Queue queue in queues)
+                {
+                    Debug.Log(queue.queueName);
+                }*/
+
+                break;
+            }
+        }
+
+        return queuesList;
+        
     }
 
 }
