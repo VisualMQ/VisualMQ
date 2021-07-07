@@ -5,34 +5,46 @@ using UnityEngine.UI;
 
 public class NavigationController : MonoBehaviour
 {
+    // Windows Gameobject
+    public GameObject Authentication;
+    public GameObject FilterWindow;
     
+    // Buttons
     public Button connectNewQMButton;
     public Button addFilterButton;
     public Button expandPanelButton;
-
-    public GameObject Authentication;
-    public GameObject FilterWindow;
 
     // Left Panel: QM Check Selector
     public GameObject leftPanel;
     public GameObject checkboxItem;
     private Dictionary<string, bool> QMVisibility = new Dictionary<string, bool>();
 
+    // 
     private int checkBoxNumber = 0;
+
+    // Testing: QM Details Panel
+    public Button showQMDetailsButton;
+    public GameObject QMDetailsWindow;
+
+    void showQMDetailsButtonClicked()
+    {
+        QMDetailsWindow.SetActive(true);
+    }
 
     // Start is called before the first frame update
     void Start()
     {
-        //connectNewQM.SetActive(false);
-        //addFilter.SetActive(false);
 
-        Authentication.SetActive(false);  // Default: Hide Auth Window
+        // Default: Hide Auth, Filter, Left Panel Windows
+        Authentication.SetActive(false);  
         leftPanel.SetActive(false);
         FilterWindow.SetActive(false);
+        QMDetailsWindow.SetActive(false);
 
         // Button Listener
         expandPanelButton.onClick.AddListener(leftPanelButtonClicked);
         addFilterButton.onClick.AddListener(addFilterButtonClicked);
+        showQMDetailsButton.onClick.AddListener(showQMDetailsButtonClicked);
     }
 
     // Update is called once per frame
@@ -41,8 +53,7 @@ public class NavigationController : MonoBehaviour
     }
 
     /*
-    * Click to open the left panel
-    * Click to hide the left panel
+    * Click to open the left panel; Click to hide the left panel
     */
     void leftPanelButtonClicked()
     {

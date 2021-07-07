@@ -19,15 +19,17 @@ public class State : MonoBehaviour
         qmgrs.Add(newMqClient, null);
     }
 
-    /* Get Number of QM Registered -> For Navigation Check box
+    /*
+    * For Information Panel
     */
+
+    // Get Number of QM Registered -> For Navigation Check box
     public int GetNumberOfRegisteredQM()
     {
         return qmgrs.Count; 
     }
     
-    /* Get MQ Name List -> For Navigation Check box
-    */
+    // Get MQ Name List -> For Navigation Check box
     public List<string> RegisteredQMNameList()
     {
         List<string> mqlist = new List<string>();
@@ -41,8 +43,30 @@ public class State : MonoBehaviour
         return mqlist;
     }
 
-    /* Return the details of selected QM
-    */
+    // Return the details of selected QM
+    public List<string> GetSelectedQMDetails(string selectedQMName)
+    {
+
+        List<string> qmDetails = new List<string>(10){"","","","","","","","","",""};
+        Debug.Log(selectedQMName);
+
+        foreach (MQ.Client client in qmgrs.Keys) 
+        {
+            Debug.Log("GET NAME:"+client.GetQueueManagerName());
+            if (client.GetQueueManagerName() == selectedQMName)
+            {
+                MQ.QueueManager newQmgr = client.GetQmgr();
+                // Get more properties here
+                qmDetails[0] = newQmgr.qmgrName;
+                qmDetails[1] = newQmgr.state;
+                /*
+                GET MORE HERE
+                */
+                break;
+            }
+        }
+        return qmDetails;
+    }
 
 
     void Start()
