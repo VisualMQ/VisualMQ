@@ -11,6 +11,7 @@ public class NavigationController : MonoBehaviour
     public Button expandPanelButton;
 
     public GameObject Authentication;
+    public GameObject FilterWindow;
 
     // Left Panel: QM Check Selector
     public GameObject leftPanel;
@@ -27,9 +28,11 @@ public class NavigationController : MonoBehaviour
 
         Authentication.SetActive(false);  // Default: Hide Auth Window
         leftPanel.SetActive(false);
+        FilterWindow.SetActive(false);
 
         // Button Listener
         expandPanelButton.onClick.AddListener(leftPanelButtonClicked);
+        addFilterButton.onClick.AddListener(addFilterButtonClicked);
     }
 
     // Update is called once per frame
@@ -54,6 +57,11 @@ public class NavigationController : MonoBehaviour
             Debug.Log("Left Panel: Expand");
             GenerateCheckBox();
         }
+    }
+
+    void addFilterButtonClicked()
+    {
+        FilterWindow.SetActive(true);
     }
 
     void GenerateCheckBox()

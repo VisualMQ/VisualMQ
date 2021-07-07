@@ -865,7 +865,7 @@ GameObject:
   - component: {fileID: 145741702}
   - component: {fileID: 145741701}
   m_Layer: 5
-  m_Name: DropdownQMName (2)
+  m_Name: DropdownQueueName
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8584,6 +8584,7 @@ MonoBehaviour:
   addFilterButton: {fileID: 1026284904}
   expandPanelButton: {fileID: 405700912}
   Authentication: {fileID: 378342413}
+  FilterWindow: {fileID: 0}
   leftPanel: {fileID: 969929348}
   checkboxItem: {fileID: 894515002}
 --- !u!1 &1525594881
@@ -9043,7 +9044,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 1803, y: 243}
+  m_AnchoredPosition: {x: 404, y: 464}
   m_SizeDelta: {x: -200.1466, y: 92.7053}
   m_Pivot: {x: 0.50000036, y: 0.50000024}
 --- !u!114 &1684688930
@@ -9058,10 +9059,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce2ad30b0ba30473cb12a683cc838a32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  FilterWindow: {fileID: 0}
-  qmDropdown: {fileID: 0}
-  queueNameDropdown: {fileID: 746536742}
-  queueTypeDropdown: {fileID: 0}
+  FilterWindow: {fileID: 1178655709}
+  qmDropdown: {fileID: 746536742}
+  queueNameDropdown: {fileID: 145741701}
+  queueTypeDropdown: {fileID: 1803267028}
   confirmFilter: {fileID: 1287581810}
   cancelFilter: {fileID: 1838408072}
 --- !u!1 &1686876986
@@ -9671,7 +9672,7 @@ GameObject:
   - component: {fileID: 1803267029}
   - component: {fileID: 1803267028}
   m_Layer: 5
-  m_Name: DropdownQMName (1)
+  m_Name: DropdownQueueType
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
