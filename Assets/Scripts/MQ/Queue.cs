@@ -29,6 +29,7 @@ namespace MQ
     public class TransmissionQueue : Queue
     {
         public int currentDepth;
+        //TODO: Assign new message fields when message API is ready
     }
 
 
@@ -41,6 +42,7 @@ namespace MQ
     public class LocalQueue : Queue
     {
         public int currentDepth;
+        //TODO: Assign new message fields when message API is ready
     }
 
 }

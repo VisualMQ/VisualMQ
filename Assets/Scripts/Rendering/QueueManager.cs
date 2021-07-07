@@ -62,7 +62,7 @@ public class QueueManager : MonoBehaviour
         List<string> queuesToRender = new List<string>();
         List<string> queuesToDestroy = new List<string>();
 
-        // First check which queues are not rendered yet
+        // First: check which queues are not rendered yet
         foreach (MQ.Queue queue in queues)
         {
             queuesToRender.Add(queue.queueName);
@@ -81,7 +81,7 @@ public class QueueManager : MonoBehaviour
             }
         }
 
-        // Secondly check which queues need to be destroyed
+        // Second: check which queues need to be destroyed
         foreach (KeyValuePair<string, GameObject> entry in renderedQueues)
         {
             if (!queuesToRender.Contains(entry.Key))
@@ -95,6 +95,37 @@ public class QueueManager : MonoBehaviour
         foreach (string queueName in queuesToDestroy)
         {
             renderedQueues.Remove(queueName);
+        }
+
+        // Third: for local queues and transmission queues, check if the utilization level has changed
+        foreach (MQ.Queue queue in queues)
+        {
+            if (queue is MQ.LocalQueue)
+            {
+                Queue queueComponent = renderedQueues[queue.queueName].GetComponent(typeof(Queue)) as Queue;
+                int oldDepth = ((MQ.LocalQueue)queueComponent.queue).currentDepth;
+                int newDepth = ((MQ.LocalQueue)queue).currentDepth;
+
+                //TODO: Assign new message fields when message API is ready
+
+                if (oldDepth != newDepth)
+                {
+                    queueComponent.updateMessages(newDepth);
+                }
+            }
+            else if (queue is MQ.TransmissionQueue)
+            {
+                Queue queueComponent = renderedQueues[queue.queueName].GetComponent(typeof(Queue)) as Queue;
+                int oldDepth = ((MQ.TransmissionQueue)queueComponent.queue).currentDepth;
+                int newDepth = ((MQ.TransmissionQueue)queue).currentDepth;
+
+                //TODO: Assign new message fields when message API is ready
+
+                if (oldDepth != newDepth)
+                {
+                    queueComponent.updateMessages(newDepth);
+                }
+            }
         }
 
     }

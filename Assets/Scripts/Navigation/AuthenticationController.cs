@@ -60,10 +60,12 @@ public class AuthenticationController : MonoBehaviour
         //apiKeyT = apiKey.text;
         //MQURLT = urlInput.text;
         //QMNameT = QMInput.text;
+
         userNameT = "shuchengtian";
         apiKeyT = "aCPHZ4ys0Tnn2xQLPsHc6lEz4CTenKmNsyW9q0MoQ0bf";
         MQURLT = "https://web-qm1-3628.qm.eu-gb.mq.appdomain.cloud:443";
         QMNameT = "QM1";
+
         if (submitFormCheck(userNameT, apiKeyT, MQURLT, QMNameT) == false)
         {
             Debug.Log("ERROR: Form Check Fails");
@@ -74,17 +76,15 @@ public class AuthenticationController : MonoBehaviour
         try
         {
             MQ.Client qmClient = new MQ.Client(MQURLT, QMNameT, userNameT, apiKeyT);
+            qmClient.GetAllChannels(); // the validity of the QM's name can only be checked by performing a valid request
 
             GameObject stateGameObject = GameObject.Find("State");
             State stateComponent = stateGameObject.GetComponent(typeof(State)) as State;
-            stateComponent.AddNewMqClient(qmClient);
-
-            //Debug.Log(stateComponent.GetNumberMQ());
-            
+            stateComponent.AddNewMqClient(qmClient);            
         }
         catch
         {
-            Debug.Log("Error: Fail to connect to the Queue Manager");
+            Debug.Log("Error: Fail to connect to the Queue Manager. Please check your credentials, url, and queue manager's name.");
             errorNotification.SetActive(true);
             return;
         }
