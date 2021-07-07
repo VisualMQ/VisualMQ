@@ -16,13 +16,13 @@ public class QMDetailsRightViewController : MonoBehaviour
         
         QueueRowItem.gameObject.SetActive(false);
         float rowHeight = 45f;
-        float startY = 0f;
+        float startY = -32f;
 
         for (int i = 0; i < 10; i++)
         {
             Transform item = Instantiate(QueueRowItem, container);
             RectTransform recTransform = item.GetComponent<RectTransform>();
-            recTransform.anchoredPosition = new Vector2(-3, -rowHeight * i+50);
+            recTransform.anchoredPosition = new Vector2(5, -rowHeight * i + startY);
             item.gameObject.SetActive(true);
         }
     }
