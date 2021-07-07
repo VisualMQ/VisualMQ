@@ -45,7 +45,7 @@ public class AuthenticationController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Authentication.SetActive(false);
+        //Authentication.SetActive(false);
         Debug.Log("NOTICE: Initialising the authentication field");
         Reset();
 
