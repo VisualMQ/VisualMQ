@@ -142,17 +142,15 @@ public class State : MonoBehaviour
         foreach (MQ.Client client in qmgrs.Keys) 
         {
             if (client.GetQueueManagerName() == selectedQMName)
-            {/*
-                List<Queue> queues = client.GetAllQueues();
+            {
+                List<MQ.Queue> queues = client.GetAllQueues();
                 foreach (MQ.Queue queue in queues)
                 {
-                    Debug.Log(queue.queueName);
-                }*/
-
+                    queuesList.Add(queue.queueName);
+                }
                 break;
             }
         }
-
         return queuesList;
         
     }

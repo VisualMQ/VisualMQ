@@ -315,7 +315,7 @@ GameObject:
   - component: {fileID: 677533987}
   - component: {fileID: 677533986}
   m_Layer: 5
-  m_Name: ButtonQueueList (1)
+  m_Name: ButtonQueueList
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -477,6 +477,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98961eb044253482ebcba648180fcfcd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  QMDetailsRightWindow: {fileID: 712653174}
 --- !u!114 &712653177
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1204,7 +1205,7 @@ GameObject:
   - component: {fileID: 1565736304}
   - component: {fileID: 1565736303}
   m_Layer: 5
-  m_Name: ButtonClose (1)
+  m_Name: ButtonClose
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1325,7 +1326,7 @@ GameObject:
   - component: {fileID: 1756622924}
   - component: {fileID: 1756622923}
   m_Layer: 5
-  m_Name: ButtonQMDetails (1)
+  m_Name: ButtonQMDetails
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1548,8 +1549,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 8.8666, y: -32}
-  m_SizeDelta: {x: 594.0499, y: 45}
+  m_AnchoredPosition: {x: 5, y: -32}
+  m_SizeDelta: {x: 601.7865, y: 45}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2022527114
 MonoBehaviour:
