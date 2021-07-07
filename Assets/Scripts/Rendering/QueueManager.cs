@@ -7,7 +7,7 @@ public class QueueManager : MonoBehaviour
 {
 
     public List<MQ.Queue> queues;
-    private Dictionary<string, GameObject> renderedQueues = new Dictionary<string, GameObject>();
+    public Dictionary<string, GameObject> renderedQueues = new Dictionary<string, GameObject>();
 
     private GameObject blockPrefab;
 
@@ -37,6 +37,7 @@ public class QueueManager : MonoBehaviour
             Queue queueComponent = queueGameObject.GetComponent(typeof(Queue)) as Queue;
             queueComponent.position = new Vector3(2.5f*x, 0.25f, 0);
             queueComponent.queue = queue;
+            queueComponent.parent = this;
 
             renderedQueues.Add(queue.queueName, queueGameObject);
         }
@@ -69,6 +70,7 @@ public class QueueManager : MonoBehaviour
                 Queue queueComponent = queueGameObject.GetComponent(typeof(Queue)) as Queue;
                 queueComponent.position = new Vector3(2.5f * renderedQueues.Count, 0.25f, 0);
                 queueComponent.queue = queue;
+                
 
                 renderedQueues.Add(queue.queueName, queueGameObject);
             }
