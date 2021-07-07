@@ -8584,7 +8584,7 @@ MonoBehaviour:
   addFilterButton: {fileID: 1026284904}
   expandPanelButton: {fileID: 405700912}
   Authentication: {fileID: 378342413}
-  FilterWindow: {fileID: 0}
+  FilterWindow: {fileID: 1178655709}
   leftPanel: {fileID: 969929348}
   checkboxItem: {fileID: 894515002}
 --- !u!1 &1525594881
