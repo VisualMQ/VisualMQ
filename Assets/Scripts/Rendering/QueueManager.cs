@@ -10,7 +10,7 @@ public class QueueManager : MonoBehaviour
     private GameObject blockPrefab;
     private GameObject linePrefab;
 
-    // Scale factor of blocks
+    // Scale factor of blocks in different axes
     private const float sXZ = 4f;
     private const float sY = 0.1286252f;
 
@@ -41,20 +41,41 @@ public class QueueManager : MonoBehaviour
             numberOfQueues[queue.GetTypeName()]++;
         }
 
-        // We will have 2 large rectangle areas and 2 small rectangle areas
+        /* We will have 2 large rectangle areas and 2 small rectangle areas
+           -----------
+           |1    |2  |
+           |     |   |
+           X-----X----
+           |3    |4  |
+           |     |   |
+           X-----X----
+         
+            We sort types of queues (Alias/Remote..) based on the number of queues
+            of that type there are. Two highest have the 2 large areas, two smallest
+            have the 2 small areas.
+            The large area is formed based on the queue with the highest number of
+            queues, the small are based on the queue type with the second smallest number
+            of queues.
+        */
         List<KeyValuePair<string, int>> numberOfQueuesList = numberOfQueues.ToList();
         numberOfQueuesList.Sort((x, y) => x.Value.CompareTo(y.Value));
 
-        KeyValuePair<string, int> highestQueues = numberOfQueuesList[3];
-        KeyValuePair<string, int> secondSmallestQueues = numberOfQueuesList[1];
+        KeyValuePair<string, int> highestQueueType = numberOfQueuesList[3];
+        KeyValuePair<string, int> secondSmallestQueueType = numberOfQueuesList[1];
 
-        int[] largeArea = ComputeRectangleArea(highestQueues.Value);
-        int[] smallArea = ComputeRectangleArea(secondSmallestQueues.Value, largeArea[1]);
+
+        /*
+            Each area has associated offset vector and dimension.
+            Offset determines its position. See offsets variable later on.
+            On diagram the offset is represented by X.
+            Dimensions/areas are 2-element int array specifying the 2 rectangle axes sizes.
+            The first element of the int array is always the greater one.
+        */
+        int[] largeArea = ComputeRectangleArea(highestQueueType.Value);
+        int[] smallArea = ComputeRectangleArea(secondSmallestQueueType.Value, largeArea[1]);
+        // By design, larger side of smallArea is equal to smaller side of largeArea
+        // See the diagram
         Debug.Assert(largeArea[1] == smallArea[0]);
-        Debug.Log("large area dimensions " + largeArea[0] + " " + largeArea[1]);
-        Debug.Log("small area dimensions " + smallArea[0] + " " + smallArea[1]);
-
-
         Dictionary<string, Vector3> offsets = new Dictionary<string, Vector3>();
         Dictionary<string, int[]> dimensions = new Dictionary<string, int[]>();
         offsets[numberOfQueuesList[3].Key] = new Vector3(0, 0, 0);
@@ -219,33 +240,34 @@ public class QueueManager : MonoBehaviour
     }
 
 
-    // Returns dimensions of a rectangle that can hold N queues
+    // Our algorithm for creating a rectangle that can hold N queues
+    // This method returns dimensions of that rectangle
     private int[] ComputeRectangleArea(int N)
     {
-        int rows = 1;
-        int cols = 0;
+        int a = 1;
+        int b = 0;
         bool stopFlag = false;
 
         while (!stopFlag)
         {
-            cols = N / rows;
-            if (Math.Abs(cols - rows) <= 2) stopFlag = true;
-            else rows++;
+            b = N / a;
+            if (Math.Abs(b - a) <= 2) stopFlag = true;
+            else a++;
         }
 
         // We need extra space for remainder queues and for dynamic updates
-        // cols will always be higher than rows, ie cols > rows
-        int[] res = { cols + 1, rows };
+        // Notice that it has to be the case that b >= a
+        int[] res = { b + 1, a };
         return res;
     }
 
 
     // Returns dimensions of a rectangle that can hold N queues but
-    // one size of the rectangle is constrained to rows
-    private static int[] ComputeRectangleArea(int N, int rows)
+    // one size of the rectangle is constrained to size a
+    private static int[] ComputeRectangleArea(int N, int a)
     {
-        int cols = N / rows;
-        int[] res = { Math.Max(rows, cols + 1), Math.Min(rows, cols + 1) };
+        int b = N / a;
+        int[] res = { Math.Max(a, b + 1), Math.Min(a, b + 1) };
         return res;
     }
 
