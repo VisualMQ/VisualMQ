@@ -8,10 +8,11 @@ public class QueueManager : MonoBehaviour
 {
 
     private GameObject blockPrefab;
+    private GameObject linePrefab;
 
     // Scale factor of blocks
     private const float sXZ = 4f;
-    private const float sY = 0.1286252f * 2;
+    private const float sY = 0.1286252f;
 
     public List<MQ.Queue> queues;
     private Dictionary<string, GameObject> renderedQueues = new Dictionary<string, GameObject>();
@@ -21,6 +22,7 @@ public class QueueManager : MonoBehaviour
     void Awake()
     {
         blockPrefab = Resources.Load("Prefabs/Block") as GameObject;
+        linePrefab = Resources.Load("Prefabs/Line") as GameObject;
     }
 
 
@@ -93,6 +95,37 @@ public class QueueManager : MonoBehaviour
             }
         }
 
+        // Render lines between areas among X-axis
+        for (int x = 0; x < largeArea[0] + smallArea[1]; x++)
+        {
+            GameObject line = Instantiate(linePrefab, new Vector3(sXZ * x, sY * 1.001f, -2) + offsets[numberOfQueuesList[2].Key], Quaternion.Euler(0f, 90f, 0f));
+            line.transform.parent = this.transform;
+        }
+        // Render lines between areas among Z-axis
+        for (int z = 0; z < largeArea[1] + smallArea[0]; z++)
+        {
+            GameObject line = Instantiate(linePrefab, new Vector3(-2, sY * 1.001f, sXZ * z) + offsets[numberOfQueuesList[1].Key], Quaternion.identity);
+            line.transform.parent = this.transform;
+        }
+
+        // TODO: Add text on blocks
+        // Problem right now is that text is rendered with awful resolution
+        // I don't really know the cause for that
+        //foreach (KeyValuePair<string, Vector3> entry in offsets)
+        //{
+        //    GameObject textName = new GameObject();
+        //    TextMesh textMesh = textName.AddComponent<TextMesh>() as TextMesh;
+        //    textMesh.text = entry.Key;
+        //    textMesh.anchor = TextAnchor.MiddleCenter;
+        //    textMesh.alignment = TextAlignment.Center;
+        //    textMesh.color = Color.black;
+        //    textMesh.fontSize = 6;
+        //    textMesh.transform.Rotate(90, 0, 0);
+        //    textMesh.transform.position = entry.Value + new Vector3(-0.3f, 0.01f, -1.5f);
+        //}
+
+
+
         // Render inidividual queues
         Dictionary<string, int> numberOfRenderedQueues = new Dictionary<string, int>();
         numberOfRenderedQueues[MQ.AliasQueue.typeName] = 0;
@@ -105,7 +138,7 @@ public class QueueManager : MonoBehaviour
             int i = numberOfRenderedQueues[queueType]++;
             Vector3 offset = offsets[queueType];
             Vector3 position = new Vector3(sXZ * (i % dimensions[queueType][0]), 0, sXZ * (i / dimensions[queueType][0]));
-            Vector3 queueManagerHeight = new Vector3(0, sY, 0);
+            Vector3 queueManagerHeight = new Vector3(0, sY*2, 0);
 
             GameObject queueGameObject = new GameObject(queue.queueName, typeof(Queue));
             Queue queueComponent = queueGameObject.GetComponent(typeof(Queue)) as Queue;
