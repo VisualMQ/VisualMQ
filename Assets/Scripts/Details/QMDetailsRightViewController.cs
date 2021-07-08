@@ -51,7 +51,7 @@ public class QMDetailsRightViewController : MonoBehaviour
 
         // Row Origin Position
         float rowHeight = 45f;
-        float startY = -32f;
+        float startY = -37f;
 
         for (int i = 0; i < size; i++)
         {
@@ -59,7 +59,7 @@ public class QMDetailsRightViewController : MonoBehaviour
             RectTransform recTransform = item.GetComponent<RectTransform>();
             recTransform.anchoredPosition = new Vector2(5, -rowHeight * i + startY);
             item.gameObject.SetActive(true);
-
+            
             item.Find("TextQueueName").GetComponent<Text>().text = names[i];
         }
     }
