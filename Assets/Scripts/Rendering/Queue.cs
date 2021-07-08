@@ -38,7 +38,7 @@ public class Queue : MonoBehaviour
         GameObject queuePrefab = Resources.Load(prefabName) as GameObject;
         GameObject instantiatedQueue = Instantiate(queuePrefab, position, Quaternion.identity) as GameObject;
         instantiatedQueue.transform.parent = this.transform;
-
+            
         
 
         // TODO: Move this to prefab
@@ -69,16 +69,47 @@ public class Queue : MonoBehaviour
         }
 
         // Change the size log decreasing towards min of 0.2.
-        textMesh.characterSize = (0.5f / parent.queues.Count) + 0.2f;
+        if(textMesh == null)
+        {
+            return;
+        }
+        textMesh.characterSize = (0.4f / parent.queues.Count) + 0.1f;
 
-        // Obtain the first Queue component and align all the text according to it.
+        // Obtain the middle Queue component and align all the text according to it.
+
+        
         var firstIndex = parent.renderedQueues.GetEnumerator();
-        firstIndex.MoveNext();
-        Queue firstQueue = firstIndex.Current.Value.GetComponent(typeof(Queue)) as Queue;
+        Queue usedQueue = null;
+        float distance = int.MaxValue;
+        for (int i = 0; i < parent.renderedQueues.Count / 2; i++)
+        {
+            firstIndex.MoveNext();
+            Queue firstQueue = firstIndex.Current.Value.GetComponent(typeof(Queue)) as Queue;
 
-        textMesh.transform.rotation = Quaternion.LookRotation(firstQueue.textMesh.transform.position - Camera.main.transform.position);
+            if (Vector3.Distance(firstQueue.position, Camera.main.transform.position) < distance)
+            {
+                usedQueue = firstQueue;
+                distance = Vector3.Distance(firstQueue.position, Camera.main.transform.position);
+            }
 
+        }
+
+        
+
+        textMesh.transform.rotation = Quaternion.LookRotation(usedQueue.textMesh.transform.position - Camera.main.transform.position);
+        
+
+       // textMesh.transform.rotation = Quaternion.LookRotation(textMesh.transform.position - Camera.main.transform.position);
 
 
     }
+
+    void OnMouseUp()
+    {
+        /*Do whatever here as per your need*/
+        Camera.main.transform.Rotate(30f, -1.75f, 0f);
+        Camera.main.transform.position = new Vector3(2.5f, 15f, -13f) + this.position;
+        Debug.Log("Moving Camera to Queue" + this.name);
+    }
+
 }
