@@ -62,11 +62,7 @@ public class AuthenticationController : MonoBehaviour
         MQURLT = urlInput.text;
         QMNameT = QMInput.text;
 
-<<<<<<< HEAD
-        if (submitFormCheck(userNameT, apiKeyT, MQURLT, QMNameT) == false)
-=======
         if (SubmitFormCheck(userNameT, apiKeyT, MQURLT, QMNameT) == false)
->>>>>>> bf5752c355cb47f25808a6f2b98d7a57215b7f96
         {
             Debug.Log("ERROR: Form Check Fails");
             return;
