@@ -36,9 +36,9 @@ public class Queue : MonoBehaviour
             prefabName = "LocalQueue";
         }
         GameObject queuePrefab = Resources.Load(prefabName) as GameObject;
-        GameObject instantiatedQueue = Instantiate(queuePrefab, position, Quaternion.identity) as GameObject;
+        GameObject instantiatedQueue = Instantiate(queuePrefab, new Vector3(0,0,0), Quaternion.identity) as GameObject;
         instantiatedQueue.transform.parent = this.transform;
-            
+        instantiatedQueue.transform.parent.position = position;
         
 
         // TODO: Move this to prefab
