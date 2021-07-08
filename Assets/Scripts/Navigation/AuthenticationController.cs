@@ -28,10 +28,10 @@ public class AuthenticationController : MonoBehaviour
     private string errorMessage = "Fail to add this Queue Manager. Please try later.";
 
     // Variables for make a connection
-    private string userNameT = "yuexu";
-    private string apiKeyT = "";
-    private string MQURLT = "https://web-qm1-3628.qm.eu-gb.mq.appdomain.cloud:443";
-    private string QMNameT = "QM1";
+    private string userNameT;
+    private string apiKeyT;
+    private string MQURLT;
+    private string QMNameT;
 
     //Show QM
     //public GameObject ToggleQM1;
@@ -45,8 +45,6 @@ public class AuthenticationController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //Authentication.SetActive(false);
-        //Debug.Log("NOTICE: Initialising the authentication field");
         Reset();
 
         // Listen to button activity
@@ -58,15 +56,13 @@ public class AuthenticationController : MonoBehaviour
     // Confirm Button Clicked
     void ConfirmButtonClicked()
     {
-        //Debug.Log("NOTICE: Comfirm Button clicked");
-
         // Get Current Input Text and Form Checking
         userNameT = userName.text;
         apiKeyT = apiKey.text;
         MQURLT = urlInput.text;
         QMNameT = QMInput.text;
 
-        if (submitFormCheck(userNameT, apiKeyT, MQURLT, QMNameT) == false)
+        if (SubmitFormCheck(userNameT, apiKeyT, MQURLT, QMNameT) == false)
         {
             Debug.Log("ERROR: Form Check Fails");
             return;
@@ -76,7 +72,6 @@ public class AuthenticationController : MonoBehaviour
         try
         {
             MQ.Client qmClient = new MQ.Client(MQURLT, QMNameT, userNameT, apiKeyT);
-            qmClient.GetAllChannels();
 
             GameObject stateGameObject = GameObject.Find("State");
             State stateComponent = stateGameObject.GetComponent(typeof(State)) as State;
@@ -85,34 +80,37 @@ public class AuthenticationController : MonoBehaviour
         catch
         {
             Debug.Log("Error: Fail to connect to the Queue Manager. Please check your credentials, url, and queue manager's name.");
-            generateErrorWindow(errorMessage);
+            GenerateErrorWindow(errorMessage);
             Authentication.SetActive(false);
             Reset(); // Reset all input fields & Warning Label
             return;
         }
         
         Debug.Log("Authentication succeeded.");
-        generateSuccessWindow(successMessage);
+        GenerateSuccessWindow(successMessage);
         Authentication.SetActive(false);
         Reset();
     }
 
+
     /*  
     * Notification Window Generation as a whole
     */
-    void generateSuccessWindow(string message)
+    void GenerateSuccessWindow(string message)
     {
         successTimeText.text = (DateTime.Now).ToString();
         successMainText.text = message;
         successNotification.SetActive(true);
     }
 
-    void generateErrorWindow(string message)
+
+    void GenerateErrorWindow(string message)
     {
         errorTimeText.text = (DateTime.Now).ToString();
         errorMainText.text = message;
         errorNotification.SetActive(true);
     }
+
 
     /* ---- submitFormCheck ----
     * Check the authentication form before submit
@@ -120,7 +118,7 @@ public class AuthenticationController : MonoBehaviour
     * Return false: exist empty
     * Could Add more form check conditions in this method
     */
-    bool submitFormCheck(string username, string apikey, string url, string qm)
+    bool SubmitFormCheck(string username, string apikey, string url, string qm)
     {
         bool passFormCheck = true;
         // Exist Empty
@@ -138,33 +136,35 @@ public class AuthenticationController : MonoBehaviour
     bool EmptyCheck(string username, string apikey, string url, string qm)
     {
         bool existEmpty = false;
+        string warningText = "Please fill this out.";
 
-        if (string.IsNullOrEmpty(username))
+        if (string.IsNullOrEmpty(url))
         {
-            warningUserName.text = "Please ";
-            warningUserName.color = Color.red;
+            warningURL.text = warningText;
+            warningURL.color = Color.red;
             existEmpty = true;
         }
         if (string.IsNullOrEmpty(apikey))
         {
-            warningAPI.text = "Please";
+            warningAPI.text = warningText;
             warningAPI.color = Color.red;
             existEmpty = true;
         }
         if (string.IsNullOrEmpty(username))
         {
-            warningUserName.text = "Please";
+            warningUserName.text = warningText;
             warningUserName.color = Color.red;
             existEmpty = true;
         }
         if (string.IsNullOrEmpty(qm))
         {
-            warningQueueName.text = "Please";
+            warningQueueName.text = warningText;
             warningQueueName.color = Color.red;
             existEmpty = true;
         }
         return existEmpty;
     }
+
 
     /* 
     * Cancel Button Clicked
@@ -174,10 +174,10 @@ public class AuthenticationController : MonoBehaviour
     */
     void CancelButtonClicked()
     {
-        //Debug.Log("NOTICE: Cancel Button clicked");
         Reset();
         Authentication.SetActive(false); // Hide the authentication window
     }
+
 
     // Reset: Includes below two functions
     void Reset()
@@ -185,6 +185,7 @@ public class AuthenticationController : MonoBehaviour
         CleanAllInputField();
         WarningLabelsInitStatus();
     }
+
 
     // Clean all input fields
     void CleanAllInputField()
@@ -194,6 +195,7 @@ public class AuthenticationController : MonoBehaviour
         urlInput.text = "";
         QMInput.text = "";
     }
+
 
     // The Initial state of all warning labels
     void WarningLabelsInitStatus()

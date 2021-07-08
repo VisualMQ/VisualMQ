@@ -27,11 +27,13 @@ public class NavigationController : MonoBehaviour
     public GameObject QMDetailsWindow;
     public GameObject QMDetailsRightWindow;
 
-    void showQMDetailsButtonClicked()
+
+    void ShowQMDetailsButtonClicked()
     {
         //QMDetailsWindow.SetActive(true);
         QMDetailsRightWindow.SetActive(true);
     }
+
 
     // Start is called before the first frame update
     void Start()
@@ -46,20 +48,23 @@ public class NavigationController : MonoBehaviour
         QMDetailsRightWindow.SetActive(false);
 
         // Button Listener
-        expandPanelButton.onClick.AddListener(leftPanelButtonClicked);
-        addFilterButton.onClick.AddListener(addFilterButtonClicked);
-        showQMDetailsButton.onClick.AddListener(showQMDetailsButtonClicked);
+        expandPanelButton.onClick.AddListener(LeftPanelButtonClicked);
+        addFilterButton.onClick.AddListener(AddFilterButtonClicked);
+        showQMDetailsButton.onClick.AddListener(ShowQMDetailsButtonClicked);
     }
+
 
     // Update is called once per frame
     void Update()
     {
+
     }
+
 
     /*
     * Click to open the left panel; Click to hide the left panel
     */
-    void leftPanelButtonClicked()
+    void LeftPanelButtonClicked()
     {
         if (leftPanel.activeSelf == true)
         {
@@ -74,10 +79,12 @@ public class NavigationController : MonoBehaviour
         }
     }
 
-    void addFilterButtonClicked()
+
+    void AddFilterButtonClicked()
     {
         FilterWindow.SetActive(true);
     }
+
 
     void GenerateCheckBox()
     {
@@ -85,7 +92,6 @@ public class NavigationController : MonoBehaviour
         Debug.Log("NOTICE: Generating checkbox");
         GameObject stateGameObject = GameObject.Find("State");
         State stateComponent = stateGameObject.GetComponent(typeof(State)) as State;
-        //checkBoxNumber = stateComponent.GetNumberMQ();
         
         List<string> mqlist = stateComponent.RegisteredQMNameList();
         Debug.Log(string.Join(",", mqlist));

@@ -18,22 +18,24 @@ public class QMDetailsRightViewController : MonoBehaviour
 
     // !!! TEST !!!
     public Button testButton;
-    void clicked(){
-        getQueueNames("QM1");
+    void Clicked(){
+        GenerateQueueList("QM1");
     }
+
 
     // Start is called before the first frame update
     void Start()
     {   
         // !!! TEST !!!
-        testButton.onClick.AddListener(clicked);
+        testButton.onClick.AddListener(Clicked);
 
         // Buttons & Listener
         closeButton.onClick.AddListener(CloseButtonClicked);
-        toDetails.onClick.AddListener(toDetailsClicked);
-        toQueueLists.onClick.AddListener(toQueueListsClicked);
+        toDetails.onClick.AddListener(ToDetailsClicked);
+        toQueueLists.onClick.AddListener(ToQueueListsClicked);
         
     }
+
 
     // Update is called once per frame
     void Update()
@@ -41,8 +43,15 @@ public class QMDetailsRightViewController : MonoBehaviour
         
     }
 
-    void generateQueueList(int size, List<string> names)
+
+    void GenerateQueueList(string selectedQM)
     {
+        // Get queues in the selectedQM
+        GameObject stateGameObject = GameObject.Find("State");
+        State stateComponent = stateGameObject.GetComponent(typeof(State)) as State;
+
+        List<MQ.Queue> queues = stateComponent.GetAllQueuesInQmgr(selectedQM);
+
         // Container and Row Item
         container = transform.Find("QueueRowContainer");
         QueueRowItem = container.Find("QueueRowItem");
@@ -53,6 +62,8 @@ public class QMDetailsRightViewController : MonoBehaviour
         float rowHeight = 45f;
         float startY = -32f;
 
+        int size = queues.Count;
+
         for (int i = 0; i < size; i++)
         {
             Transform item = Instantiate(QueueRowItem, container);
@@ -60,35 +71,24 @@ public class QMDetailsRightViewController : MonoBehaviour
             recTransform.anchoredPosition = new Vector2(5, -rowHeight * i + startY);
             item.gameObject.SetActive(true);
 
-            item.Find("TextQueueName").GetComponent<Text>().text = names[i];
+            item.Find("TextQueueName").GetComponent<Text>().text = queues[i].queueName;
         }
     }
 
-    void getQueueNames(string selectedQM)
-    {
-        List<string> queueNames = new List<string>();
-
-        // Get Name Lists of the selectedQM
-        GameObject stateGameObject = GameObject.Find("State");
-        State stateComponent = stateGameObject.GetComponent(typeof(State)) as State;
-
-        queueNames = stateComponent.GetALLQueuesNames(selectedQM);
-
-        Debug.Log("GET ALL QUEUE NAMES");
-        generateQueueList(queueNames.Count, queueNames);
-    }
 
     void CloseButtonClicked()
     {
         QMDetailsRightWindow.SetActive(false);
     }
 
-    void toDetailsClicked()
+
+    void ToDetailsClicked()
     {
 
     }
 
-    void toQueueListsClicked()
+
+    void ToQueueListsClicked()
     {
 
     }

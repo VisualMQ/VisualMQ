@@ -7,61 +7,63 @@ using UnityEngine.UI;
 */
 public class QMDetailsController : MonoBehaviour
 {
+
     // Queue Manager Configuration Details
     public Text text0Name, text1State, 
         text2InstallationName, text3PermitStandBy, text4IsDefault, 
         text5PublishState, text6ConnectionCount, text7ChannelState, 
         text8Idap, text9StartedTime;
 
-    List<string> qmDetails = new List<string>(10){"","","","","","","","","",""};
     
     public Button closeButton;
     //public Button detailsButton, messagesButton;
     public string selectedQM = "QM1";
-
-    public Button testButton;
     
-    void clicked(){
-        clearAllInfoFields();
-        queueManagerInfoInit(selectedQM);
+    public Button testButton;
+
+
+    void Clicked(){
+        ClearAllInfoFields();
+        QueueManagerInfoInit(selectedQM);
     }
 
     
     void Start()
     {
-        Debug.Log("This is QM Details");
-        // Initialise with all details
-        testButton.onClick.AddListener(clicked);
-        
+        testButton.onClick.AddListener(Clicked);
     }
+
 
     void Update()
     {
 
     }
 
-    // Initialise the QM Info using the QM name
-    void queueManagerInfoInit(string selectedQMName){
 
+    // Initialise the QM Info using the QM name
+    void QueueManagerInfoInit(string selectedQMName)
+    {
         GameObject stateGameObject = GameObject.Find("State");
         State stateComponent = stateGameObject.GetComponent(typeof(State)) as State;
 
-        qmDetails = stateComponent.GetSelectedQMDetails(selectedQMName);
+        MQ.QueueManager queueManager = stateComponent.GetSelectedQmgr(selectedQMName);
 
-        text0Name.text = qmDetails[0];
-        text1State.text = qmDetails[1];
-        text2InstallationName.text = qmDetails[2];
-        text3PermitStandBy.text = qmDetails[3];
-        text4IsDefault.text = qmDetails[4];
-        text5PublishState.text = qmDetails[5];
-        text6ConnectionCount.text = qmDetails[6];
-        text7ChannelState.text = qmDetails[7];
-        text8Idap.text = qmDetails[8];
-        text9StartedTime.text = qmDetails[9];
+        text0Name.text = queueManager.qmgrName;
+        text1State.text = queueManager.state;
+        // The following properties might or might not be used
+        //text2InstallationName.text = qmDetails[2];
+        //text3PermitStandBy.text = qmDetails[3];
+        //text4IsDefault.text = qmDetails[4];
+        //text5PublishState.text = qmDetails[5];
+        //text6ConnectionCount.text = qmDetails[6];
+        //text7ChannelState.text = qmDetails[7];
+        //text8Idap.text = qmDetails[8];
+        //text9StartedTime.text = qmDetails[9];
     }
 
+
     // Clear all fields
-    void clearAllInfoFields()
+    void ClearAllInfoFields()
     {
         text0Name.text = "";
         text1State.text = "";
@@ -79,16 +81,21 @@ public class QMDetailsController : MonoBehaviour
     /*
     * Button Listener
     */
-    void detailsButtonClicked(){
+    void DetailsButtonClicked()
+    {
 
     }
 
-    // Show 
-    void messagesButtonClicked(){
+
+    void MessagesButtonClicked()
+    {
 
     }
 
-    void closeButtonClicked(){
+
+    void CloseButtonClicked()
+    {
 
     }
+
 }
