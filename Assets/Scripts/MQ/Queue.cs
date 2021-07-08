@@ -13,7 +13,6 @@ namespace MQ
         public string description;
         public string timeCreated;
         public string timeAltered;
-
     }
 
 
