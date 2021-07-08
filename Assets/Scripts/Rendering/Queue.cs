@@ -12,7 +12,7 @@ public class Queue : MonoBehaviour
 
     void Awake()
     {
-        messagePrefab = Resources.Load("Message") as GameObject;
+        messagePrefab = Resources.Load("Prefabs/Message") as GameObject;
         messages = new List<GameObject>();
     }
 
@@ -22,23 +22,23 @@ public class Queue : MonoBehaviour
         string prefabName;
         if (queue is MQ.RemoteQueue) 
         {
-            prefabName = "RemoteQueue";
+            prefabName = "Prefabs/RemoteQueue";
         }
         else if (queue is MQ.LocalQueue)
         {
-            prefabName = "LocalQueue";
+            prefabName = "Prefabs/LocalQueue";
         }
         else if (queue is MQ.TransmissionQueue)
         {
-            prefabName = "TransmissionQueue";
+            prefabName = "Prefabs/TransmissionQueue";
         }
         else if (queue is MQ.AliasQueue)
         {
-            prefabName = "AliasQueue";
+            prefabName = "Prefabs/AliasQueue";
         }
         else
         {
-            prefabName = "LocalQueue"; //TODO: undefined queue
+            prefabName = "Prefabs/LocalQueue"; //TODO: undefined queue
         }
         GameObject queuePrefab = Resources.Load(prefabName) as GameObject;
         GameObject instantiatedQueue = Instantiate(queuePrefab, position, Quaternion.identity) as GameObject;
@@ -66,15 +66,15 @@ public class Queue : MonoBehaviour
         string messageColor;
         if (utilization > 0.6) //determine what color to render the message prefabs
         {
-            messageColor = "QueueRed";
+            messageColor = "Materials/QueueRed";
         }
         else if (utilization < 0.4)
         {
-            messageColor = "QueueBlue";
+            messageColor = "Materials/QueueBlue";
         }
         else
         {
-            messageColor = "QueueYellow";
+            messageColor = "Materials/QueueYellow";
         }
 
         for (int i = 0; i < currentDepth; i++)

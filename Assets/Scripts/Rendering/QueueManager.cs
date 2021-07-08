@@ -15,7 +15,7 @@ public class QueueManager : MonoBehaviour
     // Unity calls this method at the complete beginning, even before Start
     void Awake()
     {
-        blockPrefab = Resources.Load("Block") as GameObject;
+        blockPrefab = Resources.Load("Prefabs/Block") as GameObject;
     }
 
 
