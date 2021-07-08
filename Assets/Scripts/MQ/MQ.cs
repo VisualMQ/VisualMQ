@@ -45,8 +45,6 @@ namespace MQ
             request.Content = new StringContent(body, Encoding.UTF8, "application/json");
             HttpResponseMessage response = client.SendAsync(request).Result;
             
-            Debug.Log(response); // test response
-
             if (!response.IsSuccessStatusCode)
             { //Invalid credentials or API endpoints
                 throw new Exception();
