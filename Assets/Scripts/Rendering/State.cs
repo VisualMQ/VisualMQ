@@ -94,6 +94,7 @@ public class State : MonoBehaviour
     {
         return qmgrs.Count; 
     }
+
     
     // Get MQ Name List -> For Navigation Check box
     public List<string> RegisteredQMNameList()
@@ -105,55 +106,38 @@ public class State : MonoBehaviour
             mqlist.Add(client.GetQueueManagerName());
         }
 
-        //Debug.Log("PRINT: All Queue Manager Names: " + String.Join(", ", mqlist));
         return mqlist;
     }
 
+
     // Return the details of selected QM
-    public List<string> GetSelectedQMDetails(string selectedQMName)
+    public MQ.QueueManager GetSelectedQmgr(string selectedQMName)
     {
-
-        List<string> qmDetails = new List<string>(10){"","","","","","","","","",""};
-
+    
         foreach (MQ.Client client in qmgrs.Keys) 
         {
-            Debug.Log("GET NAME:"+client.GetQueueManagerName());
             if (client.GetQueueManagerName() == selectedQMName)
             {
-                MQ.QueueManager newQmgr = client.GetQmgr();
-                // Get more properties here
-                qmDetails[0] = newQmgr.qmgrName;
-                qmDetails[1] = newQmgr.state;
-                /*
-                GET MORE HERE
-                */
-                break;
+                return client.GetQmgr();
             }
         }
-        return qmDetails;
+        return null;
     }
 
-    // Return List of queue names for the table of queues of a QM
-    public List<string> GetALLQueuesNames(string selectedQMName)
+
+    // Return List of queues for the table of queues of a QM
+    public List<MQ.Queue> GetAllQueuesInQmgr(string selectedQMName)
     {
         List<string> queuesList = new List<string>();
-        //Debug.Log("QUEUE TABLE TESTING");
 
         foreach (MQ.Client client in qmgrs.Keys) 
         {
             if (client.GetQueueManagerName() == selectedQMName)
             {
-                List<MQ.Queue> queues = client.GetAllQueues();
-                foreach (MQ.Queue queue in queues)
-                {
-                    //Debug.Log(queue.queueName);
-                    queuesList.Add(queue.queueName);
-                }
-                break;
+                return client.GetAllQueues();
             }
         }
-        return queuesList;
-        
+        return null;
     }
 
 }
