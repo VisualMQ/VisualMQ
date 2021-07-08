@@ -153,7 +153,6 @@ namespace MQ
                     case "alias":
                         queue = new AliasQueue();
                         ((AliasQueue)queue).targetQueueName = queueJson.alias.targetName;
-                        queue.holdsMessages = false;
                         break;
 
                     case "remote":
@@ -161,7 +160,6 @@ namespace MQ
                         ((RemoteQueue)queue).targetQueueName = queueJson.remote.queueName;
                         ((RemoteQueue)queue).targetQmgrName = queueJson.remote.qmgrName;
                         ((RemoteQueue)queue).transmissionQueueName = queueJson.remote.transmissionQueueName;
-                        queue.holdsMessages = false;
                         break;
 
                     case "local":
@@ -169,13 +167,11 @@ namespace MQ
                         {
                             queue = new TransmissionQueue();
                             ((TransmissionQueue)queue).currentDepth = queueJson.status.currentDepth;
-                            queue.holdsMessages = true;
                         }
                         else
                         {
                             queue = new LocalQueue();
                             ((LocalQueue)queue).currentDepth = queueJson.status.currentDepth;
-                            queue.holdsMessages = true;
                         }
                         break;
 

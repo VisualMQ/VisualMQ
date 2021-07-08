@@ -44,6 +44,7 @@ public class Queue : MonoBehaviour
         GameObject instantiatedQueue = Instantiate(queuePrefab, position, Quaternion.identity) as GameObject;
         instantiatedQueue.transform.parent = this.transform;
 
+        Debug.Log(queue.queueName + " is " + queue.holdsMessages);
         if (queue.holdsMessages)
         {
             int currentDepth = queue.currentDepth;

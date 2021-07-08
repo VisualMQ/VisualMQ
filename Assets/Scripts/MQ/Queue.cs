@@ -13,9 +13,8 @@ namespace MQ
         public string description;
         public string timeCreated;
         public string timeAltered;
-        public Boolean holdsMessages;
+        public bool holdsMessages{ get; protected set; }
         public int currentDepth;
-
     }
 
 
@@ -24,7 +23,11 @@ namespace MQ
         public string targetQueueName;
         public string targetQmgrName;
         public string transmissionQueueName;
-        public new const int currentDepth = 0;
+        public RemoteQueue()
+        {
+            currentDepth = 0;
+            holdsMessages = false;
+        }
 
     }
 
@@ -32,19 +35,31 @@ namespace MQ
     public class TransmissionQueue : Queue
     {
         //TODO: Assign new message fields when message API is ready
+        public TransmissionQueue()
+        {
+            holdsMessages = true;
+        }
     }
 
 
     public class AliasQueue : Queue
     {
         public string targetQueueName;
-        public new const int currentDepth = 0;
+        public AliasQueue()
+        {
+            currentDepth = 0;
+            holdsMessages = false;
+        }
     }
 
 
     public class LocalQueue : Queue
     {
         //TODO: Assign new message fields when message API is ready
+        public LocalQueue()
+        {
+            holdsMessages = true;
+        }
     }
 
 }
