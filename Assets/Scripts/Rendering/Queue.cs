@@ -10,6 +10,8 @@ public class Queue : MonoBehaviour
  
     public TextMesh textMesh;
     public QueueManager parent;
+    public GameObject instantiatedQueue;
+    public GameObject queuePrefab;
 
     // Use this for initialization
     void Start()
@@ -35,8 +37,8 @@ public class Queue : MonoBehaviour
         {
             prefabName = "LocalQueue";
         }
-        GameObject queuePrefab = Resources.Load(prefabName) as GameObject;
-        GameObject instantiatedQueue = Instantiate(queuePrefab, new Vector3(0,0,0), Quaternion.identity) as GameObject;
+        queuePrefab = Resources.Load(prefabName) as GameObject;
+        instantiatedQueue = Instantiate(queuePrefab, new Vector3(0,0,0), Quaternion.identity) as GameObject;
         instantiatedQueue.transform.parent = this.transform;
         instantiatedQueue.transform.parent.position = position;
         // Add mesh Colider
@@ -115,4 +117,12 @@ public class Queue : MonoBehaviour
         Debug.Log("Moving Camera to Queue" + this.name);
     }
 
+    void OnMouseEnter()
+    {
+        instantiatedQueue.transform.localScale = new Vector3(1.2f, 1.2f, 1.2f);   
+    }
+    void OnMouseExit()
+    {
+        instantiatedQueue.transform.localScale = this.queuePrefab.transform.localScale;
+    }
 }
