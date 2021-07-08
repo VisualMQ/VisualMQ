@@ -38,7 +38,7 @@ public class QueueManager : MonoBehaviour
             Queue queueComponent = queueGameObject.GetComponent(typeof(Queue)) as Queue;
             queueComponent.position = new Vector3(2.5f*x, 0.25f, 0);
             queueComponent.queue = queue;
-            // DELETE: TEST CODE
+            // DELETE LATER: TEST CODE
             if (queue is MQ.LocalQueue)
             {
                 Debug.Log(queue.queueName + " currently has " + ((MQ.LocalQueue)queue).currentDepth + " messages.");
