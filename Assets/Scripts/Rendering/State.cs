@@ -53,11 +53,15 @@ public class State : MonoBehaviour
 
             // Render queue manager. Note that data is stored in Component (ie Script) not in GameObject!
             // GameObject is just an Entity/Container for Components that perform the real functionality
+
             GameObject qmgrGameObject = new GameObject(newQmgr.qmgrName, typeof(QueueManager));
+
             QueueManager qmgrComponent = qmgrGameObject.GetComponent(typeof(QueueManager)) as QueueManager;
             qmgrComponent.queues = newQueues;
-
             qmgrs[newMqClient] = qmgrGameObject;
+
+            qmgrGameObject.transform.parent = this.transform;
+
             return;
         }
 

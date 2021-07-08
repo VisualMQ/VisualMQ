@@ -111,7 +111,7 @@ namespace MQ
 
         public Queue GetQueue(string queue)
         {
-            string response = GetRequest("/ibmmq/rest/v1/admin/qmgr/" + qmgr + "/queue/" + queue + "?attributes=*");
+            string response = GetRequest("/ibmmq/rest/v1/admin/qmgr/" + qmgr + "/queue/" + queue + "?attributes=*&status=*");
             _QueueResponseJson queueJson = JsonUtility.FromJson<_QueueResponseJson>(response);
             List<Queue> queues = Parser.Parse(queueJson);
             return queues[0];
@@ -166,10 +166,12 @@ namespace MQ
                         if (queueJson.general.isTransmissionQueue)
                         {
                             queue = new TransmissionQueue();
+                            ((TransmissionQueue)queue).currentDepth = queueJson.status.currentDepth;
                         }
                         else
                         {
                             queue = new LocalQueue();
+                            ((LocalQueue)queue).currentDepth = queueJson.status.currentDepth;
                         }
                         break;
 
@@ -231,6 +233,7 @@ namespace MQ
         public _QueueRemoteJson remote;
         public _QueueAliasJson alias;
         public _QueueGeneralJson general;
+        public _QueueStatusJson status;
     }
 
     [Serializable]
@@ -272,4 +275,9 @@ namespace MQ
         public int maximumMessageLength;
     }
 
+    [Serializable]
+    public class _QueueStatusJson
+    {
+        public int currentDepth;
+    }
 }

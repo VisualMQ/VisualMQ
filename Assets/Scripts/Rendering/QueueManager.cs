@@ -15,7 +15,7 @@ public class QueueManager : MonoBehaviour
     // Unity calls this method at the complete beginning, even before Start
     void Awake()
     {
-        blockPrefab = Resources.Load("Block") as GameObject;
+        blockPrefab = Resources.Load("Prefabs/Block") as GameObject;
     }
 
 
@@ -26,7 +26,8 @@ public class QueueManager : MonoBehaviour
         // Render Qmgr plane from blocks
         for (int x = 0; x < queues.Count; ++x)
         {   
-            Instantiate(blockPrefab, new Vector3(2.5f*x, 0, 0), Quaternion.identity);
+            GameObject block = Instantiate(blockPrefab, new Vector3(2.5f*x, 0, 0), Quaternion.identity);
+            block.transform.parent = this.transform;
         }
 
         // Render inidividual queues
@@ -37,8 +38,18 @@ public class QueueManager : MonoBehaviour
             Queue queueComponent = queueGameObject.GetComponent(typeof(Queue)) as Queue;
             queueComponent.position = new Vector3(2.5f*x, 0.25f, 0);
             queueComponent.queue = queue;
-
+            // DELETE LATER: TEST CODE
+            if (queue is MQ.LocalQueue)
+            {
+                Debug.Log(queue.queueName + " currently has " + ((MQ.LocalQueue)queue).currentDepth + " messages.");
+            } else if (queue is MQ.TransmissionQueue)
+            {
+                Debug.Log(queue.queueName + " currently has " + ((MQ.TransmissionQueue)queue).currentDepth + " messages.");
+            }
+            //
             renderedQueues.Add(queue.queueName, queueGameObject);
+
+            queueGameObject.transform.parent = this.transform;
         }
     }
 
@@ -55,7 +66,7 @@ public class QueueManager : MonoBehaviour
         List<string> queuesToRender = new List<string>();
         List<string> queuesToDestroy = new List<string>();
 
-        // First check which queues are not rendered yet
+        // First: check which queues are not rendered yet
         foreach (MQ.Queue queue in queues)
         {
             queuesToRender.Add(queue.queueName);
@@ -71,10 +82,11 @@ public class QueueManager : MonoBehaviour
                 queueComponent.queue = queue;
 
                 renderedQueues.Add(queue.queueName, queueGameObject);
+                queueGameObject.transform.parent = this.transform;
             }
         }
 
-        // Secondly check which queues need to be destroyed
+        // Second: check which queues need to be destroyed
         foreach (KeyValuePair<string, GameObject> entry in renderedQueues)
         {
             if (!queuesToRender.Contains(entry.Key))
@@ -88,6 +100,25 @@ public class QueueManager : MonoBehaviour
         foreach (string queueName in queuesToDestroy)
         {
             renderedQueues.Remove(queueName);
+        }
+
+        // Third: for local queues and transmission queues, check if the utilization level has changed
+        foreach (MQ.Queue queue in queues)
+        {
+            if (queue.holdsMessages)
+            {
+                Queue queueComponent = renderedQueues[queue.queueName].GetComponent(typeof(Queue)) as Queue;
+                int oldDepth = queueComponent.queue.currentDepth;
+                int newDepth = queue.currentDepth;
+
+                //TODO: Assign new message fields when message API is ready
+                //TODO: Re-render might be necessary even if oldDepth = newDepth -- messages might have changed
+
+                if (oldDepth != newDepth)
+                {
+                    queueComponent.UpdateMessages(newDepth);
+                }
+            }
         }
 
     }
