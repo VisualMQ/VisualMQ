@@ -19,8 +19,8 @@ public class NavigationController : MonoBehaviour
     public GameObject checkboxItem;
     private Dictionary<string, bool> QMVisibility = new Dictionary<string, bool>();
 
-    // 
-    private int checkBoxNumber = 0;
+
+    //private int checkBoxNumber = 0;
 
     // Testing: QM Details Panel
     public Button showQMDetailsButton;
