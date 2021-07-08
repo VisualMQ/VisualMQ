@@ -44,21 +44,15 @@ public class Queue : MonoBehaviour
         GameObject instantiatedQueue = Instantiate(queuePrefab, position, Quaternion.identity) as GameObject;
         instantiatedQueue.transform.parent = this.transform;
 
-        int currentDepth = 0;
-        if (queue is MQ.LocalQueue)
+        if (queue.holdsMessages)
         {
-            currentDepth = ((MQ.LocalQueue)queue).currentDepth;
-            createMessages(currentDepth, 10); //TODO: change 10 to actual maximumDepth
+            int currentDepth = queue.currentDepth;
+            CreateMessages(currentDepth, 10); //TODO: change 10 to actual maximumDepth
 
-        }
-        else if (queue is MQ.TransmissionQueue)
-        {
-            currentDepth = ((MQ.TransmissionQueue)queue).currentDepth;
-            createMessages(currentDepth, 10); //TODO: change 10 to actual maximumDepth
         }
     }
 
-    void createMessages(int currentDepth, int MaximumDepth)
+    void CreateMessages(int currentDepth, int MaximumDepth)
     {
         if (currentDepth == 0) return;
 
@@ -89,7 +83,7 @@ public class Queue : MonoBehaviour
         }
     }
 
-    public void updateMessages(int newDepth)
+    public void UpdateMessages(int newDepth)
     {
         // First: destroy all old messages
         for (int i = 0; i < messages.Count; i++)
@@ -98,16 +92,10 @@ public class Queue : MonoBehaviour
         }
 
         // Second: Update to new messages
-        if (queue is MQ.LocalQueue)
+        if (queue.holdsMessages)
         {
-            ((MQ.LocalQueue)queue).currentDepth = newDepth;
-            createMessages(newDepth, 10); //TODO: change 10 to actual maximumDepth
-
-        }
-        else if (queue is MQ.TransmissionQueue)
-        {
-            ((MQ.TransmissionQueue)queue).currentDepth = newDepth;
-            createMessages(newDepth, 10); //TODO: change 10 to actual maximumDepth
+            queue.currentDepth = newDepth;
+            CreateMessages(newDepth, 10); //TODO: change 10 to actual maximumDepth
         }
     }
 

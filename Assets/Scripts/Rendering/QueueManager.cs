@@ -105,30 +105,18 @@ public class QueueManager : MonoBehaviour
         // Third: for local queues and transmission queues, check if the utilization level has changed
         foreach (MQ.Queue queue in queues)
         {
-            if (queue is MQ.LocalQueue)
+            if (queue.holdsMessages)
             {
                 Queue queueComponent = renderedQueues[queue.queueName].GetComponent(typeof(Queue)) as Queue;
-                int oldDepth = ((MQ.LocalQueue)queueComponent.queue).currentDepth;
-                int newDepth = ((MQ.LocalQueue)queue).currentDepth;
+                int oldDepth = queueComponent.queue.currentDepth;
+                int newDepth = queue.currentDepth;
 
                 //TODO: Assign new message fields when message API is ready
+                //TODO: Re-render might be necessary even if oldDepth = newDepth -- messages might have changed
 
                 if (oldDepth != newDepth)
                 {
-                    queueComponent.updateMessages(newDepth);
-                }
-            }
-            else if (queue is MQ.TransmissionQueue)
-            {
-                Queue queueComponent = renderedQueues[queue.queueName].GetComponent(typeof(Queue)) as Queue;
-                int oldDepth = ((MQ.TransmissionQueue)queueComponent.queue).currentDepth;
-                int newDepth = ((MQ.TransmissionQueue)queue).currentDepth;
-
-                //TODO: Assign new message fields when message API is ready
-
-                if (oldDepth != newDepth)
-                {
-                    queueComponent.updateMessages(newDepth);
+                    queueComponent.UpdateMessages(newDepth);
                 }
             }
         }
