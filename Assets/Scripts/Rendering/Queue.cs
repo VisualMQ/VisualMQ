@@ -39,7 +39,10 @@ public class Queue : MonoBehaviour
         GameObject instantiatedQueue = Instantiate(queuePrefab, new Vector3(0,0,0), Quaternion.identity) as GameObject;
         instantiatedQueue.transform.parent = this.transform;
         instantiatedQueue.transform.parent.position = position;
-        
+        // Add mesh Colider
+        MeshCollider mc = instantiatedQueue.transform.parent.gameObject.AddComponent<MeshCollider>();
+        mc.sharedMesh = instantiatedQueue.GetComponent<MeshFilter>().sharedMesh;
+
 
         // TODO: Move this to prefab
         // Generate the initial text to be displayed above Queues.
@@ -107,7 +110,7 @@ public class Queue : MonoBehaviour
     void OnMouseUp()
     {
         /*Do whatever here as per your need*/
-        Camera.main.transform.Rotate(30f, -1.75f, 0f);
+        Camera.main.transform.LookAt(this.position);
         Camera.main.transform.position = new Vector3(2.5f, 15f, -13f) + this.position;
         Debug.Log("Moving Camera to Queue" + this.name);
     }
