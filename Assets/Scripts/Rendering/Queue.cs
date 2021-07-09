@@ -47,7 +47,7 @@ public class Queue : MonoBehaviour
         if (queue.holdsMessages)
         {
             int currentDepth = queue.currentDepth;
-            CreateMessages(currentDepth, queue.maxNumberOfMessages); //TODO: change 10 to actual maximumDepth
+            CreateMessages(currentDepth, queue.maxNumberOfMessages);
 
         }
     }
@@ -96,7 +96,7 @@ public class Queue : MonoBehaviour
         if (queue.holdsMessages)
         {
             queue.currentDepth = newDepth;
-            CreateMessages(newDepth, queue.maxNumberOfMessages); //TODO: change 10 to actual maximumDepth
+            CreateMessages(newDepth, queue.maxNumberOfMessages);
         }
     }
 
