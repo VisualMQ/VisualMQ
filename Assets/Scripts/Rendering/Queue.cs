@@ -12,7 +12,8 @@ public class Queue : MonoBehaviour
     public QueueManager parent;
     public GameObject instantiatedQueue;
     public GameObject queuePrefab;
-
+    public static GameObject queueInFocus;
+    public static GameObject prefabInFocus;
     // Use this for initialization
     void Start()
     {
@@ -110,7 +111,23 @@ public class Queue : MonoBehaviour
     }
 
     void OnMouseUp()
-    {
+    {   
+        // Click on twice = Deactivate focus
+        if(queueInFocus == instantiatedQueue)
+        {
+            queueInFocus.transform.localScale = prefabInFocus.transform.localScale;
+            queueInFocus = null;
+            return;
+        }
+        // If clicked on once, it's now the new in focus. Reset the previous focus
+        if (queueInFocus)
+        {
+            queueInFocus.transform.localScale = prefabInFocus.transform.localScale;
+        }
+
+        queueInFocus = instantiatedQueue;
+        prefabInFocus = instantiatedQueue;
+        instantiatedQueue.transform.localScale = new Vector3(1.2f, 1.2f, 1.2f);
         /*Do whatever here as per your need*/
         Camera.main.transform.LookAt(this.position);
         Camera.main.transform.position = new Vector3(2.5f, 15f, -13f) + this.position;
