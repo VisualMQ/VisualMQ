@@ -43,10 +43,10 @@ public class QueueManager : MonoBehaviour
 
         /* We will have 2 large rectangle areas and 2 small rectangle areas
            -----------
-           |1    |2  |
+           |2    |4  |
            |     |   |
            X-----X----
-           |3    |4  |
+           |1    |3  |
            |     |   |
            X-----X----
          
