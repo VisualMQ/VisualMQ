@@ -18,18 +18,19 @@ public class QMDetailsRightViewController : MonoBehaviour
     public Button closeButton;
 
     // !!! TEST !!!
-    public Button testButton2;
+    //public Button testButton2;
+    /*
     void Clicked(){
         QMDetailsRightWindow.SetActive(true);
         GenerateQueueList("QM1");
-    }
+    }*/
 
 
     // Start is called before the first frame update
     void Start()
     {   
-        // !!! TEST !!!
-        testButton2.onClick.AddListener(Clicked);
+        /* !!! TEST !!!
+        testButton2.onClick.AddListener(Clicked);*/
 
         // Buttons Listener
         closeButton.onClick.AddListener(CloseButtonClicked);
@@ -43,8 +44,7 @@ public class QMDetailsRightViewController : MonoBehaviour
     void Update(){
     }
 
-
-    void GenerateQueueList(string selectedQM)
+    public void GenerateQueueList(string selectedQM)
     {
         // Get queues in the selectedQM
         GameObject stateGameObject = GameObject.Find("State");
