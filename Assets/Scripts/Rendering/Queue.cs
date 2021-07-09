@@ -1,15 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System;
 using MQ;
 
 public class Queue : MonoBehaviour
 {
-
     public Vector3 position;
     public MQ.Queue queue;
     public GameObject messagePrefab;
     public List<GameObject> messages;
-
+    
     void Awake()
     {
         messagePrefab = Resources.Load("Prefabs/Message") as GameObject;
@@ -47,7 +47,7 @@ public class Queue : MonoBehaviour
         if (queue.holdsMessages)
         {
             int currentDepth = queue.currentDepth;
-            CreateMessages(currentDepth, 10); //TODO: change 10 to actual maximumDepth
+            CreateMessages(currentDepth, queue.maxNumberOfMessages);
 
         }
     }
@@ -71,7 +71,8 @@ public class Queue : MonoBehaviour
             messageColor = "Materials/QueueYellow";
         }
 
-        for (int i = 0; i < currentDepth; i++)
+        int messagePrefabNum = (int)Math.Ceiling(utilization * 20);
+        for (int i = 0; i < messagePrefabNum; i++)
         {
             Vector3 messagePosition = position;
             messagePosition.y = position.y + (i + 1) * 0.2f;
@@ -95,7 +96,7 @@ public class Queue : MonoBehaviour
         if (queue.holdsMessages)
         {
             queue.currentDepth = newDepth;
-            CreateMessages(newDepth, 10); //TODO: change 10 to actual maximumDepth
+            CreateMessages(newDepth, queue.maxNumberOfMessages);
         }
     }
 
