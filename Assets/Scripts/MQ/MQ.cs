@@ -71,17 +71,12 @@ namespace MQ
         }
 
 
-        public string GetAllMessageIds(string queue)
+        public List<Message> GetAllMessages(string queue)
         {
-            try
-            {
-                return GetRequest("/ibmmq/rest/v1/messaging/qmgr/" + qmgr + "/queue/" + queue + "/messagelist");
-            }
-            catch (Exception)
-            {
-                return "Not supported for this type of queue.";
-            }
-
+            string response = GetRequest("/ibmmq/rest/v1/messaging/qmgr/" + qmgr + "/queue/" + queue + "/messagelist");
+            _MessageResponseJson messageJson = JsonUtility.FromJson<_MessageResponseJson>(response);
+            List<Message> messages = Parser.Parse(messageJson);
+            return messages;
         }
 
 
@@ -193,8 +188,20 @@ namespace MQ
             return queues;
         }
 
-    }
+        public static List<Message> Parse(_MessageResponseJson messageResponseJson)
+        {
+            List<Message> messages = new List<Message>();
+            foreach (_MessageJson messageJson in messageResponseJson.messages)
+            {
+                Message message = new Message();
+                message.format = messageJson.format;
+                message.messageId = messageJson.messageId;
 
+                messages.Add(message);
+            }
+            return messages;
+        }
+    }
 
     /// 
     /// Below are JSON data representation objects
@@ -279,5 +286,18 @@ namespace MQ
     public class _QueueStatusJson
     {
         public int currentDepth;
+    }
+
+    [Serializable]
+    public class _MessageResponseJson
+    {
+        public List<_MessageJson> messages;
+    }
+
+    [Serializable]
+    public class _MessageJson
+    {
+        public string format;
+        public string messageId;
     }
 }
