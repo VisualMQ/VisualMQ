@@ -117,7 +117,6 @@ public class State : MonoBehaviour
     // Return the details of selected QM
     public MQ.QueueManager GetSelectedQmgr(string selectedQMName)
     {
-        
         foreach (MQ.Client client in qmgrs.Keys) 
         {
             if (client.GetQueueManagerName() == selectedQMName)

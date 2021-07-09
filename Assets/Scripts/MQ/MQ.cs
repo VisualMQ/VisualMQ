@@ -227,8 +227,8 @@ namespace MQ
     {
         public string name;
         public string type;
-        public _QueueTimestampsJson timestamps;
 
+        public _QueueTimestampsJson timestamps;
         public _QueueStorageJson storage;
         public _QueueRemoteJson remote;
         public _QueueAliasJson alias;

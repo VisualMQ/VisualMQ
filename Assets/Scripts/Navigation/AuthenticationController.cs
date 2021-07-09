@@ -28,10 +28,10 @@ public class AuthenticationController : MonoBehaviour
     private string errorMessage = "Fail to add this Queue Manager. Please try later.";
 
     // Variables for make a connection
-    private string userNameT = "yuexu";
-    private string apiKeyT = "";
-    private string MQURLT = "https://web-qm1-3628.qm.eu-gb.mq.appdomain.cloud:443";
-    private string QMNameT = "QM1";
+    private string userNameT;
+    private string apiKeyT;
+    private string MQURLT;
+    private string QMNameT;
 
     //Show QM
     //public GameObject ToggleQM1;
@@ -51,20 +51,16 @@ public class AuthenticationController : MonoBehaviour
         submit.onClick.AddListener(ConfirmButtonClicked);
         cancel.onClick.AddListener(CancelButtonClicked);
 
-        // TEST
-        ConfirmButtonClicked();
-
     }
 
     // Confirm Button Clicked
     void ConfirmButtonClicked()
     {
         // Get Current Input Text and Form Checking
-        /*
         userNameT = userName.text;
         apiKeyT = apiKey.text;
         MQURLT = urlInput.text;
-        QMNameT = QMInput.text;*/
+        QMNameT = QMInput.text;
 
         if (SubmitFormCheck(userNameT, apiKeyT, MQURLT, QMNameT) == false)
         {
