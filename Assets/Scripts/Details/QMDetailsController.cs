@@ -8,29 +8,42 @@ using UnityEngine.UI;
 public class QMDetailsController : MonoBehaviour
 {
 
+    public GameObject QMDetailsWindow;
+    public GameObject QMDetailsRightWindow;
+
     // Queue Manager Configuration Details
     public Text text0Name, text1State, 
         text2InstallationName, text3PermitStandBy, text4IsDefault, 
         text5PublishState, text6ConnectionCount, text7ChannelState, 
         text8Idap, text9StartedTime;
 
-    
+    // Buttons inside this window
     public Button closeButton;
-    //public Button detailsButton, messagesButton;
+    public Button qmDetailsButton, queueListButton;
+
+    // The QM name used for trigerring the QM Details Window
     public string selectedQM = "QM1";
     
+    // TEST: The Button used to trigger the window
     public Button testButton;
-
-
+    
     void Clicked(){
         ClearAllInfoFields();
+        QMDetailsWindow.SetActive(true);
         QueueManagerInfoInit(selectedQM);
     }
 
-    
     void Start()
     {
+        // TEST
         testButton.onClick.AddListener(Clicked);
+
+
+        // Button Listener
+        qmDetailsButton.onClick.AddListener(Clicked);
+        queueListButton.onClick.AddListener(QueueListsButtonClicked);
+        closeButton.onClick.AddListener(CloseButtonClicked);
+
     }
 
 
@@ -83,19 +96,28 @@ public class QMDetailsController : MonoBehaviour
     */
     void DetailsButtonClicked()
     {
+        
 
     }
 
 
-    void MessagesButtonClicked()
+    void QueueListsButtonClicked()
     {
+        Debug.Log("Generate Queue List");
+        // Close Current Details Window
+        QMDetailsWindow.SetActive(false);
+        // Show the Queue List Window
+        QMDetailsRightWindow.SetActive(true);
+        // Init Queue List
+        QMDetailsRightWindow.SendMessage("GenerateQueueList", "QM1");
 
     }
 
 
     void CloseButtonClicked()
     {
-
+        QMDetailsRightWindow.SetActive(false);
+        QMDetailsWindow.SetActive(false);
     }
 
 }

@@ -19,20 +19,20 @@ public class NavigationController : MonoBehaviour
     public GameObject checkboxItem;
     private Dictionary<string, bool> QMVisibility = new Dictionary<string, bool>();
 
-    // 
-    private int checkBoxNumber = 0;
+
+    //private int checkBoxNumber = 0;
 
     // Testing: QM Details Panel
-    public Button showQMDetailsButton;
+    //public Button showQMDetailsButton;
     public GameObject QMDetailsWindow;
     public GameObject QMDetailsRightWindow;
 
-
+/*
     void ShowQMDetailsButtonClicked()
     {
         //QMDetailsWindow.SetActive(true);
         QMDetailsRightWindow.SetActive(true);
-    }
+    }*/
 
 
     // Start is called before the first frame update
@@ -50,7 +50,7 @@ public class NavigationController : MonoBehaviour
         // Button Listener
         expandPanelButton.onClick.AddListener(LeftPanelButtonClicked);
         addFilterButton.onClick.AddListener(AddFilterButtonClicked);
-        showQMDetailsButton.onClick.AddListener(ShowQMDetailsButtonClicked);
+        //showQMDetailsButton.onClick.AddListener(ShowQMDetailsButtonClicked);
     }
 
 
