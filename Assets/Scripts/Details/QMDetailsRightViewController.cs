@@ -71,9 +71,17 @@ public class QMDetailsRightViewController : MonoBehaviour
             recTransform.anchoredPosition = new Vector2(5, -rowHeight * i + startY);
             item.gameObject.SetActive(true);
             
-            //item.Find("TextQueueName").GetComponent<Text>().text = names[i];
             item.Find("TextQueueName").GetComponent<Text>().text = queues[i].queueName;
+
+            int keyIdx = i;
+            Button curButton = item.Find("QueueRowButton").GetComponent<Button>();
+            curButton.onClick.AddListener(() => queueRowItemSelected( keyIdx ) );
         }
+    }
+
+    void queueRowItemSelected(int rowidx)
+    {
+        Debug.Log(rowidx);
     }
 
 

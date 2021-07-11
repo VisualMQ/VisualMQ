@@ -5,29 +5,55 @@ using UnityEngine.UI;
 
 public class QueueDetailsRightViewController : MonoBehaviour
 {
+
+    // Windows Object
+    public GameObject QueueDetailLeftWindow;
+    public GameObject QueueDetailRightWindow;
+
     // Message List Items
     private Transform MessageRowItem;
     private Transform container;
 
-    public Button messageListTest;
+    // Buttons
+    private Button closeRight, returnRight;
+    private Button toLeft, toRight;
+
+    // TESTING
+    void test(){
+        QueueDetailLeftWindow.SetActive(false);
+        QueueDetailRightWindow.SetActive(true);
+        GenerateMessageList("QM1", "DEV.QUEUE.1");
+    }
+    
 
     private void Awake() {
         // Locate the Objects
         container = transform.Find("MessageRowContainer");
         MessageRowItem = container.Find("MessageRowItem");
         MessageRowItem.gameObject.SetActive(false);
-        
+
+        // Locate the Buttons
+        closeRight = transform.Find("ButtonCloseQueueRight").GetComponent<Button>();
+        returnRight = transform.Find("ButtonReturnRight").GetComponent<Button>();
+        toLeft = transform.Find("ButtonQueueDetails2").GetComponent<Button>();
+        toRight = transform.Find("ButtonMessageList2").GetComponent<Button>();
     }
     
     // Start is called before the first frame update
     void Start()
-    {
-        messageListTest.onClick.AddListener(test);
+    {   
+        // Default Hide
+        QueueDetailLeftWindow.SetActive(false);
+        QueueDetailRightWindow.SetActive(false);
+
+        // Button Listener
+        closeRight.onClick.AddListener(closeWindowClicked);
+        returnRight.onClick.AddListener(returnToQueueList);
+        toLeft.onClick.AddListener(toQueueDetail);
+        toRight.onClick.AddListener(toQueueMessageList);
     }
 
-    void test(){
-        GenerateMessageList("QM1", "DEV.QUEUE.1");
-    }
+    
 
     public void GenerateMessageList(string qmName, string queueName)
     {
@@ -49,9 +75,36 @@ public class QueueDetailsRightViewController : MonoBehaviour
             recTransform.anchoredPosition = new Vector2(7, -rowHeight * i + startY);
             item.gameObject.SetActive(true);
             
-            //item.Find("TextQueueName").GetComponent<Text>().text = names[i];
+            item.Find("TextMessageName").GetComponent<Text>().text = messages[i].messageId;
             //item.Find("TextQueueName").GetComponent<Text>().text = queues[i].queueName;
         }
     }
+
+
+    /*
+    * Button Listener Functions
+    */
+    void closeWindowClicked(){
+        QueueDetailRightWindow.SetActive(false);
+        QueueDetailLeftWindow.SetActive(false);
+    }
+
+    void toQueueDetail()
+    {
+        QueueDetailRightWindow.SetActive(false); // close current
+        QueueDetailLeftWindow.SetActive(true);   // show left
+        //QueueDetailLeftWindow.SendMessage("test");  // Reload Details
+    }
+
+    void toQueueMessageList()
+    {
+        return;
+    }
+
+    void returnToQueueList()
+    {
+
+    }
+
 
 }

@@ -8,6 +8,7 @@ public class QueueDetailsController : MonoBehaviour
     // PUBLIC
     public GameObject QueueDetailLeftWindow;
     public GameObject QueueDetailRightWindow;
+
     // Details Section for different type of Queue
     public GameObject QueueDetailLocal;
     public GameObject QueueDetailRemote;
@@ -33,7 +34,7 @@ public class QueueDetailsController : MonoBehaviour
     private Button returnButton, closeButton;
     private Button toQueueDetail, toMessageList;
 
-    public Button testQueue;
+    public Button buttontestleft;
 
     private void Awake() {
 
@@ -74,17 +75,23 @@ public class QueueDetailsController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        /* Button Listeners
+        //Button Listeners
         returnButton.onClick.AddListener(ReturnClicked);
         closeButton.onClick.AddListener(CloseClicked);
         toQueueDetail.onClick.AddListener(ToQueueDetailsClicked);
-        toMessageList.onClick.AddListener(ToMessageListClicked);*/
+        toMessageList.onClick.AddListener(ToMessageListClicked);
         
-        testQueue.onClick.AddListener(test);
-    
+        buttontestleft.onClick.AddListener(testwin);
+
+        // Hide the Windows
+        //QueueDetailLeftWindow.SetActive(false);
+        //QueueDetailRightWindow.SetActive(false);
+
     }
 
-    void test(){
+    void testwin(){
+        Debug.Log("HIHIHI");
+        QueueDetailLeftWindow.SetActive(true);
         GetQueueBasicInfo("QM1", "DEV.QUEUE.REMOTE1");
     }
 
@@ -182,6 +189,7 @@ public class QueueDetailsController : MonoBehaviour
     /*
     *    Button Listeners
     */
+    // Return to Queue Lists
     void ReturnClicked()
     {
 
@@ -192,13 +200,17 @@ public class QueueDetailsController : MonoBehaviour
         QueueDetailLeftWindow.SetActive(false);
     }
 
+    // Reload Current Window
     void ToQueueDetailsClicked()
     {
         return;
     }
 
+    // Switch to Message List Window
     void ToMessageListClicked()
     {
-        
+        QueueDetailLeftWindow.SetActive(false);
+        QueueDetailRightWindow.SetActive(true);
+        //QueueDetailRightWindow.SendMessage("test");
     }
 }
