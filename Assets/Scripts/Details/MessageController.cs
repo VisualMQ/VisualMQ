@@ -16,6 +16,7 @@ public class MessageController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        MessageWindow.SetActive(false);
         // Button Listener
         closeButton.onClick.AddListener(CloseButtonClicked);
         closeButtonTop.onClick.AddListener(CloseButtonClicked);
@@ -23,11 +24,7 @@ public class MessageController : MonoBehaviour
         copyIdButton.onClick.AddListener(CopyIdButtonClicked);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+
 
     /*
         BUTTON ACTIONS

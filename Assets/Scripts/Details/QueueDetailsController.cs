@@ -8,6 +8,7 @@ public class QueueDetailsController : MonoBehaviour
     // PUBLIC
     public GameObject QueueDetailLeftWindow;
     public GameObject QueueDetailRightWindow;
+    public GameObject QMDetailRightWindow;
 
     // Details Section for different type of Queue
     public GameObject QueueDetailLocal;
@@ -187,6 +188,11 @@ public class QueueDetailsController : MonoBehaviour
     // Return to Queue Lists
     void ReturnClicked()
     {
+        // Close Current
+        QueueDetailLeftWindow.SetActive(false);
+        // To Queue List Window (QMDetailRight)
+        QMDetailRightWindow.SetActive(true);
+        QMDetailRightWindow.SendMessage("GenerateQueueList", currentSelected[0]);
 
     }
 
@@ -206,7 +212,7 @@ public class QueueDetailsController : MonoBehaviour
     {
         QueueDetailRightWindow.SetActive(true);
         QueueDetailRightWindow.SendMessage("GenerateMessageList", currentSelected);
-        
+
         QueueDetailLeftWindow.SetActive(false);
     }
 }

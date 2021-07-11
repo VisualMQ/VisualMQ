@@ -9,6 +9,7 @@ public class QueueDetailsRightViewController : MonoBehaviour
     // Windows Object
     public GameObject QueueDetailLeftWindow;
     public GameObject QueueDetailRightWindow;
+    public GameObject QMDetailRightWindow;
 
     // Message List Items
     private Transform MessageRowItem;
@@ -17,7 +18,8 @@ public class QueueDetailsRightViewController : MonoBehaviour
     // Buttons
     private Button closeRight, returnRight;
     private Button toLeft, toRight;
-    
+
+    public List<string> currentSelected;
 
     private void Awake() {
         // Locate the Objects
@@ -47,11 +49,10 @@ public class QueueDetailsRightViewController : MonoBehaviour
     }
 
     
-
     public void GenerateMessageList(List<string> temp)
     {
         Debug.Log("MESSAGE LIST");
-        
+        currentSelected = temp;
         string qmName = temp[0];
         string queueName = temp[1];
         Debug.Log(qmName + queueName);
@@ -100,9 +101,14 @@ public class QueueDetailsRightViewController : MonoBehaviour
         return;
     }
 
+
     void returnToQueueList()
     {
-
+         // Close Current
+        QueueDetailRightWindow.SetActive(false);
+        // To Queue List Window (QMDetailRight)
+        QMDetailRightWindow.SetActive(true);
+        QMDetailRightWindow.SendMessage("GenerateQueueList", currentSelected[0]);
     }
 
 

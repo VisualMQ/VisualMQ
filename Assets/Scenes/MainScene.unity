@@ -7600,6 +7600,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   QueueDetailLeftWindow: {fileID: 1982846574}
   QueueDetailRightWindow: {fileID: 862236587}
+  QMDetailRightWindow: {fileID: 82359487}
 --- !u!1 &870237297
 GameObject:
   m_ObjectHideFlags: 0
@@ -8415,7 +8416,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -422, y: -866}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 571, y: 487}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &921123023
@@ -12411,7 +12412,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -286.1829, y: 480.87012}
-  m_SizeDelta: {x: 57.634, y: 38.2635}
+  m_SizeDelta: {x: 50, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1250109612
 MonoBehaviour:
@@ -15772,7 +15773,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -286.1, y: 480.9}
-  m_SizeDelta: {x: 57.634, y: 38.2635}
+  m_SizeDelta: {x: 50, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1653584299
 MonoBehaviour:
@@ -18215,10 +18216,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   QueueDetailLeftWindow: {fileID: 1982846574}
   QueueDetailRightWindow: {fileID: 862236587}
+  QMDetailRightWindow: {fileID: 82359487}
   QueueDetailLocal: {fileID: 1458707009}
   QueueDetailRemote: {fileID: 2106014790}
   QueueDetialAlias: {fileID: 44241441}
   QueueDetailTransmission: {fileID: 2133941847}
+  currentSelected: []
 --- !u!1 &2026648632
 GameObject:
   m_ObjectHideFlags: 0
