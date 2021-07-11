@@ -21,6 +21,8 @@ public class QueueDetailsController : MonoBehaviour
             text8_depth;
     
     // Text Fields: Remote
+    private Transform typeGroups;
+    private Transform textGroupRemote, textGroupAlias;
     private Text textqueue1_targetQM, textqueue2_targetQueue, textqueue3_transmission;
     // Text Fields: Alias
     private Text textqueue4_targetQueue, textqueue5_currentPath;
@@ -53,10 +55,19 @@ public class QueueDetailsController : MonoBehaviour
         text7_altered = textGroup.Find("Text7").GetComponent<Text>();
         text8_depth = textGroup.Find("Text8").GetComponent<Text>();
 
-        // Locate Text: Remote
-
-        // Locate Text: Alias
+        // Locate Type Parents
+        typeGroups = transform.Find("QueueTypesGameObject");
+        textGroupRemote = typeGroups.Find("QueueRemoteGameObject");
+        textGroupAlias = typeGroups.Find("QueueAliasGameObject");
         
+        // Locate Text: Remote
+        textqueue1_targetQM = textGroupRemote.Find("TextQueue_1").GetComponent<Text>();
+        textqueue2_targetQueue = textGroupRemote.Find("TextQueue_2").GetComponent<Text>();
+        textqueue3_transmission = textGroupRemote.Find("TextQueue_3").GetComponent<Text>();
+        // Locate Text: Alias
+        textqueue4_targetQueue = textGroupAlias.Find("TextQueue_4").GetComponent<Text>();
+        textqueue5_currentPath = textGroupAlias.Find("TextQueue_5").GetComponent<Text>();
+
         
     }
 
@@ -125,24 +136,40 @@ public class QueueDetailsController : MonoBehaviour
 
     }
 
+
+    /*
+    * Prepare Information based on the queue type
+    */
     void GetQueueLocal(MQ.Queue queue)
     {
-
+        SetAllQueueTypeInfoObjectFalse();
+        QueueDetailLocal.SetActive(true);
     }
 
     void GetQueueRemote(MQ.Queue queue)
     {
-
+        SetAllQueueTypeInfoObjectFalse();
+        QueueDetailRemote.SetActive(true);
     }
 
     void GetQueueAlias(MQ.Queue queue)
     {
-
+        SetAllQueueTypeInfoObjectFalse();
+        QueueDetialAlias.SetActive(true);
     }
 
     void GetQueueTransmission(MQ.Queue queue)
     {
+        SetAllQueueTypeInfoObjectFalse();
+        QueueDetailTransmission.SetActive(true);
+    }
 
+    void SetAllQueueTypeInfoObjectFalse()
+    {
+        QueueDetailLocal.SetActive(false);
+        QueueDetailRemote.SetActive(false);
+        QueueDetialAlias.SetActive(false);
+        QueueDetailTransmission.SetActive(false);
     }
 
 
