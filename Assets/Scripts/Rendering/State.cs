@@ -180,5 +180,30 @@ public class State : MonoBehaviour
         }
         return null;
     }
+
+    // Return the message
+    public MQ.Message GetTheMessage(string selectedQMName, string selectedQueueName, string messageID)
+    {
+        foreach (MQ.Client client in qmgrs.Keys)
+        {
+            if (client.GetQueueManagerName() == selectedQMName)
+            {
+                foreach (MQ.Queue queue in client.GetAllQueues())
+                {
+                    if (queue.queueName == selectedQueueName)
+                    {
+                        foreach (MQ.Message message in client.GetAllMessages(queue.queueName))
+                        {
+                            if (message.messageId == messageID)
+                            {
+                                return message;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return null;
+    }
 }
 

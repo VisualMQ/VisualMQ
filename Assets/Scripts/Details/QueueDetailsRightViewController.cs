@@ -10,6 +10,7 @@ public class QueueDetailsRightViewController : MonoBehaviour
     public GameObject QueueDetailLeftWindow;
     public GameObject QueueDetailRightWindow;
     public GameObject QMDetailRightWindow;
+    public GameObject MessageWindow;
 
     // Message List Items
     private Transform MessageRowItem;
@@ -76,8 +77,19 @@ public class QueueDetailsRightViewController : MonoBehaviour
             item.gameObject.SetActive(true);
             
             item.Find("TextMessageName").GetComponent<Text>().text = messages[i].messageId;
-            //item.Find("TextQueueName").GetComponent<Text>().text = queues[i].queueName;
+            
+            int keyIdx = i;
+            Button curButton = item.Find("MessageRowButton").GetComponent<Button>();
+            curButton.onClick.AddListener(() => messageRowItemSelected(keyIdx, qmName, queueName, messages[keyIdx].messageId) );
         }
+    }
+
+    void messageRowItemSelected(int idx, string qmName, string queueName, string messageid)
+    {
+        MessageWindow.SetActive(true);
+        Debug.Log(messageid);
+        List<string> temp = new List<string>() { qmName, queueName , messageid};
+        MessageWindow.SendMessage("GenerateMessageWindow", temp);
     }
 
 

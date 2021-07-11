@@ -10,8 +10,16 @@ public class MessageController : MonoBehaviour
 
     // Button
     public Button closeButton, closeButtonTop, downLoadButton, copyIdButton;
-    public Text text0MessageID, text1Format;
-    public Text parentPath;
+    private Text text0MessageID, text1Format;
+    private Text parentPath;
+
+    void Awake()
+    {
+        // Locate GameObjects
+        text0MessageID = transform.Find("TextMessageID").GetComponent<Text>();
+        text1Format = transform.Find("TextMessageFormat").GetComponent<Text>();
+        //parentPath = transform.Find("ImagePath").Find("TextParentPath").GetComponent<Text>();
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -24,7 +32,17 @@ public class MessageController : MonoBehaviour
         copyIdButton.onClick.AddListener(CopyIdButtonClicked);
     }
 
+    void GenerateMessageWindow(List<string> temp)
+    {
+        ClearAllFields();
 
+        GameObject stateGameObject = GameObject.Find("State");
+        State stateComponent = stateGameObject.GetComponent(typeof(State)) as State;
+
+        MQ.Message message = stateComponent.GetTheMessage(temp[0],temp[1], temp[2]);
+        text0MessageID.text = message.messageId;
+        text1Format.text = message.format;
+    }
 
     /*
         BUTTON ACTIONS
@@ -51,11 +69,8 @@ public class MessageController : MonoBehaviour
     {
         text0MessageID.text = "";
         text1Format.text = "";
-        parentPath.text  = "";
+        //parentPath.text  = "";
     }
 
-    void GenerateMessageWindow(string messageID)
-    {
-
-    }
+    
 }
