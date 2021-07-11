@@ -8,6 +8,7 @@ public class QueueDetailsController : MonoBehaviour
     // PUBLIC
     public GameObject QueueDetailLeftWindow;
     public GameObject QueueDetailRightWindow;
+    // Details Section for different type of Queue
     public GameObject QueueDetailLocal;
     public GameObject QueueDetailRemote;
     public GameObject QueueDetialAlias;
@@ -17,10 +18,20 @@ public class QueueDetailsController : MonoBehaviour
     private Transform textGroup;
     private Text text0_queuename, text1_maxnumbermessage, text2_maxmessagelength, 
             text3_put, text4_get,text5_description, text6_created, text7_altered, 
-            text8_hold, text9_depth;
+            text8_depth;
+    
+    // Text Fields: Remote
+    private Text textqueue1_targetQM, textqueue2_targetQueue, textqueue3_transmission;
+    // Text Fields: Alias
+    private Text textqueue4_targetQueue, textqueue5_currentPath;
+    // Text Fields: Local
+    // Text Fields: Transmission
+
     // Button
     private Button returnButton, closeButton;
     private Button toQueueDetail, toMessageList;
+
+    public Button testQueue;
 
     private void Awake() {
 
@@ -40,9 +51,13 @@ public class QueueDetailsController : MonoBehaviour
         text5_description = textGroup.Find("Text5").GetComponent<Text>();
         text6_created = textGroup.Find("Text6").GetComponent<Text>();
         text7_altered = textGroup.Find("Text7").GetComponent<Text>();
-        text8_hold = textGroup.Find("Text8").GetComponent<Text>();
-        text9_depth = textGroup.Find("Text9").GetComponent<Text>();
+        text8_depth = textGroup.Find("Text8").GetComponent<Text>();
 
+        // Locate Text: Remote
+
+        // Locate Text: Alias
+        
+        
     }
 
     // Start is called before the first frame update
@@ -53,7 +68,13 @@ public class QueueDetailsController : MonoBehaviour
         closeButton.onClick.AddListener(CloseClicked);
         toQueueDetail.onClick.AddListener(ToQueueDetailsClicked);
         toMessageList.onClick.AddListener(ToMessageListClicked);*/
+        
+        testQueue.onClick.AddListener(test);
     
+    }
+
+    void test(){
+        GetQueueBasicInfo("QM1", "DEV.QUEUE.1");
     }
 
     // Update is called once per frame
@@ -66,27 +87,60 @@ public class QueueDetailsController : MonoBehaviour
         Content Generation
     */
 
-    void GetQueueBasicInfo(string queuename)
+    void GetQueueBasicInfo(string qmName, string queueName)
+    {
+        GameObject stateGameObject = GameObject.Find("State");
+        State stateComponent = stateGameObject.GetComponent(typeof(State)) as State;
+        MQ.Queue queue = stateComponent.GetQueueuDetail(qmName, queueName);
+
+        text0_queuename.text = queue.queueName;
+        text1_maxnumbermessage.text = queue.maxNumberOfMessages.ToString();
+        text2_maxmessagelength.text = queue.maxMessageLength.ToString();
+        text3_put.text = queue.inhibitPut.ToString();
+        text4_get.text = queue.inhibitGet.ToString();
+        text5_description.text = queue.description;
+        text6_created.text = queue.timeCreated;
+        text7_altered.text = queue.timeAltered;
+        text8_depth.text = queue.currentDepth.ToString();
+
+        // Get Queue Type
+        switch (queue.GetTypeName())
+        {
+            case "Local":
+                GetQueueLocal(queue);
+                break;
+            case "Alias":
+                GetQueueAlias(queue);
+                break;
+            case "Remote":
+                GetQueueRemote(queue);
+                break;
+            case "Transmission":
+                GetQueueTransmission(queue);
+                break;
+            default:
+                Debug.Log("Default case");
+                break;
+        }
+
+    }
+
+    void GetQueueLocal(MQ.Queue queue)
     {
 
     }
 
-    void GetQueueLocal(string queuename)
+    void GetQueueRemote(MQ.Queue queue)
     {
 
     }
 
-    void GetQueueRemote(string queuename)
+    void GetQueueAlias(MQ.Queue queue)
     {
 
     }
 
-    void GetQueueAlias(string queuename)
-    {
-
-    }
-
-    void GetQueueTransmission(string queuename)
+    void GetQueueTransmission(MQ.Queue queue)
     {
 
     }
