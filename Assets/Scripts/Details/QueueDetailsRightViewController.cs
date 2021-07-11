@@ -17,13 +17,6 @@ public class QueueDetailsRightViewController : MonoBehaviour
     // Buttons
     private Button closeRight, returnRight;
     private Button toLeft, toRight;
-
-    // TESTING
-    void test(){
-        QueueDetailLeftWindow.SetActive(false);
-        QueueDetailRightWindow.SetActive(true);
-        GenerateMessageList("QM1", "DEV.QUEUE.1");
-    }
     
 
     private void Awake() {
@@ -55,8 +48,14 @@ public class QueueDetailsRightViewController : MonoBehaviour
 
     
 
-    public void GenerateMessageList(string qmName, string queueName)
+    public void GenerateMessageList(List<string> temp)
     {
+        Debug.Log("MESSAGE LIST");
+        
+        string qmName = temp[0];
+        string queueName = temp[1];
+        Debug.Log(qmName + queueName);
+
         // Get List of MQ.Message
         GameObject stateGameObject = GameObject.Find("State");
         State stateComponent = stateGameObject.GetComponent(typeof(State)) as State;

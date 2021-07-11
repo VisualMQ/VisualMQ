@@ -111,7 +111,7 @@ public class QMDetailsController : MonoBehaviour
 
     }
 
-    
+
     void CloseButtonClicked()
     {
         QMDetailsRightWindow.SetActive(false);

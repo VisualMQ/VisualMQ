@@ -8,6 +8,7 @@ public class QMDetailsRightViewController : MonoBehaviour
     // Details Window Game Object
     public GameObject QMDetailsRightWindow;
     public GameObject QMDetailsWindow;
+    public GameObject QueueDetailLeftWindow;
 
     // Queue Lists Items
     private Transform QueueRowItem;
@@ -17,26 +18,14 @@ public class QMDetailsRightViewController : MonoBehaviour
     public Button toDetails, toQueueLists;
     public Button closeButton;
 
-    // !!! TEST !!!
-    //public Button testButton2;
-    /*
-    void Clicked(){
-        QMDetailsRightWindow.SetActive(true);
-        GenerateQueueList("QM1");
-    }*/
-
 
     // Start is called before the first frame update
     void Start()
     {   
-        /* !!! TEST !!!
-        testButton2.onClick.AddListener(Clicked);*/
-
         // Buttons Listener
         closeButton.onClick.AddListener(CloseButtonClicked);
         toDetails.onClick.AddListener(ToDetailsClicked);
         toQueueLists.onClick.AddListener(ToQueueListsClicked);
-        
     }
 
 
@@ -75,13 +64,19 @@ public class QMDetailsRightViewController : MonoBehaviour
 
             int keyIdx = i;
             Button curButton = item.Find("QueueRowButton").GetComponent<Button>();
-            curButton.onClick.AddListener(() => queueRowItemSelected( keyIdx ) );
+            curButton.onClick.AddListener(() => queueRowItemSelected(keyIdx, selectedQM, queues[keyIdx].queueName) );
         }
     }
 
-    void queueRowItemSelected(int rowidx)
+    // Queue is selected -> To Queue Details Winodw
+    void queueRowItemSelected(int rowidx, string qmName, string queueName)
     {
-        Debug.Log(rowidx);
+        // To Queue Detail Window
+        QMDetailsRightWindow.SetActive(false);
+        QueueDetailLeftWindow.SetActive(true);
+
+        List<string> temp = new List<string>() { qmName, queueName };
+        QueueDetailLeftWindow.SendMessage("GetQueueBasicInfo", temp);
     }
 
 

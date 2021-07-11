@@ -34,7 +34,7 @@ public class QueueDetailsController : MonoBehaviour
     private Button returnButton, closeButton;
     private Button toQueueDetail, toMessageList;
 
-    public Button buttontestleft;
+    public List<string> currentSelected;
 
     private void Awake() {
 
@@ -80,19 +80,11 @@ public class QueueDetailsController : MonoBehaviour
         closeButton.onClick.AddListener(CloseClicked);
         toQueueDetail.onClick.AddListener(ToQueueDetailsClicked);
         toMessageList.onClick.AddListener(ToMessageListClicked);
-        
-        buttontestleft.onClick.AddListener(testwin);
 
         // Hide the Windows
         //QueueDetailLeftWindow.SetActive(false);
         //QueueDetailRightWindow.SetActive(false);
 
-    }
-
-    void testwin(){
-        Debug.Log("HIHIHI");
-        QueueDetailLeftWindow.SetActive(true);
-        GetQueueBasicInfo("QM1", "DEV.QUEUE.REMOTE1");
     }
 
     // Update is called once per frame
@@ -104,8 +96,12 @@ public class QueueDetailsController : MonoBehaviour
     /*
         Content Generation
     */
-    void GetQueueBasicInfo(string qmName, string queueName)
+    public void GetQueueBasicInfo(List<string> temp)
     {
+        currentSelected = temp;
+        string qmName = temp[0];
+        string queueName = temp[1];
+
         GameObject stateGameObject = GameObject.Find("State");
         State stateComponent = stateGameObject.GetComponent(typeof(State)) as State;
         MQ.Queue queue = stateComponent.GetQueueuDetail(qmName, queueName);
@@ -139,7 +135,6 @@ public class QueueDetailsController : MonoBehaviour
                 Debug.Log("Default case");
                 break;
         }
-
     }
     
 
@@ -209,8 +204,9 @@ public class QueueDetailsController : MonoBehaviour
     // Switch to Message List Window
     void ToMessageListClicked()
     {
-        QueueDetailLeftWindow.SetActive(false);
         QueueDetailRightWindow.SetActive(true);
-        //QueueDetailRightWindow.SendMessage("test");
+        QueueDetailRightWindow.SendMessage("GenerateMessageList", currentSelected);
+        
+        QueueDetailLeftWindow.SetActive(false);
     }
 }
