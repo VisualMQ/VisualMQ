@@ -85,7 +85,7 @@ public class QueueDetailsController : MonoBehaviour
     }
 
     void test(){
-        GetQueueBasicInfo("QM1", "DEV.QUEUE.1");
+        GetQueueBasicInfo("QM1", "DEV.QUEUE.REMOTE1");
     }
 
     // Update is called once per frame
@@ -97,7 +97,6 @@ public class QueueDetailsController : MonoBehaviour
     /*
         Content Generation
     */
-
     void GetQueueBasicInfo(string qmName, string queueName)
     {
         GameObject stateGameObject = GameObject.Find("State");
@@ -135,7 +134,7 @@ public class QueueDetailsController : MonoBehaviour
         }
 
     }
-
+    
 
     /*
     * Prepare Information based on the queue type
@@ -150,12 +149,19 @@ public class QueueDetailsController : MonoBehaviour
     {
         SetAllQueueTypeInfoObjectFalse();
         QueueDetailRemote.SetActive(true);
+        /*
+        textqueue1_targetQM.text = queue.targetQueueName;
+        textqueue2_targetQueue.text = queue.targetQmgrName;
+        textqueue3_transmission.text = queue.transmissionQueueName;*/
     }
 
     void GetQueueAlias(MQ.Queue queue)
     {
         SetAllQueueTypeInfoObjectFalse();
         QueueDetialAlias.SetActive(true);
+        
+        //textqueue4_targetQueue.text = ((AliasQueue)queue).targetQueueName;
+        textqueue5_currentPath.text = "";
     }
 
     void GetQueueTransmission(MQ.Queue queue)
@@ -188,11 +194,11 @@ public class QueueDetailsController : MonoBehaviour
 
     void ToQueueDetailsClicked()
     {
-
+        return;
     }
 
     void ToMessageListClicked()
     {
-
+        
     }
 }

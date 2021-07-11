@@ -169,7 +169,7 @@ namespace MQ
                             ((LocalQueue)queue).currentDepth = queueJson.status.currentDepth;
                         }
                         break;
-
+                    
                     default:
                         break;
                 }

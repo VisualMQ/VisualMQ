@@ -161,5 +161,24 @@ public class State : MonoBehaviour
         }
         return null;
     }
+
+    // Return All messages under current QM and queue
+    public List<MQ.Message> GetAllMessages(string selectedQMName, string selectedQueueName)
+    {
+        foreach (MQ.Client client in qmgrs.Keys)
+        {
+            if (client.GetQueueManagerName() == selectedQMName)
+            {
+                foreach (MQ.Queue queue in client.GetAllQueues())
+                {
+                    if (queue.queueName == selectedQueueName)
+                    {
+                        return client.GetAllMessages(selectedQueueName);
+                    }
+                }
+            }
+        }
+        return null;
+    }
 }
 

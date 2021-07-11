@@ -18,7 +18,6 @@ namespace MQ
 
         public static string typeName { get; protected set; }
         public abstract string GetTypeName();
-
     }
 
 
@@ -34,9 +33,8 @@ namespace MQ
         {
             currentDepth = 0;
             holdsMessages = false;
-
         }
-
+        
         public override string GetTypeName()
         {
             return RemoteQueue.typeName;
