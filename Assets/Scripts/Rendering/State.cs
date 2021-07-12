@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class State : MonoBehaviour
 {
-
-    private const float UPDATE_INTERVAL = 10.0f; // 10 seconds
+    // TODO: Change, right now dynamic updates do not work with Queue areas
+    private const float UPDATE_INTERVAL = 100000.0f;
     private float updateCountdown = UPDATE_INTERVAL;
 
     // Main dictionary keeping all connection and their rendered counterparts
@@ -19,10 +19,10 @@ public class State : MonoBehaviour
         qmgrs.Add(newMqClient, null);
     }
 
-
+    
     void Start()
     {
-
+        
     }
 
 
@@ -53,11 +53,15 @@ public class State : MonoBehaviour
 
             // Render queue manager. Note that data is stored in Component (ie Script) not in GameObject!
             // GameObject is just an Entity/Container for Components that perform the real functionality
+
             GameObject qmgrGameObject = new GameObject(newQmgr.qmgrName, typeof(QueueManager));
+
             QueueManager qmgrComponent = qmgrGameObject.GetComponent(typeof(QueueManager)) as QueueManager;
             qmgrComponent.queues = newQueues;
-
             qmgrs[newMqClient] = qmgrGameObject;
+
+            qmgrGameObject.transform.parent = this.transform;
+
             return;
         }
 
@@ -66,7 +70,7 @@ public class State : MonoBehaviour
         updateCountdown -= Time.deltaTime;
         if (updateCountdown <= 0)
         {
-            Debug.Log("Updating state...");
+            //Debug.Log("Updating state...");
 
             foreach (KeyValuePair<MQ.Client, GameObject> entry in qmgrs)
             {
@@ -82,6 +86,61 @@ public class State : MonoBehaviour
             updateCountdown = UPDATE_INTERVAL;
         }
 
+    }
+
+
+    /*
+    * For Information Panel
+    */
+
+    // Get Number of QM Registered -> For Navigation Check box
+    public int GetNumberOfRegisteredQM()
+    {
+        return qmgrs.Count; 
+    }
+
+    
+    // Get MQ Name List -> For Navigation Check box
+    public List<string> RegisteredQMNameList()
+    {
+        List<string> mqlist = new List<string>();
+
+        foreach (MQ.Client client in qmgrs.Keys) 
+        {
+            mqlist.Add(client.GetQueueManagerName());
+        }
+
+        return mqlist;
+    }
+
+
+    // Return the details of selected QM
+    public MQ.QueueManager GetSelectedQmgr(string selectedQMName)
+    {
+        foreach (MQ.Client client in qmgrs.Keys) 
+        {
+            if (client.GetQueueManagerName() == selectedQMName)
+            {
+                return client.GetQmgr();
+            }
+        }
+        return null;
+    }
+
+
+    // Return List of queues for the table of queues of a QM
+    public List<MQ.Queue> GetAllQueuesInQmgr(string selectedQMName)
+    {
+        List<string> queuesList = new List<string>();
+
+        foreach (MQ.Client client in qmgrs.Keys) 
+        {
+            if (client.GetQueueManagerName() == selectedQMName)
+            {
+                return client.GetAllQueues();
+            }
+        }
+        return null;
     }
 
 }

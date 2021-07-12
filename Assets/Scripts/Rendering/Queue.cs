@@ -1,47 +1,62 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using MQ;
+using System.Collections.Generic;
 
 public class Queue : MonoBehaviour
 {
 
     public Vector3 position;
     public MQ.Queue queue;
- 
+    public GameObject messagePrefab;
+    public List<GameObject> messages;
+
+
     public TextMesh textMesh;
     public QueueManager parent;
     public GameObject instantiatedQueue;
     public GameObject queuePrefab;
     public static GameObject queueInFocus;
     public static GameObject prefabInFocus;
+
+    // TODO: REMOVE THIS LATER DEMO
+    public static QMDetailsController tempWindow;
     // Use this for initialization
     void Start()
     {
         string prefabName;
-        if (queue is MQ.RemoteQueue) 
+        if (queue is MQ.RemoteQueue)
         {
-            prefabName = "RemoteQueue";
+            prefabName = "Prefabs/RemoteQueue";
         }
         else if (queue is MQ.LocalQueue)
         {
-            prefabName = "LocalQueue";
+            prefabName = "Prefabs/LocalQueue";
         }
         else if (queue is MQ.TransmissionQueue)
         {
-            prefabName = "TransmissionQueue";
+            prefabName = "Prefabs/TransmissionQueue";
         }
         else if (queue is MQ.AliasQueue)
         {
-            prefabName = "AliasQueue";
+            prefabName = "Prefabs/AliasQueue";
         }
         else
         {
-            prefabName = "LocalQueue";
+            prefabName = "Prefabs/LocalQueue"; //TODO: undefined queue
         }
         queuePrefab = Resources.Load(prefabName) as GameObject;
         instantiatedQueue = Instantiate(queuePrefab, new Vector3(0,0,0), Quaternion.identity) as GameObject;
         instantiatedQueue.transform.parent = this.transform;
         instantiatedQueue.transform.parent.position = position;
+
+        if (queue.holdsMessages)
+        {
+            int currentDepth = queue.currentDepth;
+            CreateMessages(currentDepth, 10); //TODO: change 10 to actual maximumDepth
+
+        }
+        
         // Add mesh Colider
         MeshCollider mc = instantiatedQueue.transform.parent.gameObject.AddComponent<MeshCollider>();
         mc.sharedMesh = instantiatedQueue.GetComponent<MeshFilter>().sharedMesh;
@@ -111,9 +126,14 @@ public class Queue : MonoBehaviour
     }
 
     void OnMouseUp()
-    {   
+    {
+        // TODO: SHOWQING QM DETAILS FIX DEMO TEST
+        tempWindow.Clicked();
+       
+
+
         // Click on twice = Deactivate focus
-        if(queueInFocus == instantiatedQueue)
+        if (queueInFocus == instantiatedQueue)
         {
             queueInFocus.transform.localScale = prefabInFocus.transform.localScale;
             queueInFocus = null;
@@ -127,7 +147,7 @@ public class Queue : MonoBehaviour
 
         queueInFocus = instantiatedQueue;
         prefabInFocus = instantiatedQueue;
-        instantiatedQueue.transform.localScale = new Vector3(1.2f, 1.2f, 1.2f);
+        instantiatedQueue.transform.localScale = new Vector3(1.05f, 1.05f, 1.05f);
         /*Do whatever here as per your need*/
         Camera.main.transform.LookAt(this.position);
         Camera.main.transform.position = new Vector3(2.5f, 15f, -13f) + this.position;
@@ -136,10 +156,66 @@ public class Queue : MonoBehaviour
 
     void OnMouseEnter()
     {
-        instantiatedQueue.transform.localScale = new Vector3(1.2f, 1.2f, 1.2f);   
+        instantiatedQueue.transform.localScale = new Vector3(1.05f, 1.05f, 1.05f);   
     }
     void OnMouseExit()
     {
         instantiatedQueue.transform.localScale = this.queuePrefab.transform.localScale;
     }
+
+
+    void Awake()
+    {
+        messagePrefab = Resources.Load("Prefabs/Message") as GameObject;
+        messages = new List<GameObject>();
+    }
+
+
+    void CreateMessages(int currentDepth, int MaximumDepth)
+    {
+        if (currentDepth == 0) return;
+
+        double utilization = (double)currentDepth / (double)MaximumDepth;
+        string messageColor;
+        if (utilization > 0.6) //determine what color to render the message prefabs
+        {
+            messageColor = "Materials/QueueRed";
+        }
+        else if (utilization < 0.4)
+        {
+            messageColor = "Materials/QueueBlue";
+        }
+        else
+        {
+            messageColor = "Materials/QueueYellow";
+        }
+
+        for (int i = 0; i < currentDepth; i++)
+        {
+            Vector3 messagePosition = position;
+            messagePosition.y = position.y + (i + 1) * 0.2f;
+            GameObject instantiatedMessage = Instantiate(messagePrefab, messagePosition, Quaternion.identity) as GameObject;
+            instantiatedMessage.transform.parent = this.transform;
+            instantiatedMessage.GetComponent<MeshRenderer>().material = Resources.Load(messageColor) as Material;
+
+            messages.Add(instantiatedMessage);
+        }
+    }
+
+    public void UpdateMessages(int newDepth)
+    {
+        // First: destroy all old messages
+        for (int i = 0; i < messages.Count; i++)
+        {
+            GameObject.DestroyImmediate(messages[i]);
+        }
+
+        // Second: Update to new messages
+        if (queue.holdsMessages)
+        {
+            queue.currentDepth = newDepth;
+            CreateMessages(newDepth, 10); //TODO: change 10 to actual maximumDepth
+        }
+    }
+
 }

@@ -5,39 +5,67 @@ using UnityEngine.UI;
 
 public class NavigationController : MonoBehaviour
 {
-    //public GameObject AuthenticationWindow;
+    // Windows Gameobject
+    public GameObject Authentication;
+    public GameObject FilterWindow;
+    
+    // Buttons
     public Button connectNewQMButton;
     public Button addFilterButton;
     public Button expandPanelButton;
 
+    // Left Panel: QM Check Selector
     public GameObject leftPanel;
+    public GameObject checkboxItem;
+    private Dictionary<string, bool> QMVisibility = new Dictionary<string, bool>();
+
+
+    //private int checkBoxNumber = 0;
+
+    // Testing: QM Details Panel
+    //public Button showQMDetailsButton;
+    public GameObject QMDetailsWindow;
+    public GameObject QMDetailsRightWindow;
+
+/*
+    void ShowQMDetailsButtonClicked()
+    {
+        //QMDetailsWindow.SetActive(true);
+        QMDetailsRightWindow.SetActive(true);
+    }*/
+
 
     // Start is called before the first frame update
     void Start()
     {
-        //AuthenticationWindow.SetActive(false);
-        //connectNewQM.SetActive(false);
-        //addFilter.SetActive(false);
 
+        // Default: Hide Auth, Filter, Left Panel Windows
+        Authentication.SetActive(false);  
         leftPanel.SetActive(false);
-        expandPanelButton.onClick.AddListener(leftPanelButtonClicked);
+        FilterWindow.SetActive(false);
 
+        QMDetailsWindow.SetActive(false);
+        QMDetailsRightWindow.SetActive(false);
 
+        // Button Listener
+        expandPanelButton.onClick.AddListener(LeftPanelButtonClicked);
+        addFilterButton.onClick.AddListener(AddFilterButtonClicked);
+        //showQMDetailsButton.onClick.AddListener(ShowQMDetailsButtonClicked);
     }
+
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
+
     /*
-    * Click to open the left panel
-    * Click to hide the left panel
+    * Click to open the left panel; Click to hide the left panel
     */
-    void leftPanelButtonClicked()
+    void LeftPanelButtonClicked()
     {
-        
         if (leftPanel.activeSelf == true)
         {
             leftPanel.SetActive(false);
@@ -47,6 +75,33 @@ public class NavigationController : MonoBehaviour
         {
             leftPanel.SetActive(true);
             Debug.Log("Left Panel: Expand");
+            GenerateCheckBox();
         }
     }
+
+
+    void AddFilterButtonClicked()
+    {
+        FilterWindow.SetActive(true);
+    }
+
+
+    void GenerateCheckBox()
+    {
+        // Get Current Number of Check Box
+        Debug.Log("NOTICE: Generating checkbox");
+        GameObject stateGameObject = GameObject.Find("State");
+        State stateComponent = stateGameObject.GetComponent(typeof(State)) as State;
+        
+        List<string> mqlist = stateComponent.RegisteredQMNameList();
+        Debug.Log(string.Join(",", mqlist));
+
+        // Default to true, all mq is visiable
+        foreach (string mq in mqlist)
+        {
+            QMVisibility.Add(mq, true);
+        }
+
+    }
+
 }

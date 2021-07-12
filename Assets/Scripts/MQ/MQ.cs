@@ -28,8 +28,13 @@ namespace MQ
             client = new HttpClient();
             client.BaseAddress = new Uri(baseUrl);
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
+            
             Authenticate();
+
+        }
+
+        public string GetQueueManagerName(){
+            return this.qmgr;
         }
 
         // Post request to the Login endpoint, which create cookies for authentication
@@ -39,6 +44,7 @@ namespace MQ
             string body = "{\"username\":\"" + username + "\",\"password\":\"" + apikey + "\"}";
             request.Content = new StringContent(body, Encoding.UTF8, "application/json");
             HttpResponseMessage response = client.SendAsync(request).Result;
+            
             if (!response.IsSuccessStatusCode)
             { //Invalid credentials or API endpoints
                 throw new Exception();
@@ -57,7 +63,6 @@ namespace MQ
             {
                 throw new Exception();
             }
-
         }
 
         public string GetAllChannels()
@@ -66,17 +71,12 @@ namespace MQ
         }
 
 
-        public string GetAllMessageIds(string queue)
+        public List<Message> GetAllMessages(string queue)
         {
-            try
-            {
-                return GetRequest("/ibmmq/rest/v1/messaging/qmgr/" + qmgr + "/queue/" + queue + "/messagelist");
-            }
-            catch (Exception)
-            {
-                return "Not supported for this type of queue.";
-            }
-
+            string response = GetRequest("/ibmmq/rest/v1/messaging/qmgr/" + qmgr + "/queue/" + queue + "/messagelist");
+            _MessageResponseJson messageJson = JsonUtility.FromJson<_MessageResponseJson>(response);
+            List<Message> messages = Parser.Parse(messageJson);
+            return messages;
         }
 
 
@@ -106,7 +106,7 @@ namespace MQ
 
         public Queue GetQueue(string queue)
         {
-            string response = GetRequest("/ibmmq/rest/v1/admin/qmgr/" + qmgr + "/queue/" + queue + "?attributes=*");
+            string response = GetRequest("/ibmmq/rest/v1/admin/qmgr/" + qmgr + "/queue/" + queue + "?attributes=*&status=*");
             _QueueResponseJson queueJson = JsonUtility.FromJson<_QueueResponseJson>(response);
             List<Queue> queues = Parser.Parse(queueJson);
             return queues[0];
@@ -161,10 +161,12 @@ namespace MQ
                         if (queueJson.general.isTransmissionQueue)
                         {
                             queue = new TransmissionQueue();
+                            ((TransmissionQueue)queue).currentDepth = queueJson.status.currentDepth;
                         }
                         else
                         {
                             queue = new LocalQueue();
+                            ((LocalQueue)queue).currentDepth = queueJson.status.currentDepth;
                         }
                         break;
 
@@ -186,8 +188,20 @@ namespace MQ
             return queues;
         }
 
-    }
+        public static List<Message> Parse(_MessageResponseJson messageResponseJson)
+        {
+            List<Message> messages = new List<Message>();
+            foreach (_MessageJson messageJson in messageResponseJson.messages)
+            {
+                Message message = new Message();
+                message.format = messageJson.format;
+                message.messageId = messageJson.messageId;
 
+                messages.Add(message);
+            }
+            return messages;
+        }
+    }
 
     /// 
     /// Below are JSON data representation objects
@@ -226,6 +240,7 @@ namespace MQ
         public _QueueRemoteJson remote;
         public _QueueAliasJson alias;
         public _QueueGeneralJson general;
+        public _QueueStatusJson status;
     }
 
     [Serializable]
@@ -267,4 +282,22 @@ namespace MQ
         public int maximumMessageLength;
     }
 
+    [Serializable]
+    public class _QueueStatusJson
+    {
+        public int currentDepth;
+    }
+
+    [Serializable]
+    public class _MessageResponseJson
+    {
+        public List<_MessageJson> messages;
+    }
+
+    [Serializable]
+    public class _MessageJson
+    {
+        public string format;
+        public string messageId;
+    }
 }
