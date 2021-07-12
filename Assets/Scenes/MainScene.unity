@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657838, g: 0.49641234, b: 0.57481676, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657868, g: 0.49641263, b: 0.5748171, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -18218,7 +18218,7 @@ MonoBehaviour:
   QMDetailRightWindow: {fileID: 82359487}
   QueueDetailLocal: {fileID: 1458707009}
   QueueDetailRemote: {fileID: 2106014790}
-  QueueDetialAlias: {fileID: 44241441}
+  QueueDetailAlias: {fileID: 44241441}
   QueueDetailTransmission: {fileID: 2133941847}
   currentSelected: []
 --- !u!1 &2026648632

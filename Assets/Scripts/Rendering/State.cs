@@ -144,7 +144,7 @@ public class State : MonoBehaviour
     }
 
     // Return the detail of one queue
-    public MQ.Queue GetQueueuDetail(string selectedQMName, string selectedQueueName)
+    public MQ.Queue GetQueueDetails(string selectedQMName, string selectedQueueName)
     {
         foreach (MQ.Client client in qmgrs.Keys)
         {
@@ -182,7 +182,7 @@ public class State : MonoBehaviour
     }
 
     // Return the message
-    public MQ.Message GetTheMessage(string selectedQMName, string selectedQueueName, string messageID)
+    public MQ.Message GetMessage(string selectedQMName, string selectedQueueName, string messageID)
     {
         foreach (MQ.Client client in qmgrs.Keys)
         {

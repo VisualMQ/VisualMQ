@@ -39,7 +39,7 @@ public class MessageController : MonoBehaviour
         GameObject stateGameObject = GameObject.Find("State");
         State stateComponent = stateGameObject.GetComponent(typeof(State)) as State;
 
-        MQ.Message message = stateComponent.GetTheMessage(temp[0],temp[1], temp[2]);
+        MQ.Message message = stateComponent.GetMessage(temp[0],temp[1], temp[2]);
         text0MessageID.text = message.messageId;
         text1Format.text = message.format;
     }
