@@ -15,6 +15,7 @@ public class QueueManager : MonoBehaviour
     private const float sY = 0.1286252f;
 
     public List<MQ.Queue> queues;
+    public List<MQ.Channel> channels;
     private Dictionary<string, GameObject> renderedQueues = new Dictionary<string, GameObject>();
 
     
@@ -166,6 +167,38 @@ public class QueueManager : MonoBehaviour
             queueComponent.position = offset + position + queueManagerHeight;
             queueComponent.queue = queue;
             queueGameObject.transform.parent = this.transform;
+        }
+
+
+        // Render area for channels and channels on them
+        for (int x = 0; x < largeArea[0] + smallArea[1]; x++)
+        {
+            GameObject lowerBlock = Instantiate(blockPrefab, new Vector3(sXZ * x, 0, -sXZ), Quaternion.identity);
+            lowerBlock.transform.parent = this.transform;
+        }
+        int numberOfSenderChannels = 0;
+        int numberOfReceiverChannels = 0;
+        foreach (MQ.Channel channel in channels)
+        {
+            
+            Vector3 queueManagerHeight = new Vector3(0, sY * 2, 0);
+            Vector3 position = new Vector3();
+            if (channel is MQ.SenderChannel)
+            {
+                int i = numberOfSenderChannels++;
+                position = new Vector3(sXZ * i, 0, -sXZ);
+            }
+            else if (channel is MQ.ReceiverChannel)
+            {
+                int j = numberOfReceiverChannels++;
+                position = new Vector3(sXZ * (largeArea[0] + smallArea[1] - j - 1), 0, -sXZ);
+            }
+            
+            GameObject channelGameObject = new GameObject(channel.channelName, typeof(Channel));
+            Channel channelComponent = channelGameObject.GetComponent(typeof(Channel)) as Channel;
+            channelComponent.position = position + queueManagerHeight;
+            channelComponent.channel = channel;
+            channelGameObject.transform.parent = this.transform;
         }
     }
 

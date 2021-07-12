@@ -50,6 +50,7 @@ public class State : MonoBehaviour
             }
             MQ.QueueManager newQmgr = newMqClient.GetQmgr();
             List<MQ.Queue> newQueues = newMqClient.GetAllQueues();
+            List<MQ.Channel> newChannels = newMqClient.GetAllChannels();
 
             // Render queue manager. Note that data is stored in Component (ie Script) not in GameObject!
             // GameObject is just an Entity/Container for Components that perform the real functionality
@@ -58,6 +59,7 @@ public class State : MonoBehaviour
 
             QueueManager qmgrComponent = qmgrGameObject.GetComponent(typeof(QueueManager)) as QueueManager;
             qmgrComponent.queues = newQueues;
+            qmgrComponent.channels = newChannels;
             qmgrs[newMqClient] = qmgrGameObject;
 
             qmgrGameObject.transform.parent = this.transform;
