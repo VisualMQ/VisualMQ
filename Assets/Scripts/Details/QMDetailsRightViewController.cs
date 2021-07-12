@@ -6,9 +6,9 @@ using UnityEngine.UI;
 public class QMDetailsRightViewController : MonoBehaviour
 {
     // Details Window Game Object
-    public GameObject QMDetailsRightWindow;
+    public GameObject QMDetailQueueListWindow;
     public GameObject QMDetailsWindow;
-    public GameObject QueueDetailLeftWindow;
+    public GameObject QueueDetailWindow;
 
     // Queue Lists Items
     private Transform QueueRowItem;
@@ -18,6 +18,15 @@ public class QMDetailsRightViewController : MonoBehaviour
     public Button toDetails, toQueueLists;
     public Button closeButton;
 
+    // List of row objects
+    List<GameObject> rowItemList = new List<GameObject>();
+
+    // Locate the Objects
+    private void Awake() {
+        // Container and Row Item
+        container = transform.Find("QueueRowContainer");
+        QueueRowItem = container.Find("QueueRowItem");
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -28,11 +37,6 @@ public class QMDetailsRightViewController : MonoBehaviour
         toQueueLists.onClick.AddListener(ToQueueListsClicked);
     }
 
-
-    // Update is called once per frame
-    void Update(){
-    }
-
     public void GenerateQueueList(string selectedQM)
     {
         // Get queues in the selectedQM
@@ -40,15 +44,11 @@ public class QMDetailsRightViewController : MonoBehaviour
         State stateComponent = stateGameObject.GetComponent(typeof(State)) as State;
 
         List<MQ.Queue> queues = stateComponent.GetAllQueuesInQmgr(selectedQM);
-
-        // Container and Row Item
-        container = transform.Find("QueueRowContainer");
-        QueueRowItem = container.Find("QueueRowItem");
         
         QueueRowItem.gameObject.SetActive(false);
 
         // Row Origin Position
-        float rowHeight = 45f;
+        float rowHeight = 50f;
         float startY = -37f;
 
         int size = queues.Count;
@@ -58,8 +58,10 @@ public class QMDetailsRightViewController : MonoBehaviour
             Transform item = Instantiate(QueueRowItem, container);
             RectTransform recTransform = item.GetComponent<RectTransform>();
             recTransform.anchoredPosition = new Vector2(5, -rowHeight * i + startY);
+
             item.gameObject.SetActive(true);
-            
+            rowItemList.Add(item.gameObject);
+
             item.Find("TextQueueName").GetComponent<Text>().text = queues[i].queueName;
 
             int keyIdx = i;
@@ -68,21 +70,35 @@ public class QMDetailsRightViewController : MonoBehaviour
         }
     }
 
+
+    // Clean all created queue row item
+    void QueueListDestroy()
+    {
+        
+        int size = rowItemList.Count;
+        for (int i = 0; i < size; i++)
+        {
+            GameObject cur = rowItemList[0];
+            rowItemList.RemoveAt(0);
+        }
+    }
+
+
     // Queue is selected -> To Queue Details Winodw
     void queueRowItemSelected(int rowidx, string qmName, string queueName)
     {
         // To Queue Detail Window
-        QMDetailsRightWindow.SetActive(false);
-        QueueDetailLeftWindow.SetActive(true);
+        QMDetailQueueListWindow.SetActive(false);
+        QueueDetailWindow.SetActive(true);
 
         List<string> temp = new List<string>() { qmName, queueName };
-        QueueDetailLeftWindow.SendMessage("GetQueueBasicInfo", temp);
+        QueueDetailWindow.SendMessage("GetQueueBasicInfo", temp);
     }
 
 
     void CloseButtonClicked()
     {
-        QMDetailsRightWindow.SetActive(false);
+        QMDetailQueueListWindow.SetActive(false);
         QMDetailsWindow.SetActive(false);
     }
 
@@ -92,7 +108,7 @@ public class QMDetailsRightViewController : MonoBehaviour
         // Show Current Details Window
         QMDetailsWindow.SetActive(true);
         // Close the Queue List Window
-        QMDetailsRightWindow.SetActive(false);
+        QMDetailQueueListWindow.SetActive(false);
     }
 
 

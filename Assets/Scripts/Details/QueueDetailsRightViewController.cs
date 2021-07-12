@@ -66,7 +66,7 @@ public class QueueDetailsRightViewController : MonoBehaviour
         int size = messages.Count;
 
         // Row Origin Position
-        float rowHeight = 45f;
+        float rowHeight = 50f;
         float startY = -37f;
 
         for (int i = 0; i < size; i++)
