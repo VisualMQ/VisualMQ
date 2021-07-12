@@ -39,6 +39,8 @@ public class QMDetailsRightViewController : MonoBehaviour
 
     public void GenerateQueueList(string selectedQM)
     {
+        DestroyRowItems();
+
         // Get queues in the selectedQM
         GameObject stateGameObject = GameObject.Find("State");
         State stateComponent = stateGameObject.GetComponent(typeof(State)) as State;
@@ -72,14 +74,14 @@ public class QMDetailsRightViewController : MonoBehaviour
 
 
     // Clean all created queue row item
-    void QueueListDestroy()
+    void DestroyRowItems()
     {
-        
-        int size = rowItemList.Count;
-        for (int i = 0; i < size; i++)
+        foreach (Transform child in container) 
         {
-            GameObject cur = rowItemList[0];
-            rowItemList.RemoveAt(0);
+            if(child.gameObject.name == "QueueRowItem(Clone)")
+            {
+                GameObject.Destroy(child.gameObject);
+            }
         }
     }
 
