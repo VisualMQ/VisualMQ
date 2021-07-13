@@ -65,9 +65,12 @@ namespace MQ
             }
         }
 
-        public string GetAllChannels()
+        public List<Channel> GetAllChannels()
         {
-            return GetRequest("/ibmmq/rest/v1/admin/qmgr/" + qmgr + "/channel");
+            string response = GetRequest("/ibmmq/rest/v1/admin/qmgr/" + qmgr + "/channel?attributes=*&status=*");
+            _ChannelResponseJson channelJson = JsonUtility.FromJson<_ChannelResponseJson>(response);
+            List<Channel> channels = Parser.Parse(channelJson);
+            return channels;
         }
 
 
@@ -201,6 +204,35 @@ namespace MQ
             }
             return messages;
         }
+
+        public static List<Channel> Parse(_ChannelResponseJson channelResponseJson)
+        {
+            List<Channel> channels = new List<Channel>();
+            foreach (_ChannelJson channelJson in channelResponseJson.channel)
+            {
+                Channel channel = null;
+                Debug.Log(channelJson.name);
+                Debug.Log(channelJson.type);
+                switch (channelJson.type)
+                {
+                    case "sender":
+                        channel = new SenderChannel();
+                        break;
+
+                    case "receiver":
+                        channel = new ReceiverChannel();
+                        break;
+
+                    default:
+                        continue;
+                }
+                channel.channelName = channelJson.name;
+                channel.channelType = channelJson.type;
+
+                channels.Add(channel);
+            }
+            return channels;
+        }
     }
 
     /// 
@@ -299,5 +331,18 @@ namespace MQ
     {
         public string format;
         public string messageId;
+    }
+
+    [Serializable]
+    public class _ChannelResponseJson
+    {
+        public List<_ChannelJson> channel;
+    }
+
+    [Serializable]
+    public class _ChannelJson
+    {
+        public string type;
+        public string name;
     }
 }

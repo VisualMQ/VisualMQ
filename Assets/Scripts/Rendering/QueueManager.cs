@@ -6,9 +6,6 @@ using UnityEngine;
 
 public class QueueManager : MonoBehaviour
 {
-
-
-
     private GameObject blockPrefab;
     private GameObject linePrefab;
 
@@ -17,8 +14,8 @@ public class QueueManager : MonoBehaviour
     private const float sY = 0.1286252f;
 
     public List<MQ.Queue> queues;
-    public Dictionary<string, GameObject> renderedQueues = new Dictionary<string, GameObject>();
-
+    public List<MQ.Channel> channels;
+    private Dictionary<string, GameObject> renderedQueues = new Dictionary<string, GameObject>();
     
     // Unity calls this method at the complete beginning, even before Start
     void Awake()
@@ -26,7 +23,6 @@ public class QueueManager : MonoBehaviour
         blockPrefab = Resources.Load("Prefabs/Block") as GameObject;
         linePrefab = Resources.Load("Prefabs/Line") as GameObject;
     }
-
 
     void Start()
     {
@@ -123,6 +119,9 @@ public class QueueManager : MonoBehaviour
         {
             GameObject line = Instantiate(linePrefab, new Vector3(sXZ * x, sY * 1.001f, -2) + offsets[numberOfQueuesList[2].Key], Quaternion.Euler(0f, 90f, 0f));
             line.transform.parent = this.transform;
+
+            GameObject line2 = Instantiate(linePrefab, new Vector3(sXZ * x, sY * 1.001f, -2), Quaternion.Euler(0f, 90f, 0f));
+            line2.transform.parent = this.transform;
         }
         // Render lines between areas among Z-axis
         for (int z = 0; z < largeArea[1] + smallArea[0]; z++)
@@ -146,8 +145,6 @@ public class QueueManager : MonoBehaviour
         //    textMesh.transform.Rotate(90, 0, 0);
         //    textMesh.transform.position = entry.Value + new Vector3(-0.3f, 0.01f, -1.5f);
         //}
-
-
 
         // Render inidividual queues
         Dictionary<string, int> numberOfRenderedQueues = new Dictionary<string, int>();
@@ -176,14 +173,43 @@ public class QueueManager : MonoBehaviour
             queueGameObject.transform.parent = this.transform;
 
         }
-    }
 
+        // Render area for channels and channels on them
+        for (int x = 0; x < largeArea[0] + smallArea[1]; x++)
+        {
+            GameObject lowerBlock = Instantiate(blockPrefab, new Vector3(sXZ * x, 0, -sXZ), Quaternion.identity);
+            lowerBlock.transform.parent = this.transform;
+        }
+        int numberOfSenderChannels = 0;
+        int numberOfReceiverChannels = 0;
+        foreach (MQ.Channel channel in channels)
+        {
+            
+            Vector3 queueManagerHeight = new Vector3(0, sY * 2, 0);
+            Vector3 position = new Vector3();
+            if (channel is MQ.SenderChannel)
+            {
+                int i = numberOfSenderChannels++;
+                position = new Vector3(sXZ * i, 0, -sXZ);
+            }
+            else if (channel is MQ.ReceiverChannel)
+            {
+                int j = numberOfReceiverChannels++;
+                position = new Vector3(sXZ * (largeArea[0] + smallArea[1] - j - 1), 0, -sXZ);
+            }
+            
+            GameObject channelGameObject = new GameObject(channel.channelName, typeof(Channel));
+            Channel channelComponent = channelGameObject.GetComponent(typeof(Channel)) as Channel;
+            channelComponent.position = position + queueManagerHeight;
+            channelComponent.channel = channel;
+            channelGameObject.transform.parent = this.transform;
+        }
+    }
 
     void Update()
     {
 
     }
-
 
     // This method is called from State object on the periodical update
     public void UpdateQueues(List<MQ.Queue> queues)
@@ -249,7 +275,6 @@ public class QueueManager : MonoBehaviour
 
     }
 
-
     // Our algorithm for creating a rectangle that can hold N queues
     // This method returns dimensions of that rectangle
     private int[] ComputeRectangleArea(int N)
@@ -270,7 +295,6 @@ public class QueueManager : MonoBehaviour
         int[] res = { b + 1, a };
         return res;
     }
-
 
     // Returns dimensions of a rectangle that can hold N queues but
     // one size of the rectangle is constrained to size a
