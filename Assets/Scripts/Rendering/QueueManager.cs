@@ -15,7 +15,7 @@ public class QueueManager : MonoBehaviour
 
     public List<MQ.Queue> queues;
     public List<MQ.Channel> channels;
-    private Dictionary<string, GameObject> renderedQueues = new Dictionary<string, GameObject>();
+    public Dictionary<string, GameObject> renderedQueues = new Dictionary<string, GameObject>();
     
     // Unity calls this method at the complete beginning, even before Start
     void Awake()
