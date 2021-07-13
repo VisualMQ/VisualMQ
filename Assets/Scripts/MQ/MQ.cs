@@ -103,7 +103,7 @@ namespace MQ
             return queues;
         }
 
-
+        // Get the queue under current QM
         public Queue GetQueue(string queue)
         {
             string response = GetRequest("/ibmmq/rest/v1/admin/qmgr/" + qmgr + "/queue/" + queue + "?attributes=*&status=*");
@@ -169,7 +169,7 @@ namespace MQ
                             ((LocalQueue)queue).currentDepth = queueJson.status.currentDepth;
                         }
                         break;
-
+                    
                     default:
                         break;
                 }

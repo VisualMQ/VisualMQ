@@ -37,18 +37,13 @@ public class QMDetailsController : MonoBehaviour
     {
         // TEST
         testButton.onClick.AddListener(Clicked);
-
+        QMDetailsWindow.SetActive(false);
+        QMDetailsRightWindow.SetActive(false);
 
         // Button Listener
         qmDetailsButton.onClick.AddListener(Clicked);
         queueListButton.onClick.AddListener(QueueListsButtonClicked);
         closeButton.onClick.AddListener(CloseButtonClicked);
-
-    }
-
-
-    void Update()
-    {
 
     }
 
@@ -97,7 +92,6 @@ public class QMDetailsController : MonoBehaviour
     void DetailsButtonClicked()
     {
         
-
     }
 
 

@@ -33,12 +33,6 @@ public class AuthenticationController : MonoBehaviour
     private string MQURLT;
     private string QMNameT;
 
-    //Show QM
-    //public GameObject ToggleQM1;
-    //public GameObject ToggleQM2;
-    //public int clickTime;
-    //public List<GameObject> toggleList = new List<GameObject>();
-
     // Reference NotificationController
     private NotificationController notificationScript;
 
