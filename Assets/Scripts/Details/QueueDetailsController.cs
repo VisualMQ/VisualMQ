@@ -87,12 +87,7 @@ public class QueueDetailsController : MonoBehaviour
         //QueueDetailRightWindow.SetActive(false);
 
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    
 
     /*
         Content Generation
