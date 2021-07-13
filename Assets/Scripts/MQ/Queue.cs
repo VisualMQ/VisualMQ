@@ -13,12 +13,11 @@ namespace MQ
         public string description;
         public string timeCreated;
         public string timeAltered;
-        public bool holdsMessages{ get; protected set; }
         public int currentDepth;
+        public bool holdsMessages{ get; protected set; }
 
         public static string typeName { get; protected set; }
         public abstract string GetTypeName();
-
     }
 
 
@@ -34,9 +33,8 @@ namespace MQ
         {
             currentDepth = 0;
             holdsMessages = false;
-
         }
-
+        
         public override string GetTypeName()
         {
             return RemoteQueue.typeName;

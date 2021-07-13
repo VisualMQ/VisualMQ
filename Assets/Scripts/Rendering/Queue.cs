@@ -53,7 +53,7 @@ public class Queue : MonoBehaviour
         if (queue.holdsMessages)
         {
             int currentDepth = queue.currentDepth;
-            CreateMessages(currentDepth, 10); //TODO: change 10 to actual maximumDepth
+            CreateMessages(currentDepth, queue.maxNumberOfMessages);
 
         }
         
@@ -169,8 +169,7 @@ public class Queue : MonoBehaviour
         messagePrefab = Resources.Load("Prefabs/Message") as GameObject;
         messages = new List<GameObject>();
     }
-
-
+    
     void CreateMessages(int currentDepth, int MaximumDepth)
     {
         if (currentDepth == 0) return;
@@ -190,7 +189,8 @@ public class Queue : MonoBehaviour
             messageColor = "Materials/QueueYellow";
         }
 
-        for (int i = 0; i < currentDepth; i++)
+        int messagePrefabNum = (int)Math.Ceiling(utilization * 20);
+        for (int i = 0; i < messagePrefabNum; i++)
         {
             Vector3 messagePosition = position;
             messagePosition.y = position.y + (i + 1) * 0.2f;
@@ -214,8 +214,7 @@ public class Queue : MonoBehaviour
         if (queue.holdsMessages)
         {
             queue.currentDepth = newDepth;
-            CreateMessages(newDepth, 10); //TODO: change 10 to actual maximumDepth
+            CreateMessages(newDepth, queue.maxNumberOfMessages);
         }
     }
-
 }

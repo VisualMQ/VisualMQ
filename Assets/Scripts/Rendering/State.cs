@@ -143,5 +143,67 @@ public class State : MonoBehaviour
         return null;
     }
 
+    // Return the detail of one queue
+    public MQ.Queue GetQueueDetails(string selectedQMName, string selectedQueueName)
+    {
+        foreach (MQ.Client client in qmgrs.Keys)
+        {
+            if (client.GetQueueManagerName() == selectedQMName)
+            {
+                foreach (MQ.Queue queue in client.GetAllQueues())
+                {
+                    if (queue.queueName == selectedQueueName)
+                    {
+                        return client.GetQueue(selectedQueueName);
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    // Return All messages under current QM and queue
+    public List<MQ.Message> GetAllMessages(string selectedQMName, string selectedQueueName)
+    {
+        foreach (MQ.Client client in qmgrs.Keys)
+        {
+            if (client.GetQueueManagerName() == selectedQMName)
+            {
+                foreach (MQ.Queue queue in client.GetAllQueues())
+                {
+                    if (queue.queueName == selectedQueueName)
+                    {
+                        return client.GetAllMessages(selectedQueueName);
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    // Return the message
+    public MQ.Message GetMessage(string selectedQMName, string selectedQueueName, string messageID)
+    {
+        foreach (MQ.Client client in qmgrs.Keys)
+        {
+            if (client.GetQueueManagerName() == selectedQMName)
+            {
+                foreach (MQ.Queue queue in client.GetAllQueues())
+                {
+                    if (queue.queueName == selectedQueueName)
+                    {
+                        foreach (MQ.Message message in client.GetAllMessages(queue.queueName))
+                        {
+                            if (message.messageId == messageID)
+                            {
+                                return message;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return null;
+    }
 }
 

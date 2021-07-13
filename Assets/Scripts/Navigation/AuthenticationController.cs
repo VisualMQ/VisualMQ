@@ -33,12 +33,6 @@ public class AuthenticationController : MonoBehaviour
     private string MQURLT;
     private string QMNameT;
 
-    //Show QM
-    //public GameObject ToggleQM1;
-    //public GameObject ToggleQM2;
-    //public int clickTime;
-    //public List<GameObject> toggleList = new List<GameObject>();
-
     // Reference NotificationController
     private NotificationController notificationScript;
 
@@ -72,7 +66,7 @@ public class AuthenticationController : MonoBehaviour
         try
         {
             MQ.Client qmClient = new MQ.Client(MQURLT, QMNameT, userNameT, apiKeyT);
-
+            
             GameObject stateGameObject = GameObject.Find("State");
             State stateComponent = stateGameObject.GetComponent(typeof(State)) as State;
             stateComponent.AddNewMqClient(qmClient);

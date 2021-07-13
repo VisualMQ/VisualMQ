@@ -10,54 +10,39 @@ public class NavigationController : MonoBehaviour
     public GameObject FilterWindow;
     
     // Buttons
-    public Button connectNewQMButton;
-    public Button addFilterButton;
-    public Button expandPanelButton;
+    private Button expandQMSelector, authenticateNewQM, applyFilter;
 
-    // Left Panel: QM Check Selector
+    // Left Panel
     public GameObject leftPanel;
-    public GameObject checkboxItem;
+    private Transform checkboxItem;
+    private Transform leftPanelContainer;
+
     private Dictionary<string, bool> QMVisibility = new Dictionary<string, bool>();
 
-
-    //private int checkBoxNumber = 0;
-
-    // Testing: QM Details Panel
-    //public Button showQMDetailsButton;
-    public GameObject QMDetailsWindow;
-    public GameObject QMDetailsRightWindow;
-
-/*
-    void ShowQMDetailsButtonClicked()
+    private void Awake() 
     {
-        //QMDetailsWindow.SetActive(true);
-        QMDetailsRightWindow.SetActive(true);
-    }*/
-
-
-    // Start is called before the first frame update
-    void Start()
-    {
-
-        // Default: Hide Auth, Filter, Left Panel Windows
-        Authentication.SetActive(false);  
-        leftPanel.SetActive(false);
-        FilterWindow.SetActive(false);
-
-        QMDetailsWindow.SetActive(false);
-        QMDetailsRightWindow.SetActive(false);
-
+        // Locate the Game Obejct: Button
+        expandQMSelector = transform.Find("ButtonExpandSidePanel").GetComponent<Button>();
+        authenticateNewQM = transform.Find("ButtonConnectNewMQ").GetComponent<Button>();
+        applyFilter = transform.Find("ButtonAddFilter").GetComponent<Button>();
         // Button Listener
-        expandPanelButton.onClick.AddListener(LeftPanelButtonClicked);
-        addFilterButton.onClick.AddListener(AddFilterButtonClicked);
-        //showQMDetailsButton.onClick.AddListener(ShowQMDetailsButtonClicked);
+        expandQMSelector.onClick.AddListener(LeftPanelButtonClicked);
+        applyFilter.onClick.AddListener(AddFilterButtonClicked);
+
+        // Locate the Game Object: Left Panel
+        leftPanelContainer = transform.Find("LeftPanel");
+        checkboxItem = leftPanelContainer.Find("QMSelectorRowItem");
+        checkboxItem.gameObject.SetActive(false);
+
     }
 
 
-    // Update is called once per frame
-    void Update()
+    void Start()
     {
-
+        // Default: Hide Auth, Filter, Left Panel Windows
+        Authentication.SetActive(false); 
+        leftPanel.SetActive(false);
+        FilterWindow.SetActive(false);
     }
 
 
@@ -69,37 +54,46 @@ public class NavigationController : MonoBehaviour
         if (leftPanel.activeSelf == true)
         {
             leftPanel.SetActive(false);
-            Debug.Log("Left Panel: Close");
         }
         else
         {
             leftPanel.SetActive(true);
-            Debug.Log("Left Panel: Expand");
             GenerateCheckBox();
         }
     }
 
-
+    /*
+        Button Listener: Filter
+    */
     void AddFilterButtonClicked()
     {
         FilterWindow.SetActive(true);
     }
 
-
+    /*
+        Load QM Selector
+    */
     void GenerateCheckBox()
     {
         // Get Current Number of Check Box
-        Debug.Log("NOTICE: Generating checkbox");
         GameObject stateGameObject = GameObject.Find("State");
         State stateComponent = stateGameObject.GetComponent(typeof(State)) as State;
         
         List<string> mqlist = stateComponent.RegisteredQMNameList();
-        Debug.Log(string.Join(",", mqlist));
 
-        // Default to true, all mq is visiable
-        foreach (string mq in mqlist)
+        int size = mqlist.Count;
+
+        float rowHeight = 48f;
+        float startY = -24f;
+
+        for (int i = 0; i < size; i ++)
         {
-            QMVisibility.Add(mq, true);
+            Transform item = Instantiate(checkboxItem, leftPanelContainer);
+            RectTransform recTransform = item.GetComponent<RectTransform>();
+            recTransform.anchoredPosition = new Vector2(0, -rowHeight * i + startY);
+            item.gameObject.SetActive(true);
+
+            item.Find("TextQMName").GetComponent<Text>().text = mqlist[i];
         }
 
     }
