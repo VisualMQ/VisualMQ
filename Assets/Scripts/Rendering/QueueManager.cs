@@ -122,6 +122,9 @@ public class QueueManager : MonoBehaviour
         {
             GameObject line = Instantiate(linePrefab, new Vector3(sXZ * x, sY * 1.001f, -2) + offsets[numberOfQueuesList[2].Key], Quaternion.Euler(0f, 90f, 0f));
             line.transform.parent = this.transform;
+
+            GameObject line2 = Instantiate(linePrefab, new Vector3(sXZ * x, sY * 1.001f, -2), Quaternion.Euler(0f, 90f, 0f));
+            line2.transform.parent = this.transform;
         }
         // Render lines between areas among Z-axis
         for (int z = 0; z < largeArea[1] + smallArea[0]; z++)
