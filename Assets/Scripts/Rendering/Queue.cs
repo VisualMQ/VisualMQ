@@ -1,26 +1,31 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
-using System;
+using UnityEngine;
+using System.Collections;
 using MQ;
+using System.Collections.Generic;
 
 public class Queue : MonoBehaviour
 {
+
     public Vector3 position;
     public MQ.Queue queue;
     public GameObject messagePrefab;
     public List<GameObject> messages;
-    
-    void Awake()
-    {
-        messagePrefab = Resources.Load("Prefabs/Message") as GameObject;
-        messages = new List<GameObject>();
-    }
 
+
+    public TextMesh textMesh;
+    public QueueManager parent;
+    public GameObject instantiatedQueue;
+    public GameObject queuePrefab;
+    public static GameObject queueInFocus;
+    public static GameObject prefabInFocus;
+
+    // TODO: REMOVE THIS LATER DEMO
+    public static QMDetailsController tempWindow;
     // Use this for initialization
     void Start()
     {
         string prefabName;
-        if (queue is MQ.RemoteQueue) 
+        if (queue is MQ.RemoteQueue)
         {
             prefabName = "Prefabs/RemoteQueue";
         }
@@ -40,9 +45,10 @@ public class Queue : MonoBehaviour
         {
             prefabName = "Prefabs/LocalQueue"; //TODO: undefined queue
         }
-        GameObject queuePrefab = Resources.Load(prefabName) as GameObject;
-        GameObject instantiatedQueue = Instantiate(queuePrefab, position, Quaternion.identity) as GameObject;
+        queuePrefab = Resources.Load(prefabName) as GameObject;
+        instantiatedQueue = Instantiate(queuePrefab, new Vector3(0,0,0), Quaternion.identity) as GameObject;
         instantiatedQueue.transform.parent = this.transform;
+        instantiatedQueue.transform.parent.position = position;
 
         if (queue.holdsMessages)
         {
@@ -50,8 +56,120 @@ public class Queue : MonoBehaviour
             CreateMessages(currentDepth, queue.maxNumberOfMessages);
 
         }
+        
+        // Add mesh Colider
+        MeshCollider mc = instantiatedQueue.transform.parent.gameObject.AddComponent<MeshCollider>();
+        mc.sharedMesh = instantiatedQueue.GetComponent<MeshFilter>().sharedMesh;
+
+
+        // TODO: Move this to prefab
+        // Generate the initial text to be displayed above Queues.
+        GameObject textObj = new GameObject();
+        textObj.transform.parent = instantiatedQueue.transform;
+
+        textMesh = textObj.AddComponent<TextMesh>();
+        textMesh.text = queue.queueName;
+        textMesh.anchor = TextAnchor.MiddleCenter;
+        textMesh.alignment = TextAlignment.Center;
+        textMesh.transform.position = new Vector3(instantiatedQueue.transform.position.x, instantiatedQueue.transform.position.y + 5, instantiatedQueue.transform.position.z);
     }
 
+
+    // Update is called once per frame
+    void Update()
+    {
+
+        // Magic number (TODO) currently hides if euclidean distance between camera and text.
+        if(Vector3.Distance(this.position, Camera.main.transform.position) < 35)
+        {
+            textMesh.gameObject.SetActive(true);
+        }
+        else
+        {
+            textMesh.gameObject.SetActive(false);
+        }
+
+        // Change the size log decreasing towards min of 0.2.
+        if(textMesh == null)
+        {
+            return;
+        }
+        textMesh.characterSize = (0.4f / parent.queues.Count) + 0.1f;
+
+        // Obtain the middle Queue component and align all the text according to it.
+
+        
+        var firstIndex = parent.renderedQueues.GetEnumerator();
+        Queue usedQueue = null;
+        float distance = int.MaxValue;
+        for (int i = 0; i < parent.renderedQueues.Count / 2; i++)
+        {
+            firstIndex.MoveNext();
+            Queue firstQueue = firstIndex.Current.Value.GetComponent(typeof(Queue)) as Queue;
+
+            if (Vector3.Distance(firstQueue.position, Camera.main.transform.position) < distance)
+            {
+                usedQueue = firstQueue;
+                distance = Vector3.Distance(firstQueue.position, Camera.main.transform.position);
+            }
+
+        }
+
+        
+
+        textMesh.transform.rotation = Quaternion.LookRotation(usedQueue.textMesh.transform.position - Camera.main.transform.position);
+        
+
+       // textMesh.transform.rotation = Quaternion.LookRotation(textMesh.transform.position - Camera.main.transform.position);
+
+
+    }
+
+    void OnMouseUp()
+    {
+        // TODO: SHOWQING QM DETAILS FIX DEMO TEST
+        tempWindow.Clicked();
+       
+
+
+        // Click on twice = Deactivate focus
+        if (queueInFocus == instantiatedQueue)
+        {
+            queueInFocus.transform.localScale = prefabInFocus.transform.localScale;
+            queueInFocus = null;
+            return;
+        }
+        // If clicked on once, it's now the new in focus. Reset the previous focus
+        if (queueInFocus)
+        {
+            queueInFocus.transform.localScale = prefabInFocus.transform.localScale;
+        }
+
+        queueInFocus = instantiatedQueue;
+        prefabInFocus = instantiatedQueue;
+        instantiatedQueue.transform.localScale = new Vector3(1.05f, 1.05f, 1.05f);
+        /*Do whatever here as per your need*/
+        Camera.main.transform.LookAt(this.position);
+        Camera.main.transform.position = new Vector3(2.5f, 15f, -13f) + this.position;
+        Debug.Log("Moving Camera to Queue" + this.name);
+    }
+
+    void OnMouseEnter()
+    {
+        instantiatedQueue.transform.localScale = new Vector3(1.05f, 1.05f, 1.05f);   
+    }
+    void OnMouseExit()
+    {
+        instantiatedQueue.transform.localScale = this.queuePrefab.transform.localScale;
+    }
+
+
+    void Awake()
+    {
+        messagePrefab = Resources.Load("Prefabs/Message") as GameObject;
+        messages = new List<GameObject>();
+    }
+    
     void CreateMessages(int currentDepth, int MaximumDepth)
     {
         if (currentDepth == 0) return;
@@ -98,11 +216,5 @@ public class Queue : MonoBehaviour
             queue.currentDepth = newDepth;
             CreateMessages(newDepth, queue.maxNumberOfMessages);
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 }

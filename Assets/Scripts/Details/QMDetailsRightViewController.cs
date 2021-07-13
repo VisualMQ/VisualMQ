@@ -6,8 +6,9 @@ using UnityEngine.UI;
 public class QMDetailsRightViewController : MonoBehaviour
 {
     // Details Window Game Object
-    public GameObject QMDetailsRightWindow;
+    public GameObject QMDetailQueueListWindow;
     public GameObject QMDetailsWindow;
+    public GameObject QueueDetailWindow;
 
     // Queue Lists Items
     private Transform QueueRowItem;
@@ -17,49 +18,39 @@ public class QMDetailsRightViewController : MonoBehaviour
     public Button toDetails, toQueueLists;
     public Button closeButton;
 
-    // !!! TEST !!!
-    //public Button testButton2;
-    /*
-    void Clicked(){
-        QMDetailsRightWindow.SetActive(true);
-        GenerateQueueList("QM1");
-    }*/
+    // List of row objects
+    List<GameObject> rowItemList = new List<GameObject>();
 
+    // Locate the Objects
+    private void Awake() {
+        // Container and Row Item
+        container = transform.Find("QueueRowContainer");
+        QueueRowItem = container.Find("QueueRowItem");
+    }
 
     // Start is called before the first frame update
     void Start()
     {   
-        /* !!! TEST !!!
-        testButton2.onClick.AddListener(Clicked);*/
-
         // Buttons Listener
         closeButton.onClick.AddListener(CloseButtonClicked);
         toDetails.onClick.AddListener(ToDetailsClicked);
         toQueueLists.onClick.AddListener(ToQueueListsClicked);
-        
-    }
-
-
-    // Update is called once per frame
-    void Update(){
     }
 
     public void GenerateQueueList(string selectedQM)
     {
+        DestroyRowItems();
+
         // Get queues in the selectedQM
         GameObject stateGameObject = GameObject.Find("State");
         State stateComponent = stateGameObject.GetComponent(typeof(State)) as State;
 
         List<MQ.Queue> queues = stateComponent.GetAllQueuesInQmgr(selectedQM);
-
-        // Container and Row Item
-        container = transform.Find("QueueRowContainer");
-        QueueRowItem = container.Find("QueueRowItem");
         
         QueueRowItem.gameObject.SetActive(false);
 
         // Row Origin Position
-        float rowHeight = 45f;
+        float rowHeight = 50f;
         float startY = -37f;
 
         int size = queues.Count;
@@ -69,17 +60,47 @@ public class QMDetailsRightViewController : MonoBehaviour
             Transform item = Instantiate(QueueRowItem, container);
             RectTransform recTransform = item.GetComponent<RectTransform>();
             recTransform.anchoredPosition = new Vector2(5, -rowHeight * i + startY);
+
             item.gameObject.SetActive(true);
-            
-            //item.Find("TextQueueName").GetComponent<Text>().text = names[i];
+            rowItemList.Add(item.gameObject);
+
             item.Find("TextQueueName").GetComponent<Text>().text = queues[i].queueName;
+
+            int keyIdx = i;
+            Button curButton = item.Find("QueueRowButton").GetComponent<Button>();
+            curButton.onClick.AddListener(() => queueRowItemSelected(keyIdx, selectedQM, queues[keyIdx].queueName) );
         }
+    }
+
+
+    // Clean all created queue row item
+    void DestroyRowItems()
+    {
+        foreach (Transform child in container) 
+        {
+            if(child.gameObject.name == "QueueRowItem(Clone)")
+            {
+                GameObject.Destroy(child.gameObject);
+            }
+        }
+    }
+
+
+    // Queue is selected -> To Queue Details Winodw
+    void queueRowItemSelected(int rowidx, string qmName, string queueName)
+    {
+        // To Queue Detail Window
+        QMDetailQueueListWindow.SetActive(false);
+        QueueDetailWindow.SetActive(true);
+
+        List<string> temp = new List<string>() { qmName, queueName };
+        QueueDetailWindow.SendMessage("GetQueueBasicInfo", temp);
     }
 
 
     void CloseButtonClicked()
     {
-        QMDetailsRightWindow.SetActive(false);
+        QMDetailQueueListWindow.SetActive(false);
         QMDetailsWindow.SetActive(false);
     }
 
@@ -89,7 +110,7 @@ public class QMDetailsRightViewController : MonoBehaviour
         // Show Current Details Window
         QMDetailsWindow.SetActive(true);
         // Close the Queue List Window
-        QMDetailsRightWindow.SetActive(false);
+        QMDetailQueueListWindow.SetActive(false);
     }
 
 

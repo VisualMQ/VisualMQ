@@ -6,7 +6,6 @@ using UnityEngine;
 
 public class QueueManager : MonoBehaviour
 {
-
     private GameObject blockPrefab;
     private GameObject linePrefab;
 
@@ -17,7 +16,6 @@ public class QueueManager : MonoBehaviour
     public List<MQ.Queue> queues;
     public List<MQ.Channel> channels;
     private Dictionary<string, GameObject> renderedQueues = new Dictionary<string, GameObject>();
-
     
     // Unity calls this method at the complete beginning, even before Start
     void Awake()
@@ -25,7 +23,6 @@ public class QueueManager : MonoBehaviour
         blockPrefab = Resources.Load("Prefabs/Block") as GameObject;
         linePrefab = Resources.Load("Prefabs/Line") as GameObject;
     }
-
 
     void Start()
     {
@@ -149,8 +146,6 @@ public class QueueManager : MonoBehaviour
         //    textMesh.transform.position = entry.Value + new Vector3(-0.3f, 0.01f, -1.5f);
         //}
 
-
-
         // Render inidividual queues
         Dictionary<string, int> numberOfRenderedQueues = new Dictionary<string, int>();
         numberOfRenderedQueues[MQ.AliasQueue.typeName] = 0;
@@ -169,9 +164,15 @@ public class QueueManager : MonoBehaviour
             Queue queueComponent = queueGameObject.GetComponent(typeof(Queue)) as Queue;
             queueComponent.position = offset + position + queueManagerHeight;
             queueComponent.queue = queue;
-            queueGameObject.transform.parent = this.transform;
-        }
 
+            queueComponent.parent = this;
+
+            // TODO: REMOVE?
+            renderedQueues.Add(queue.queueName, queueGameObject);
+
+            queueGameObject.transform.parent = this.transform;
+
+        }
 
         // Render area for channels and channels on them
         for (int x = 0; x < largeArea[0] + smallArea[1]; x++)
@@ -205,12 +206,10 @@ public class QueueManager : MonoBehaviour
         }
     }
 
-
     void Update()
     {
 
     }
-
 
     // This method is called from State object on the periodical update
     public void UpdateQueues(List<MQ.Queue> queues)
@@ -232,6 +231,7 @@ public class QueueManager : MonoBehaviour
                 Queue queueComponent = queueGameObject.GetComponent(typeof(Queue)) as Queue;
                 queueComponent.position = new Vector3(2.5f * renderedQueues.Count, 0.25f, 0);
                 queueComponent.queue = queue;
+                
 
                 renderedQueues.Add(queue.queueName, queueGameObject);
                 queueGameObject.transform.parent = this.transform;
@@ -275,7 +275,6 @@ public class QueueManager : MonoBehaviour
 
     }
 
-
     // Our algorithm for creating a rectangle that can hold N queues
     // This method returns dimensions of that rectangle
     private int[] ComputeRectangleArea(int N)
@@ -296,7 +295,6 @@ public class QueueManager : MonoBehaviour
         int[] res = { b + 1, a };
         return res;
     }
-
 
     // Returns dimensions of a rectangle that can hold N queues but
     // one size of the rectangle is constrained to size a
