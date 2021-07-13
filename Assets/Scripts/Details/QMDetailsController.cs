@@ -27,7 +27,7 @@ public class QMDetailsController : MonoBehaviour
     // TEST: The Button used to trigger the window
     public Button testButton;
     
-    void Clicked(){
+    public void Clicked(){
         ClearAllInfoFields();
         QMDetailsWindow.SetActive(true);
         QueueManagerInfoInit(selectedQM);
@@ -35,20 +35,17 @@ public class QMDetailsController : MonoBehaviour
 
     void Start()
     {
+        // TODO: DEMO TEST
+        Queue.tempWindow = this;
         // TEST
         testButton.onClick.AddListener(Clicked);
-
+        QMDetailsWindow.SetActive(false);
+        QMDetailsRightWindow.SetActive(false);
 
         // Button Listener
         qmDetailsButton.onClick.AddListener(Clicked);
         queueListButton.onClick.AddListener(QueueListsButtonClicked);
         closeButton.onClick.AddListener(CloseButtonClicked);
-
-    }
-
-
-    void Update()
-    {
 
     }
 
@@ -97,7 +94,6 @@ public class QMDetailsController : MonoBehaviour
     void DetailsButtonClicked()
     {
         
-
     }
 
 

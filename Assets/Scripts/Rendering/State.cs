@@ -51,6 +51,7 @@ public class State : MonoBehaviour
             }
             MQ.QueueManager newQmgr = newMqClient.GetQmgr();
             List<MQ.Queue> newQueues = newMqClient.GetAllQueues();
+            List<MQ.Channel> newChannels = newMqClient.GetAllChannels();
 
             // Render queue manager. Note that data is stored in Component (ie Script) not in GameObject!
             // GameObject is just an Entity/Container for Components that perform the real functionality
@@ -66,6 +67,7 @@ public class State : MonoBehaviour
                 Debug.Log("Dependency for " + dependency.Key + " is: " + string.Join(" , ", dependency.Value.ToArray()));
             }
             ///
+            qmgrComponent.channels = newChannels;
             qmgrs[newMqClient] = qmgrGameObject;
 
             qmgrGameObject.transform.parent = this.transform;
@@ -151,5 +153,67 @@ public class State : MonoBehaviour
         return null;
     }
 
+    // Return the detail of one queue
+    public MQ.Queue GetQueueDetails(string selectedQMName, string selectedQueueName)
+    {
+        foreach (MQ.Client client in qmgrs.Keys)
+        {
+            if (client.GetQueueManagerName() == selectedQMName)
+            {
+                foreach (MQ.Queue queue in client.GetAllQueues())
+                {
+                    if (queue.queueName == selectedQueueName)
+                    {
+                        return client.GetQueue(selectedQueueName);
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    // Return All messages under current QM and queue
+    public List<MQ.Message> GetAllMessages(string selectedQMName, string selectedQueueName)
+    {
+        foreach (MQ.Client client in qmgrs.Keys)
+        {
+            if (client.GetQueueManagerName() == selectedQMName)
+            {
+                foreach (MQ.Queue queue in client.GetAllQueues())
+                {
+                    if (queue.queueName == selectedQueueName)
+                    {
+                        return client.GetAllMessages(selectedQueueName);
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    // Return the message
+    public MQ.Message GetMessage(string selectedQMName, string selectedQueueName, string messageID)
+    {
+        foreach (MQ.Client client in qmgrs.Keys)
+        {
+            if (client.GetQueueManagerName() == selectedQMName)
+            {
+                foreach (MQ.Queue queue in client.GetAllQueues())
+                {
+                    if (queue.queueName == selectedQueueName)
+                    {
+                        foreach (MQ.Message message in client.GetAllMessages(queue.queueName))
+                        {
+                            if (message.messageId == messageID)
+                            {
+                                return message;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return null;
+    }
 }
 
