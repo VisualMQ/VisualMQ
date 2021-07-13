@@ -7,6 +7,8 @@ using UnityEngine;
 public class QueueManager : MonoBehaviour
 {
 
+
+
     private GameObject blockPrefab;
     private GameObject linePrefab;
 
@@ -15,7 +17,7 @@ public class QueueManager : MonoBehaviour
     private const float sY = 0.1286252f;
 
     public List<MQ.Queue> queues;
-    private Dictionary<string, GameObject> renderedQueues = new Dictionary<string, GameObject>();
+    public Dictionary<string, GameObject> renderedQueues = new Dictionary<string, GameObject>();
 
     
     // Unity calls this method at the complete beginning, even before Start
@@ -165,7 +167,14 @@ public class QueueManager : MonoBehaviour
             Queue queueComponent = queueGameObject.GetComponent(typeof(Queue)) as Queue;
             queueComponent.position = offset + position + queueManagerHeight;
             queueComponent.queue = queue;
+
+            queueComponent.parent = this;
+
+            // TODO: REMOVE?
+            renderedQueues.Add(queue.queueName, queueGameObject);
+
             queueGameObject.transform.parent = this.transform;
+
         }
     }
 
@@ -196,6 +205,7 @@ public class QueueManager : MonoBehaviour
                 Queue queueComponent = queueGameObject.GetComponent(typeof(Queue)) as Queue;
                 queueComponent.position = new Vector3(2.5f * renderedQueues.Count, 0.25f, 0);
                 queueComponent.queue = queue;
+                
 
                 renderedQueues.Add(queue.queueName, queueGameObject);
                 queueGameObject.transform.parent = this.transform;
