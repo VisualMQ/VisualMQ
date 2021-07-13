@@ -16,7 +16,6 @@ public class QueueManager : MonoBehaviour
 
     public List<MQ.Queue> queues;
     private Dictionary<string, GameObject> renderedQueues = new Dictionary<string, GameObject>();
-
     
     // Unity calls this method at the complete beginning, even before Start
     void Awake()
