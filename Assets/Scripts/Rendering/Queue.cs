@@ -33,30 +33,36 @@ public class Queue : MonoBehaviour
             // If a new queue with a lower rank (position) added. 
             // Increase our own rank
             this.rank++;
+            repositionSelf();
+
         }
-        repositionSelf();
     }
 
     void newQueueDeleted(int rank)
     {
-        // Message sent
+ 
         if(rank < this.rank)
         {
             // If a new queue with a lower rank (position) added. 
             // Increase our own rank
+            Debug.Log("Decreased my rank");
             this.rank--;
+            repositionSelf();
+
         }
-        repositionSelf();
     }
 
     public void repositionSelf()
     {
         this.position = QueueManager.ComputePosition(this.queue.GetTypeName(),this.rank);
+        this.instantiatedQueue.transform.parent = this.transform;
+        this.instantiatedQueue.transform.parent.position = this.position;
     }
 
 
     void Start()
     {
+       
         string prefabName;
         if (queue is MQ.RemoteQueue)
         {
@@ -80,8 +86,10 @@ public class Queue : MonoBehaviour
         }
         queuePrefab = Resources.Load(prefabName) as GameObject;
         instantiatedQueue = Instantiate(queuePrefab, new Vector3(0,0,0), Quaternion.identity) as GameObject;
-        instantiatedQueue.transform.parent = this.transform;
-        instantiatedQueue.transform.parent.position = position;
+
+        // TODO: This is for dynamic positions.
+        repositionSelf();
+        
 
         if (queue.holdsMessages)
         {
@@ -105,6 +113,8 @@ public class Queue : MonoBehaviour
         textMesh.anchor = TextAnchor.MiddleCenter;
         textMesh.alignment = TextAlignment.Center;
         textMesh.transform.position = new Vector3(instantiatedQueue.transform.position.x, instantiatedQueue.transform.position.y + 5, instantiatedQueue.transform.position.z);
+
+        
     }
 
 

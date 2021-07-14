@@ -156,11 +156,12 @@ public class QueueManager : MonoBehaviour
             queueComponent.queue = queue;
 
             queueComponent.parent = this;
-            queueComponent.repositionSelf();
+            queueGameObject.transform.parent = this.transform;
+            // queueComponent.repositionSelf();
             // TODO: REMOVE?
             renderedQueues.Add(queue.queueName, queueGameObject);
 
-            queueGameObject.transform.parent = this.transform;
+            
 
         }
 
@@ -202,7 +203,7 @@ public class QueueManager : MonoBehaviour
         Vector3 offset = offsets[queueType];
         Vector3 position = new Vector3(sXZ * (rank % dimensions[queueType][0]), 0, sXZ * (rank / dimensions[queueType][0]));
         Vector3 queueManagerHeight = new Vector3(0, sY * 2, 0);
-        Debug.Log("POSITIONING");
+        Debug.Log("POSITIONING RANK" + rank);
         return (offset + position + queueManagerHeight);  
     }
 
@@ -214,6 +215,8 @@ public class QueueManager : MonoBehaviour
     // This method is called from State object on the periodical update
     public void UpdateQueues(List<MQ.Queue> queues)
     {
+
+        
         List<string> queuesToRender = new List<string>();
         List<string> queuesToDestroy = new List<string>();
 
@@ -224,17 +227,24 @@ public class QueueManager : MonoBehaviour
 
             if (!renderedQueues.ContainsKey(queue.queueName))
             {
-                // Render block on which the queue will reside on
-                Instantiate(blockPrefab, new Vector3(2.5f * renderedQueues.Count, 0, 0), Quaternion.identity);
-                // Render new queue
+                string queueType = queue.GetTypeName();
+                int i = numberOfRenderedQueues[queueType]++;
+
                 GameObject queueGameObject = new GameObject(queue.queueName, typeof(Queue));
                 Queue queueComponent = queueGameObject.GetComponent(typeof(Queue)) as Queue;
-                queueComponent.position = new Vector3(2.5f * renderedQueues.Count, 0.25f, 0);
-                queueComponent.queue = queue;
-                
+                queueComponent.rank = i;
 
+
+                queueComponent.queue = queue;
+
+                queueComponent.parent = this;
+                // TODO: REMOVE?
                 renderedQueues.Add(queue.queueName, queueGameObject);
+
                 queueGameObject.transform.parent = this.transform;
+
+                gameObject.BroadcastMessage("newQueueAdded", i);
+                
             }
         }
 
@@ -244,8 +254,16 @@ public class QueueManager : MonoBehaviour
             if (!queuesToRender.Contains(entry.Key))
             {
                 Debug.Log("Deleting queue " + entry.Key);
+
+                Queue queueComponent = entry.Value.GetComponent(typeof(Queue)) as Queue;
+                int rank = queueComponent.rank;
+                string queueType = queueComponent.queue.GetTypeName();
+                numberOfRenderedQueues[queueType]--;
+
                 GameObject.DestroyImmediate(entry.Value);
                 queuesToDestroy.Add(entry.Key);
+
+                gameObject.BroadcastMessage("newQueueDeleted", rank);
             }
         }
 
@@ -253,7 +271,9 @@ public class QueueManager : MonoBehaviour
         {
             renderedQueues.Remove(queueName);
         }
-
+           
+        // TODO THIS DOES NOT WORK YET
+        return;
         // Third: for local queues and transmission queues, check if the utilization level has changed
         foreach (MQ.Queue queue in queues)
         {
