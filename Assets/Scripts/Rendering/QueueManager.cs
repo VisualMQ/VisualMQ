@@ -18,9 +18,9 @@ public class QueueManager : MonoBehaviour
     public Dictionary<string, GameObject> renderedQueues = new Dictionary<string, GameObject>();
 
     // Made static to be accessible by Queue objects:
-    public static Dictionary<string, Vector3> offsets;
-    public static Dictionary<string, int> numberOfRenderedQueues;
-    public static Dictionary<string, int[]> dimensions;
+    public Dictionary<string, Vector3> offsets;
+    public Dictionary<string, int> numberOfRenderedQueues;
+    public Dictionary<string, int[]> dimensions;
 
     // Unity calls this method at the complete beginning, even before Start
     void Awake()
@@ -197,7 +197,7 @@ public class QueueManager : MonoBehaviour
         }
     }
 
-    public static UnityEngine.Vector3 ComputePosition(string queueType, int rank)
+    public UnityEngine.Vector3 ComputePosition(string queueType, int rank)
     {
         // int i = numberOfRenderedQueues[queueType]++;
         Vector3 offset = offsets[queueType];

@@ -34,7 +34,6 @@ public class Queue : MonoBehaviour
             // Increase our own rank
             this.rank++;
             repositionSelf();
-
         }
     }
 
@@ -45,16 +44,14 @@ public class Queue : MonoBehaviour
         {
             // If a new queue with a lower rank (position) added. 
             // Increase our own rank
-            Debug.Log("Decreased my rank");
             this.rank--;
             repositionSelf();
-
         }
     }
 
     public void repositionSelf()
     {
-        this.position = QueueManager.ComputePosition(this.queue.GetTypeName(),this.rank);
+        this.position = this.parent.ComputePosition(this.queue.GetTypeName(),this.rank);
         this.instantiatedQueue.transform.parent = this.transform;
         this.instantiatedQueue.transform.parent.position = this.position;
     }
@@ -86,8 +83,6 @@ public class Queue : MonoBehaviour
         }
         queuePrefab = Resources.Load(prefabName) as GameObject;
         instantiatedQueue = Instantiate(queuePrefab, new Vector3(0,0,0), Quaternion.identity) as GameObject;
-
-        // TODO: This is for dynamic positions.
         repositionSelf();
         
 
