@@ -51,15 +51,10 @@ public class AuthenticationController : MonoBehaviour
     void ConfirmButtonClicked()
     {
         // Get Current Input Text and Form Checking
-        //userNameT = userName.text;
-        //apiKeyT = apiKey.text;
-        //MQURLT = urlInput.text;
-        //QMNameT = QMInput.text;
-
-        userNameT = "shuchengtian";
-        apiKeyT = "aCPHZ4ys0Tnn2xQLPsHc6lEz4CTenKmNsyW9q0MoQ0bf";
-        MQURLT = "https://web-qm1-3628.qm.eu-gb.mq.appdomain.cloud:443";
-        QMNameT = "QM1";
+        userNameT = userName.text;
+        apiKeyT = apiKey.text;
+        MQURLT = urlInput.text;
+        QMNameT = QMInput.text;
 
         if (SubmitFormCheck(userNameT, apiKeyT, MQURLT, QMNameT) == false)
         {

@@ -11,7 +11,7 @@ public class DependencyGraph
         graph = new Dictionary<string, List<string>>();
     }
 
-    public void CreateDependencyGraph (List<MQ.Queue> queues, string qmgr) //TODO:Add channels and remote-local queue
+    public void CreateDependencyGraph (List<MQ.Queue> queues, List<MQ.Channel> channels, string qmgr) //TODO:Add channels and remote-local queue
     {
         foreach (MQ.Queue queue in queues)
         {
@@ -20,12 +20,21 @@ public class DependencyGraph
                 List<string> remoteDependency = new List<string>();
                 remoteDependency.Add(qmgr + "." + queue.queueName); //Remote queue
                 remoteDependency.Add(qmgr + "." + ((MQ.RemoteQueue)queue).transmissionQueueName); //Transmission queue
+                foreach (MQ.Channel channel in channels)
+                {
+                    if (channel is MQ.SenderChannel && ((MQ.SenderChannel)channel).transmissionQueueName == ((MQ.RemoteQueue)queue).transmissionQueueName)
+                    {
+                        remoteDependency.Add(qmgr + "." + channel.channelName); // sender channel
+                        remoteDependency.Add(((MQ.RemoteQueue)queue).targetQmgrName + "." + channel.channelName);// receiver channel, name is the same by definition
+                        break; //only one sender/receiver channel pair
+                    }
+                        
+                }
                 remoteDependency.Add(((MQ.RemoteQueue)queue).targetQmgrName + "." + ((MQ.RemoteQueue)queue).targetQueueName); // Target queue
 
                 AddDependency(qmgr, queue.queueName, remoteDependency);// Dependency of the remote queue
                 AddDependency(qmgr, ((MQ.RemoteQueue)queue).transmissionQueueName, remoteDependency);// Dependency of the transmission queue
                 AddDependency(((MQ.RemoteQueue)queue).targetQmgrName, ((MQ.RemoteQueue)queue).targetQueueName, remoteDependency);// Dependency of the remote target queue
-
             }
 
             if (queue is MQ.AliasQueue)

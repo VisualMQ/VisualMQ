@@ -13,7 +13,7 @@ namespace MQ
 
     public class SenderChannel : Channel
     {
-
+        public string transmissionQueueName;
     }
 
     public class ReceiverChannel : Channel
