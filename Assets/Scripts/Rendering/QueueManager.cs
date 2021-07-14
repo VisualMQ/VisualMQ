@@ -13,6 +13,7 @@ public class QueueManager : MonoBehaviour
     private const float sXZ = 4f;
     private const float sY = 0.1286252f;
 
+    public string qmName;
     public List<MQ.Queue> queues;
     public List<MQ.Channel> channels;
     public Dictionary<string, GameObject> renderedQueues = new Dictionary<string, GameObject>();
@@ -160,7 +161,8 @@ public class QueueManager : MonoBehaviour
             Vector3 position = new Vector3(sXZ * (i % dimensions[queueType][0]), 0, sXZ * (i / dimensions[queueType][0]));
             Vector3 queueManagerHeight = new Vector3(0, sY*2, 0);
 
-            GameObject queueGameObject = new GameObject(queue.queueName, typeof(Queue));
+            string uniqueQueueName = qmName + "." + queue.queueName;
+            GameObject queueGameObject = new GameObject(uniqueQueueName, typeof(Queue)); //Globally unique queue name
             Queue queueComponent = queueGameObject.GetComponent(typeof(Queue)) as Queue;
             queueComponent.position = offset + position + queueManagerHeight;
             queueComponent.queue = queue;
@@ -197,8 +199,9 @@ public class QueueManager : MonoBehaviour
                 int j = numberOfReceiverChannels++;
                 position = new Vector3(sXZ * (largeArea[0] + smallArea[1] - j - 1), 0, -sXZ);
             }
-            
-            GameObject channelGameObject = new GameObject(channel.channelName, typeof(Channel));
+
+            string uniqueChannelName = qmName + "." + channel.channelName;
+            GameObject channelGameObject = new GameObject(uniqueChannelName, typeof(Channel)); //Globally unique channel name
             Channel channelComponent = channelGameObject.GetComponent(typeof(Channel)) as Channel;
             channelComponent.position = position + queueManagerHeight;
             channelComponent.channel = channel;
@@ -227,7 +230,8 @@ public class QueueManager : MonoBehaviour
                 // Render block on which the queue will reside on
                 Instantiate(blockPrefab, new Vector3(2.5f * renderedQueues.Count, 0, 0), Quaternion.identity);
                 // Render new queue
-                GameObject queueGameObject = new GameObject(queue.queueName, typeof(Queue));
+                string uniqueQueueName = qmName + "." + queue.queueName;
+                GameObject queueGameObject = new GameObject(uniqueQueueName, typeof(Queue));
                 Queue queueComponent = queueGameObject.GetComponent(typeof(Queue)) as Queue;
                 queueComponent.position = new Vector3(2.5f * renderedQueues.Count, 0.25f, 0);
                 queueComponent.queue = queue;

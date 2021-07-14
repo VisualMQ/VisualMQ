@@ -58,6 +58,7 @@ public class State : MonoBehaviour
             GameObject qmgrGameObject = new GameObject(newQmgr.qmgrName, typeof(QueueManager));
 
             QueueManager qmgrComponent = qmgrGameObject.GetComponent(typeof(QueueManager)) as QueueManager;
+            qmgrComponent.qmName = newQmgr.qmgrName;
             qmgrComponent.queues = newQueues;
             qmgrComponent.channels = newChannels;
             qmgrs[newMqClient] = qmgrGameObject;
