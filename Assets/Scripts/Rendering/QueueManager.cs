@@ -135,21 +135,7 @@ public class QueueManager : MonoBehaviour
             line.transform.parent = this.transform;
         }
 
-        // TODO: Add text on blocks
-        // Problem right now is that text is rendered with awful resolution
-        // I don't really know the cause for that
-        //foreach (KeyValuePair<string, Vector3> entry in offsets)
-        //{
-        //    GameObject textName = new GameObject();
-        //    TextMesh textMesh = textName.AddComponent<TextMesh>() as TextMesh;
-        //    textMesh.text = entry.Key;
-        //    textMesh.anchor = TextAnchor.MiddleCenter;
-        //    textMesh.alignment = TextAlignment.Center;
-        //    textMesh.color = Color.black;
-        //    textMesh.fontSize = 6;
-        //    textMesh.transform.Rotate(90, 0, 0);
-        //    textMesh.transform.position = entry.Value + new Vector3(-0.3f, 0.01f, -1.5f);
-        //}
+      
 
         // Render inidividual queues
         numberOfRenderedQueues = new Dictionary<string, int>();
