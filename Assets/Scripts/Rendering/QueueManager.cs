@@ -17,7 +17,7 @@ public class QueueManager : MonoBehaviour
     public List<MQ.Channel> channels;
     public Dictionary<string, GameObject> renderedQueues = new Dictionary<string, GameObject>();
 
-    // Made static to be accessible by Queue objects:
+  
     public Dictionary<string, Vector3> offsets;
     public Dictionary<string, int> numberOfRenderedQueues;
     public Dictionary<string, int[]> dimensions;
