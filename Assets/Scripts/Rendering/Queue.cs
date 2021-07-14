@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 using MQ;
 using System.Collections.Generic;
@@ -54,7 +54,7 @@ public class Queue : MonoBehaviour
 
     public void repositionSelf()
     {
-        this.position = QueueManager.ComputePosition(this.queue.GetTypeName(),this.rank);
+        this.position = this.parent.ComputePosition(this.queue.GetTypeName(),this.rank);
         this.instantiatedQueue.transform.parent = this.transform;
         this.instantiatedQueue.transform.parent.position = this.position;
     }
