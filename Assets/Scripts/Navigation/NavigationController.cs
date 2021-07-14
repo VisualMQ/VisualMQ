@@ -75,6 +75,9 @@ public class NavigationController : MonoBehaviour
     */
     void GenerateCheckBox()
     {
+        // Destroy Previous Object
+        DestroyQMSelector();
+
         // Get Current Number of Check Box
         GameObject stateGameObject = GameObject.Find("State");
         State stateComponent = stateGameObject.GetComponent(typeof(State)) as State;
@@ -96,6 +99,16 @@ public class NavigationController : MonoBehaviour
             item.Find("TextQMName").GetComponent<Text>().text = mqlist[i];
         }
 
+    }
+
+    void DestroyQMSelector() {
+        foreach (Transform child in leftPanelContainer) 
+        {
+            if(child.gameObject.name == "QMSelectorRowItem(Clone)")
+            {
+                GameObject.Destroy(child.gameObject);
+            }
+        }
     }
 
 }

@@ -20,7 +20,7 @@ namespace MQ
         public abstract string GetTypeName();
     }
 
-
+    
     public class RemoteQueue : Queue
     {
         public string targetQueueName;

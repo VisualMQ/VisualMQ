@@ -154,13 +154,9 @@ public class Queue : MonoBehaviour
         Debug.Log("Moving Camera to Queue" + this.name);
 
         // A Queue is selected -> Show Info Panel
-        /*string currentQMName, currentQueueName;
-        currentQueueName = this.name;
-*/
         List<string> temp = new List<string>(){"QM1", this.name};
-
         QueueDetailWindow.GetQueueBasicInfo(temp);
-
+        
     }
 
     void OnMouseEnter()

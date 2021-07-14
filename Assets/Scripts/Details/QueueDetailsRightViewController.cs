@@ -52,6 +52,8 @@ public class QueueDetailsRightViewController : MonoBehaviour
     
     public void GenerateMessageList(List<string> temp)
     {
+        DestroyMessageList();
+
         Debug.Log("MESSAGE LIST");
         currentSelected = temp;
         string qmName = temp[0];
@@ -81,6 +83,17 @@ public class QueueDetailsRightViewController : MonoBehaviour
             int keyIdx = i;
             Button curButton = item.Find("MessageRowButton").GetComponent<Button>();
             curButton.onClick.AddListener(() => messageRowItemSelected(keyIdx, qmName, queueName, messages[keyIdx].messageId) );
+        }
+    }
+
+    void DestroyMessageList()
+    {
+        foreach (Transform child in container) 
+        {
+            if(child.gameObject.name == "MessageRowItem(Clone)")
+            {
+                GameObject.Destroy(child.gameObject);
+            }
         }
     }
 
