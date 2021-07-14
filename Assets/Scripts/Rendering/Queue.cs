@@ -22,7 +22,39 @@ public class Queue : MonoBehaviour
 
     // TODO: REMOVE THIS LATER DEMO
     public static QMDetailsController tempWindow;
-    // Use this for initialization
+
+    // Used for positioning
+    public int rank;
+
+    void newQueueAdded(int rank)
+    {
+        if (rank < this.rank)
+        {
+            // If a new queue with a lower rank (position) added. 
+            // Increase our own rank
+            this.rank++;
+        }
+        repositionSelf();
+    }
+
+    void newQueueDeleted(int rank)
+    {
+        // Message sent
+        if(rank < this.rank)
+        {
+            // If a new queue with a lower rank (position) added. 
+            // Increase our own rank
+            this.rank--;
+        }
+        repositionSelf();
+    }
+
+    public void repositionSelf()
+    {
+        this.position = QueueManager.ComputePosition(this.queue.GetTypeName(),this.rank);
+    }
+
+
     void Start()
     {
         string prefabName;

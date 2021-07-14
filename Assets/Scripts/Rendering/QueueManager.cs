@@ -16,7 +16,12 @@ public class QueueManager : MonoBehaviour
     public List<MQ.Queue> queues;
     public List<MQ.Channel> channels;
     public Dictionary<string, GameObject> renderedQueues = new Dictionary<string, GameObject>();
-    
+
+    // Made static to be accessible by Queue objects:
+    public static Dictionary<string, Vector3> offsets;
+    public static Dictionary<string, int> numberOfRenderedQueues;
+    public static Dictionary<string, int[]> dimensions;
+
     // Unity calls this method at the complete beginning, even before Start
     void Awake()
     {
@@ -74,8 +79,8 @@ public class QueueManager : MonoBehaviour
         // By design, larger side of smallArea is equal to smaller side of largeArea
         // See the diagram
         Debug.Assert(largeArea[1] == smallArea[0]);
-        Dictionary<string, Vector3> offsets = new Dictionary<string, Vector3>();
-        Dictionary<string, int[]> dimensions = new Dictionary<string, int[]>();
+        offsets = new Dictionary<string, Vector3>();
+        dimensions = new Dictionary<string, int[]>();
         offsets[numberOfQueuesList[3].Key] = new Vector3(0, 0, 0);
         offsets[numberOfQueuesList[2].Key] = new Vector3(0, 0, sXZ * largeArea[1]);
         offsets[numberOfQueuesList[1].Key] = new Vector3(sXZ * largeArea[0], 0, 0);
@@ -147,7 +152,7 @@ public class QueueManager : MonoBehaviour
         //}
 
         // Render inidividual queues
-        Dictionary<string, int> numberOfRenderedQueues = new Dictionary<string, int>();
+        numberOfRenderedQueues = new Dictionary<string, int>();
         numberOfRenderedQueues[MQ.AliasQueue.typeName] = 0;
         numberOfRenderedQueues[MQ.RemoteQueue.typeName] = 0;
         numberOfRenderedQueues[MQ.TransmissionQueue.typeName] = 0;
@@ -156,17 +161,16 @@ public class QueueManager : MonoBehaviour
         {
             string queueType = queue.GetTypeName();
             int i = numberOfRenderedQueues[queueType]++;
-            Vector3 offset = offsets[queueType];
-            Vector3 position = new Vector3(sXZ * (i % dimensions[queueType][0]), 0, sXZ * (i / dimensions[queueType][0]));
-            Vector3 queueManagerHeight = new Vector3(0, sY*2, 0);
 
             GameObject queueGameObject = new GameObject(queue.queueName, typeof(Queue));
             Queue queueComponent = queueGameObject.GetComponent(typeof(Queue)) as Queue;
-            queueComponent.position = offset + position + queueManagerHeight;
+            queueComponent.rank = i;
+                
+                
             queueComponent.queue = queue;
 
             queueComponent.parent = this;
-
+            queueComponent.repositionSelf();
             // TODO: REMOVE?
             renderedQueues.Add(queue.queueName, queueGameObject);
 
@@ -204,6 +208,16 @@ public class QueueManager : MonoBehaviour
             channelComponent.channel = channel;
             channelGameObject.transform.parent = this.transform;
         }
+    }
+
+    public static UnityEngine.Vector3 ComputePosition(string queueType, int rank)
+    {
+        // int i = numberOfRenderedQueues[queueType]++;
+        Vector3 offset = offsets[queueType];
+        Vector3 position = new Vector3(sXZ * (rank % dimensions[queueType][0]), 0, sXZ * (rank / dimensions[queueType][0]));
+        Vector3 queueManagerHeight = new Vector3(0, sY * 2, 0);
+        Debug.Log("POSITIONING");
+        return (offset + position + queueManagerHeight);  
     }
 
     void Update()
