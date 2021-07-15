@@ -27,6 +27,10 @@ public class QMDetailsController : MonoBehaviour
     // TEST: The Button used to trigger the window
     public Button testButton;
     
+    void Awake()
+    {
+        QueueManager.QMDetailWindow = this;
+    }
 
     public void Clicked(){
         ClearAllInfoFields();
@@ -52,8 +56,10 @@ public class QMDetailsController : MonoBehaviour
 
 
     // Initialise the QM Info using the QM name
-    void QueueManagerInfoInit(string selectedQMName)
+    public void QueueManagerInfoInit(string selectedQMName)
     {
+        QMDetailsWindow.SetActive(true);
+
         GameObject stateGameObject = GameObject.Find("State");
         State stateComponent = stateGameObject.GetComponent(typeof(State)) as State;
 
@@ -96,7 +102,6 @@ public class QMDetailsController : MonoBehaviour
     {
         
     }
-
 
     void QueueListsButtonClicked()
     {

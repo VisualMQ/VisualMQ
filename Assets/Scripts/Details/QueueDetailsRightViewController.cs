@@ -54,7 +54,6 @@ public class QueueDetailsRightViewController : MonoBehaviour
     {
         DestroyMessageList();
 
-        Debug.Log("MESSAGE LIST");
         currentSelected = temp;
         string qmName = temp[0];
         string queueName = temp[1];
@@ -96,6 +95,7 @@ public class QueueDetailsRightViewController : MonoBehaviour
             }
         }
     }
+
 
     void messageRowItemSelected(int idx, string qmName, string queueName, string messageid)
     {

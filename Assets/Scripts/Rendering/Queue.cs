@@ -153,8 +153,6 @@ public class Queue : MonoBehaviour
 
         }
 
-        
-
         textMesh.transform.rotation = Quaternion.LookRotation(usedQueue.textMesh.transform.position - Camera.main.transform.position);
         
 
@@ -190,7 +188,7 @@ public class Queue : MonoBehaviour
         Debug.Log("Moving Camera to Queue" + this.name);
 
         // A Queue is selected -> Show Info Panel
-        List<string> temp = new List<string>(){"QM1", this.name};
+        List<string> temp = new List<string>(){this.parent.name, this.name};
         QueueDetailWindow.GetQueueBasicInfo(temp);
         
     }
