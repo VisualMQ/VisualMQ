@@ -86,8 +86,6 @@ public class Queue : MonoBehaviour
         }
         queuePrefab = Resources.Load(prefabName) as GameObject;
         instantiatedQueue = Instantiate(queuePrefab, new Vector3(0,0,0), Quaternion.identity) as GameObject;
-
-        // TODO: This is for dynamic positions.
         repositionSelf();
         
 
@@ -233,16 +231,39 @@ public class Queue : MonoBehaviour
         }
 
         int messagePrefabNum = (int)Math.Ceiling(utilization * 20);
+        Material queueUtilisationColor = Resources.Load(messageColor) as Material;
+
         for (int i = 0; i < messagePrefabNum; i++)
         {
             Vector3 messagePosition = position;
             messagePosition.y = position.y + (i + 1) * 0.2f;
             GameObject instantiatedMessage = Instantiate(messagePrefab, messagePosition, Quaternion.identity) as GameObject;
             instantiatedMessage.transform.parent = this.transform;
-            instantiatedMessage.GetComponent<MeshRenderer>().material = Resources.Load(messageColor) as Material;
+            instantiatedMessage.GetComponent<MeshRenderer>().material = queueUtilisationColor;
 
             messages.Add(instantiatedMessage);
         }
+
+        // Change color of icon on top of queue to correspond to messages
+        // This relies on the fact the Queue prefab is first in hieararchy
+        // see GetComponentInChildren method
+        MeshRenderer queuePrefabMeshRenderer = gameObject.GetComponentInChildren<MeshRenderer>();
+        Material[] queueMaterials = queuePrefabMeshRenderer.materials;
+        Material[] newQueueMaterials = new Material[queueMaterials.Length];
+        for (int i = 0; i < queueMaterials.Length; i++)
+        {
+            Material material = queueMaterials[i];
+            // QueueBlue is the default utilisation color, so we know
+            // we have to change this material
+            if (material.name.Contains("QueueBlue"))
+            {
+                newQueueMaterials[i] = queueUtilisationColor;
+            } else
+            {
+                newQueueMaterials[i] = material;
+            }
+        }
+        queuePrefabMeshRenderer.materials = newQueueMaterials;
     }
 
     public void UpdateMessages(int newDepth)
