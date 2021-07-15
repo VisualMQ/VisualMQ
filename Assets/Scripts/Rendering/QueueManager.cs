@@ -136,7 +136,20 @@ public class QueueManager : MonoBehaviour
             line.transform.parent = this.transform;
         }
 
-      
+      	// TODO: Add text on blocks
+        foreach (KeyValuePair<string, Vector3> entry in offsets)
+        {
+           GameObject textName = new GameObject();
+           TextMesh textMesh = textName.AddComponent<TextMesh>() as TextMesh;
+           textMesh.text = entry.Key;
+           textMesh.anchor = TextAnchor.MiddleCenter;
+           textMesh.alignment = TextAlignment.Center;
+           textMesh.color = Color.black;
+           textMesh.fontSize = 24;
+           textMesh.characterSize = 0.25f;
+           textMesh.transform.Rotate(90, 0, 0);
+           textMesh.transform.position = entry.Value + new Vector3(-0.3f+baseLoc[0], 0.01f+baseLoc[1], -1.5f+baseLoc[2]);
+        }
 
         // Render inidividual queues
         numberOfRenderedQueues = new Dictionary<string, int>();
@@ -172,6 +185,18 @@ public class QueueManager : MonoBehaviour
             GameObject lowerBlock = Instantiate(blockPrefab, new Vector3(sXZ * x+baseLoc[0], 0+baseLoc[1], -sXZ+baseLoc[2]), Quaternion.identity);
             lowerBlock.transform.parent = this.transform;
         }
+
+        GameObject textNameC = new GameObject();
+        TextMesh textMesh1 = textNameC.AddComponent<TextMesh>() as TextMesh;
+        textMesh1.text = "Channels";
+        textMesh1.anchor = TextAnchor.MiddleCenter;
+        textMesh1.alignment = TextAlignment.Center;
+        textMesh1.color = Color.black;
+        textMesh1.fontSize = 24;
+        textMesh1.characterSize = 0.25f;
+        textMesh1.transform.Rotate(90, 0, 0);
+        textMesh1.transform.position = new Vector3(-0.3f+baseLoc[0], 0.01f+baseLoc[1], -1.5f+baseLoc[2]-sXZ);
+
         int numberOfSenderChannels = 0;
         int numberOfReceiverChannels = 0;
         foreach (MQ.Channel channel in channels)
