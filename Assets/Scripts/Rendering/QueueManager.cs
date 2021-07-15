@@ -15,7 +15,9 @@ public class QueueManager : MonoBehaviour
 
     public List<MQ.Queue> queues;
     public List<MQ.Channel> channels;
-    public int[] baseLoc;
+    public Vector3 baseLoc;
+    public int[] largeArea;
+    public int[] smallArea;
     public Dictionary<string, GameObject> renderedQueues = new Dictionary<string, GameObject>();
 
     public Dictionary<string, Vector3> offsets;
@@ -96,11 +98,11 @@ public class QueueManager : MonoBehaviour
             for (int z = 0; z < largeArea[1]; z++)
             {
                 // Large area
-                GameObject lowerBlock = Instantiate(blockPrefab, new Vector3(sXZ * x+baseLoc[0], 0+baseLoc[1], sXZ * z+baseLoc[2]), Quaternion.identity);
+                GameObject lowerBlock = Instantiate(blockPrefab, new Vector3(sXZ * x, 0, sXZ * z) + baseLoc, Quaternion.identity);
                 lowerBlock.transform.parent = this.transform;
 
                 // Large area
-                GameObject upperBlock = Instantiate(blockPrefab, new Vector3(sXZ * x+baseLoc[0], 0+baseLoc[1], sXZ * z+baseLoc[2]) + offsets[numberOfQueuesList[2].Key], Quaternion.identity);
+                GameObject upperBlock = Instantiate(blockPrefab, new Vector3(sXZ * x, 0, sXZ * z) + baseLoc + offsets[numberOfQueuesList[2].Key], Quaternion.identity);
                 upperBlock.transform.parent = this.transform;
             }
         }
@@ -110,11 +112,11 @@ public class QueueManager : MonoBehaviour
             for (int z = 0; z < smallArea[0]; z++)
             {
                 // Small area
-                GameObject lowerBlock = Instantiate(blockPrefab, new Vector3(sXZ * x+baseLoc[0], 0+baseLoc[1], sXZ * z+baseLoc[2]) + offsets[numberOfQueuesList[1].Key], Quaternion.identity);
+                GameObject lowerBlock = Instantiate(blockPrefab, new Vector3(sXZ * x, 0, sXZ * z) + baseLoc + offsets[numberOfQueuesList[1].Key], Quaternion.identity);
                 lowerBlock.transform.parent = this.transform;
 
                 // Small area
-                GameObject upperBlock = Instantiate(blockPrefab, new Vector3(sXZ * x+baseLoc[0], 0+baseLoc[1], sXZ * z+baseLoc[2]) + offsets[numberOfQueuesList[0].Key], Quaternion.identity);
+                GameObject upperBlock = Instantiate(blockPrefab, new Vector3(sXZ * x, 0, sXZ * z) + baseLoc + offsets[numberOfQueuesList[0].Key], Quaternion.identity);
                 upperBlock.transform.parent = this.transform;
             }
         }
@@ -122,16 +124,16 @@ public class QueueManager : MonoBehaviour
         // Render lines between areas among X-axis
         for (int x = 0; x < largeArea[0] + smallArea[1]; x++)
         {
-            GameObject line = Instantiate(linePrefab, new Vector3(sXZ * x+baseLoc[0], sY * 1.001f+baseLoc[1], -2+baseLoc[2]) + offsets[numberOfQueuesList[2].Key], Quaternion.Euler(0f, 90f, 0f));
+            GameObject line = Instantiate(linePrefab, new Vector3(sXZ * x, sY * 1.001f, -2) + baseLoc + offsets[numberOfQueuesList[2].Key], Quaternion.Euler(0f, 90f, 0f));
             line.transform.parent = this.transform;
 
-            GameObject line2 = Instantiate(linePrefab, new Vector3(sXZ * x+baseLoc[0], sY * 1.001f+baseLoc[1], -2+baseLoc[2]), Quaternion.Euler(0f, 90f, 0f));
+            GameObject line2 = Instantiate(linePrefab, new Vector3(sXZ * x, sY * 1.001f, -2) + baseLoc, Quaternion.Euler(0f, 90f, 0f));
             line2.transform.parent = this.transform;
         }
         // Render lines between areas among Z-axis
         for (int z = 0; z < largeArea[1] + smallArea[0]; z++)
         {
-            GameObject line = Instantiate(linePrefab, new Vector3(-2+baseLoc[0], sY * 1.001f+baseLoc[1], sXZ * z+baseLoc[2]) + offsets[numberOfQueuesList[1].Key], Quaternion.identity);
+            GameObject line = Instantiate(linePrefab, new Vector3(-2, sY * 1.001f, sXZ * z) + baseLoc + offsets[numberOfQueuesList[1].Key], Quaternion.identity);
             line.transform.parent = this.transform;
         }
 
@@ -147,7 +149,7 @@ public class QueueManager : MonoBehaviour
            textMesh.fontSize = 24;
            textMesh.characterSize = 0.25f;
            textMesh.transform.Rotate(90, 0, 0);
-           textMesh.transform.position = entry.Value + new Vector3(-0.3f+baseLoc[0], 0.01f+baseLoc[1], -1.5f+baseLoc[2]);
+           textMesh.transform.position = entry.Value + new Vector3(-0.3f, 0.01f, -1.5f) + baseLoc;
         }
 
         // Render inidividual queues
@@ -181,7 +183,7 @@ public class QueueManager : MonoBehaviour
         // Render area for channels and channels on them
         for (int x = 0; x < largeArea[0] + smallArea[1]; x++)
         {
-            GameObject lowerBlock = Instantiate(blockPrefab, new Vector3(sXZ * x+baseLoc[0], 0+baseLoc[1], -sXZ+baseLoc[2]), Quaternion.identity);
+            GameObject lowerBlock = Instantiate(blockPrefab, new Vector3(sXZ * x, 0, -sXZ) + baseLoc, Quaternion.identity);
             lowerBlock.transform.parent = this.transform;
         }
 
@@ -194,7 +196,7 @@ public class QueueManager : MonoBehaviour
         textMesh1.fontSize = 24;
         textMesh1.characterSize = 0.25f;
         textMesh1.transform.Rotate(90, 0, 0);
-        textMesh1.transform.position = new Vector3(-0.3f+baseLoc[0], 0.01f+baseLoc[1], -1.5f+baseLoc[2]-sXZ);
+        textMesh1.transform.position = new Vector3(-0.3f, 0.01f, -1.5f-sXZ) + baseLoc;
 
         int numberOfSenderChannels = 0;
         int numberOfReceiverChannels = 0;
@@ -206,12 +208,12 @@ public class QueueManager : MonoBehaviour
             if (channel is MQ.SenderChannel)
             {
                 int i = numberOfSenderChannels++;
-                position = new Vector3(sXZ * i+baseLoc[0], 0+baseLoc[1], -sXZ+baseLoc[2]);
+                position = new Vector3(sXZ * i, 0, -sXZ) + baseLoc;
             }
             else if (channel is MQ.ReceiverChannel)
             {
                 int j = numberOfReceiverChannels++;
-                position = new Vector3(sXZ * (largeArea[0] + smallArea[1] - j - 1)+baseLoc[0], 0+baseLoc[1], -sXZ+baseLoc[2]);
+                position = new Vector3(sXZ * (largeArea[0] + smallArea[1] - j - 1), 0, -sXZ) + baseLoc;
             }
             
             GameObject channelGameObject = new GameObject(channel.channelName, typeof(Channel));
@@ -226,10 +228,10 @@ public class QueueManager : MonoBehaviour
     {
         // int i = numberOfRenderedQueues[queueType]++;
         Vector3 offset = offsets[queueType];
-        Vector3 position = new Vector3(sXZ * (rank % dimensions[queueType][0])+baseLoc[0], 0+baseLoc[1], sXZ * (rank / dimensions[queueType][0])+baseLoc[2]);
+        Vector3 position = new Vector3(sXZ * (rank % dimensions[queueType][0]), 0, sXZ * (rank / dimensions[queueType][0]));
         Vector3 queueManagerHeight = new Vector3(0, sY * 2, 0);
         Debug.Log("POSITIONING RANK" + rank);
-        return (offset + position + queueManagerHeight);  
+        return (offset + position + queueManagerHeight + baseLoc);  
     }
 
     void Update()
@@ -322,7 +324,7 @@ public class QueueManager : MonoBehaviour
 
     // Our algorithm for creating a rectangle that can hold N queues
     // This method returns dimensions of that rectangle
-    private int[] ComputeRectangleArea(int N)
+    public static int[] ComputeRectangleArea(int N)
     {
         int a = 1;
         int b = 0;
@@ -343,7 +345,7 @@ public class QueueManager : MonoBehaviour
 
     // Returns dimensions of a rectangle that can hold N queues but
     // one size of the rectangle is constrained to size a
-    private static int[] ComputeRectangleArea(int N, int a)
+    public static int[] ComputeRectangleArea(int N, int a)
     {
         int b = N / a;
         int[] res = { Math.Max(a, b + 1), Math.Min(a, b + 1) };

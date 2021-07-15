@@ -16,7 +16,7 @@ public class State : MonoBehaviour
     // Counter for recording the number of rendered QM
     private int renderedQueueManagers = 0;
     // Integer array for recording the postion of the last rendered manager
-    private List<int[]> QMsPosition = new List<int[]>();
+    private List<Vector3> QMsPosition = new List<Vector3>();
     // Scale factor of blocks
     private const int blockSize = 4;
     // Distance between two QMs
@@ -70,8 +70,11 @@ public class State : MonoBehaviour
             QueueManager qmgrComponent = qmgrGameObject.GetComponent(typeof(QueueManager)) as QueueManager;
             qmgrComponent.queues = newQueues;
             qmgrComponent.channels = newChannels;
+            List<int[]> areas = GetLargeSmallArea(newMqClient);
+            qmgrComponent.largeArea = areas[0];
+            qmgrComponent.smallArea = areas[1];
             // Get the rendering position according its order
-            int[] position = GetQueueMangagerPosition(renderedQueueManagers);
+            Vector3 position = GetQueueMangagerPosition(renderedQueueManagers);
             Debug.Log("New position"+position);
             qmgrComponent.baseLoc = position;
             qmgrs[newMqClient] = qmgrGameObject;
@@ -225,10 +228,10 @@ public class State : MonoBehaviour
     }
 
 
-    public int[] GetQueueMangagerPosition(int renderedQueueManagers)
+    public Vector3 GetQueueMangagerPosition(int renderedQueueManagers)
     {
         List<MQ.Client> qmgrsList=qmgrs.Keys.ToList();
-        int[] result = new int[] {0,0,0};
+        Vector3 result = new Vector3(0,0,0);
         if (renderedQueueManagers==0)
         {
             QMsPosition.Add(result);
@@ -237,22 +240,25 @@ public class State : MonoBehaviour
         if ((renderedQueueManagers+1)%2==0)
         {
             int[] lastQMSize = GetQueueManagerSize(qmgrsList[renderedQueueManagers-1]);
-            result[0]=QMsPosition[renderedQueueManagers-1][0]+lastQMSize[0]+QMsDistance;
-            result[1]=QMsPosition[renderedQueueManagers-1][1];
-            result[2]=QMsPosition[renderedQueueManagers-1][2];
+            result.x=QMsPosition[renderedQueueManagers-1].x+lastQMSize[0]+QMsDistance;
+            result.y=QMsPosition[renderedQueueManagers-1].y;
+            result.z=QMsPosition[renderedQueueManagers-1].z;
         }else{
             int[] lastQMSize = GetQueueManagerSize(qmgrsList[renderedQueueManagers-2]);
-            result[0]=QMsPosition[renderedQueueManagers-2][0];
-            result[1]=QMsPosition[renderedQueueManagers-2][1];
-            result[2]=QMsPosition[renderedQueueManagers-2][2]+lastQMSize[1]+QMsDistance;
+            result.x=QMsPosition[renderedQueueManagers-2].x;
+            result.y=QMsPosition[renderedQueueManagers-2].y;
+            result.z=QMsPosition[renderedQueueManagers-2].z+lastQMSize[1]+QMsDistance;
         }
 
         QMsPosition.Add(result);
+
         return result;
     }
 
-    public int[] GetQueueManagerSize(MQ.Client manager)
+
+    public List<int[]> GetLargeSmallArea(MQ.Client manager)
     {
+        List<int[]> res = new List<int[]>();
         List<MQ.Queue> queues = manager.GetAllQueues();
         // Compute how many queues are of each type
         Dictionary<string, int> numberOfQueues = new Dictionary<string, int>();
@@ -271,47 +277,28 @@ public class State : MonoBehaviour
         KeyValuePair<string, int> highestQueueType = numberOfQueuesList[3];
         KeyValuePair<string, int> secondSmallestQueueType = numberOfQueuesList[1];
 
-        int[] largeArea = ComputeRectangleArea(highestQueueType.Value);
-        int[] smallArea = ComputeRectangleArea(secondSmallestQueueType.Value, largeArea[1]);
+        int[] largeArea = QueueManager.ComputeRectangleArea(highestQueueType.Value);
+        int[] smallArea = QueueManager.ComputeRectangleArea(secondSmallestQueueType.Value, largeArea[1]);
+
+        res.Add(largeArea);
+        res.Add(smallArea);
+
+        return res;
+
+
+    }
+
+    public int[] GetQueueManagerSize(MQ.Client manager)
+    {
+        List<int[]> areas = GetLargeSmallArea(manager);
 
         // Length in x axe
-        int x = blockSize*(largeArea[0]+smallArea[1]);
+        int x = blockSize*(areas[0][0]+areas[1][1]);
         // Length in z axe "+1" is for channel length
-        int y = blockSize*(largeArea[1]+smallArea[0]+1);
+        int y = blockSize*(areas[0][1]+areas[1][0]+1);
 
         int[] size = new int[] {x,y};
         return size;
-    }
-
-    // Our algorithm for creating a rectangle that can hold N queues
-    // This method returns dimensions of that rectangle
-    private int[] ComputeRectangleArea(int N)
-    {
-        int a = 1;
-        int b = 0;
-        bool stopFlag = false;
-
-        while (!stopFlag)
-        {
-            b = N / a;
-            if (Math.Abs(b - a) <= 2) stopFlag = true;
-            else a++;
-        }
-
-        // We need extra space for remainder queues and for dynamic updates
-        // Notice that it has to be the case that b >= a
-        int[] res = { b + 1, a };
-        return res;
-    }
-
-
-    // Returns dimensions of a rectangle that can hold N queues but
-    // one size of the rectangle is constrained to size a
-    private static int[] ComputeRectangleArea(int N, int a)
-    {
-        int b = N / a;
-        int[] res = { Math.Max(a, b + 1), Math.Min(a, b + 1) };
-        return res;
     }
 
 }
