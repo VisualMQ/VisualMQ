@@ -46,6 +46,8 @@ namespace MQ
     public class TransmissionQueue : Queue
     {
         public new static string typeName = "Transmission";
+        public int openInputCount;
+        public int openOutputCount;
 
         //TODO: Assign new message fields when message API is ready
         public TransmissionQueue()
@@ -82,6 +84,8 @@ namespace MQ
     public class LocalQueue : Queue
     {
         public new static string typeName = "Local";
+        public int openInputCount;
+        public int openOutputCount;
 
         //TODO: Assign new message fields when message API is ready
         public LocalQueue()

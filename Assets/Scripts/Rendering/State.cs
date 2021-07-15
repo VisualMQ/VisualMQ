@@ -6,7 +6,7 @@ using UnityEngine;
 public class State : MonoBehaviour
 {
     // TODO: Change, right now dynamic updates do not work with Queue areas
-    private const float UPDATE_INTERVAL = 100000.0f;
+    private const float UPDATE_INTERVAL = 10.0f;
     private float updateCountdown = UPDATE_INTERVAL;
 
     // Main dictionary keeping all connection and their rendered counterparts
