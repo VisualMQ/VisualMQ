@@ -16,9 +16,11 @@ public class State : MonoBehaviour
     // Counter for recording the number of rendered QM
     private int renderedQueueManagers = 0;
     // Integer array for recording the postion of the last rendered manager
-    private List<int[]> lastQMPosition = new List<int[]>();
+    private List<int[]> QMsPosition = new List<int[]>();
     // Scale factor of blocks
     private const int blockSize = 4;
+    // Distance between two QMs
+    private const int QMsDistance = 10;
 
 
     // Use this method for adding new Mq connections (aka connections to different Qmgrs)
@@ -229,23 +231,23 @@ public class State : MonoBehaviour
         int[] result = new int[] {0,0,0};
         if (renderedQueueManagers==0)
         {
-            lastQMPosition.Add(result);
+            QMsPosition.Add(result);
             return result;
         }
         if ((renderedQueueManagers+1)%2==0)
         {
             int[] lastQMSize = GetQueueManagerSize(qmgrsList[renderedQueueManagers-1]);
-            result[0]=lastQMPosition[renderedQueueManagers-1][0]+lastQMSize[0]+10;
-            result[1]=lastQMPosition[renderedQueueManagers-1][1];
-            result[2]=lastQMPosition[renderedQueueManagers-1][2];
+            result[0]=QMsPosition[renderedQueueManagers-1][0]+lastQMSize[0]+QMsDistance;
+            result[1]=QMsPosition[renderedQueueManagers-1][1];
+            result[2]=QMsPosition[renderedQueueManagers-1][2];
         }else{
             int[] lastQMSize = GetQueueManagerSize(qmgrsList[renderedQueueManagers-2]);
-            result[0]=lastQMPosition[renderedQueueManagers-2][0];
-            result[1]=lastQMPosition[renderedQueueManagers-2][1];
-            result[2]=lastQMPosition[renderedQueueManagers-2][2]+lastQMSize[1]+10;
+            result[0]=QMsPosition[renderedQueueManagers-2][0];
+            result[1]=QMsPosition[renderedQueueManagers-2][1];
+            result[2]=QMsPosition[renderedQueueManagers-2][2]+lastQMSize[1]+QMsDistance;
         }
 
-        lastQMPosition.Add(result);
+        QMsPosition.Add(result);
         return result;
     }
 
