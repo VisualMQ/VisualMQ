@@ -23,6 +23,8 @@ public class QueueManager : MonoBehaviour
     public Dictionary<string, int> numberOfRenderedQueues;
     public Dictionary<string, int[]> dimensions;
 
+    public static QMDetailsController QMDetailWindow;
+
     // Unity calls this method at the complete beginning, even before Start
     void Awake()
     {

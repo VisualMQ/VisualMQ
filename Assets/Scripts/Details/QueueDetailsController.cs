@@ -37,6 +37,7 @@ public class QueueDetailsController : MonoBehaviour
 
     public List<string> currentSelected;
 
+
     private void Awake() {
 
         // Locate the Button
@@ -79,7 +80,6 @@ public class QueueDetailsController : MonoBehaviour
     void Start()
     {
         
-
         //Button Listeners
         returnButton.onClick.AddListener(ReturnClicked);
         closeButton.onClick.AddListener(CloseClicked);

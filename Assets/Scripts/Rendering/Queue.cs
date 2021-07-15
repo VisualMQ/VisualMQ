@@ -21,7 +21,7 @@ public class Queue : MonoBehaviour
     public static GameObject prefabInFocus;
 
     // TODO: REMOVE THIS LATER DEMO
-    public static QMDetailsController tempWindow;
+    public static QueueDetailsController QueueDetailWindow;
 
     // Used for positioning
     public int rank;
