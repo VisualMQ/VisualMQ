@@ -16,7 +16,12 @@ public class QueueManager : MonoBehaviour
     public List<MQ.Queue> queues;
     public List<MQ.Channel> channels;
     public Dictionary<string, GameObject> renderedQueues = new Dictionary<string, GameObject>();
-    
+
+  
+    public Dictionary<string, Vector3> offsets;
+    public Dictionary<string, int> numberOfRenderedQueues;
+    public Dictionary<string, int[]> dimensions;
+
     // Unity calls this method at the complete beginning, even before Start
     void Awake()
     {
@@ -74,8 +79,8 @@ public class QueueManager : MonoBehaviour
         // By design, larger side of smallArea is equal to smaller side of largeArea
         // See the diagram
         Debug.Assert(largeArea[1] == smallArea[0]);
-        Dictionary<string, Vector3> offsets = new Dictionary<string, Vector3>();
-        Dictionary<string, int[]> dimensions = new Dictionary<string, int[]>();
+        offsets = new Dictionary<string, Vector3>();
+        dimensions = new Dictionary<string, int[]>();
         offsets[numberOfQueuesList[3].Key] = new Vector3(0, 0, 0);
         offsets[numberOfQueuesList[2].Key] = new Vector3(0, 0, sXZ * largeArea[1]);
         offsets[numberOfQueuesList[1].Key] = new Vector3(sXZ * largeArea[0], 0, 0);
@@ -130,24 +135,10 @@ public class QueueManager : MonoBehaviour
             line.transform.parent = this.transform;
         }
 
-        // TODO: Add text on blocks
-        // Problem right now is that text is rendered with awful resolution
-        // I don't really know the cause for that
-        //foreach (KeyValuePair<string, Vector3> entry in offsets)
-        //{
-        //    GameObject textName = new GameObject();
-        //    TextMesh textMesh = textName.AddComponent<TextMesh>() as TextMesh;
-        //    textMesh.text = entry.Key;
-        //    textMesh.anchor = TextAnchor.MiddleCenter;
-        //    textMesh.alignment = TextAlignment.Center;
-        //    textMesh.color = Color.black;
-        //    textMesh.fontSize = 6;
-        //    textMesh.transform.Rotate(90, 0, 0);
-        //    textMesh.transform.position = entry.Value + new Vector3(-0.3f, 0.01f, -1.5f);
-        //}
+      
 
         // Render inidividual queues
-        Dictionary<string, int> numberOfRenderedQueues = new Dictionary<string, int>();
+        numberOfRenderedQueues = new Dictionary<string, int>();
         numberOfRenderedQueues[MQ.AliasQueue.typeName] = 0;
         numberOfRenderedQueues[MQ.RemoteQueue.typeName] = 0;
         numberOfRenderedQueues[MQ.TransmissionQueue.typeName] = 0;
@@ -156,21 +147,21 @@ public class QueueManager : MonoBehaviour
         {
             string queueType = queue.GetTypeName();
             int i = numberOfRenderedQueues[queueType]++;
-            Vector3 offset = offsets[queueType];
-            Vector3 position = new Vector3(sXZ * (i % dimensions[queueType][0]), 0, sXZ * (i / dimensions[queueType][0]));
-            Vector3 queueManagerHeight = new Vector3(0, sY*2, 0);
 
             GameObject queueGameObject = new GameObject(queue.queueName, typeof(Queue));
             Queue queueComponent = queueGameObject.GetComponent(typeof(Queue)) as Queue;
-            queueComponent.position = offset + position + queueManagerHeight;
+            queueComponent.rank = i;
+                
+                
             queueComponent.queue = queue;
 
             queueComponent.parent = this;
-
+            queueGameObject.transform.parent = this.transform;
+            // queueComponent.repositionSelf();
             // TODO: REMOVE?
             renderedQueues.Add(queue.queueName, queueGameObject);
 
-            queueGameObject.transform.parent = this.transform;
+            
 
         }
 
@@ -206,6 +197,16 @@ public class QueueManager : MonoBehaviour
         }
     }
 
+    public UnityEngine.Vector3 ComputePosition(string queueType, int rank)
+    {
+        // int i = numberOfRenderedQueues[queueType]++;
+        Vector3 offset = offsets[queueType];
+        Vector3 position = new Vector3(sXZ * (rank % dimensions[queueType][0]), 0, sXZ * (rank / dimensions[queueType][0]));
+        Vector3 queueManagerHeight = new Vector3(0, sY * 2, 0);
+        Debug.Log("POSITIONING RANK" + rank);
+        return (offset + position + queueManagerHeight);  
+    }
+
     void Update()
     {
 
@@ -214,6 +215,8 @@ public class QueueManager : MonoBehaviour
     // This method is called from State object on the periodical update
     public void UpdateQueues(List<MQ.Queue> queues)
     {
+
+        
         List<string> queuesToRender = new List<string>();
         List<string> queuesToDestroy = new List<string>();
 
@@ -224,17 +227,24 @@ public class QueueManager : MonoBehaviour
 
             if (!renderedQueues.ContainsKey(queue.queueName))
             {
-                // Render block on which the queue will reside on
-                Instantiate(blockPrefab, new Vector3(2.5f * renderedQueues.Count, 0, 0), Quaternion.identity);
-                // Render new queue
+                string queueType = queue.GetTypeName();
+                int i = numberOfRenderedQueues[queueType]++;
+
                 GameObject queueGameObject = new GameObject(queue.queueName, typeof(Queue));
                 Queue queueComponent = queueGameObject.GetComponent(typeof(Queue)) as Queue;
-                queueComponent.position = new Vector3(2.5f * renderedQueues.Count, 0.25f, 0);
-                queueComponent.queue = queue;
-                
+                queueComponent.rank = i;
 
+
+                queueComponent.queue = queue;
+
+                queueComponent.parent = this;
+                // TODO: REMOVE?
                 renderedQueues.Add(queue.queueName, queueGameObject);
+
                 queueGameObject.transform.parent = this.transform;
+
+                gameObject.BroadcastMessage("newQueueAdded", i);
+                
             }
         }
 
@@ -244,8 +254,16 @@ public class QueueManager : MonoBehaviour
             if (!queuesToRender.Contains(entry.Key))
             {
                 Debug.Log("Deleting queue " + entry.Key);
+
+                Queue queueComponent = entry.Value.GetComponent(typeof(Queue)) as Queue;
+                int rank = queueComponent.rank;
+                string queueType = queueComponent.queue.GetTypeName();
+                numberOfRenderedQueues[queueType]--;
+
                 GameObject.DestroyImmediate(entry.Value);
                 queuesToDestroy.Add(entry.Key);
+
+                gameObject.BroadcastMessage("newQueueDeleted", rank);
             }
         }
 
@@ -253,7 +271,9 @@ public class QueueManager : MonoBehaviour
         {
             renderedQueues.Remove(queueName);
         }
-
+           
+        // TODO THIS DOES NOT WORK YET
+        return;
         // Third: for local queues and transmission queues, check if the utilization level has changed
         foreach (MQ.Queue queue in queues)
         {
