@@ -191,6 +191,7 @@ public class Queue : MonoBehaviour
 
         // A Queue is selected -> Show Info Panel
         List<string> temp = new List<string>(){this.parent.name, this.name};
+        Debug.Log(this.parent.name + this.name);
         QueueDetailWindow.GetQueueBasicInfo(temp);
         
     }

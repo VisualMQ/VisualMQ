@@ -18,6 +18,8 @@ public class QMDetailsRightViewController : MonoBehaviour
     public Button toDetails, toQueueLists;
     public Button closeButton;
 
+    private string currentQMName;
+
     // List of row objects
     List<GameObject> rowItemList = new List<GameObject>();
 
@@ -40,6 +42,7 @@ public class QMDetailsRightViewController : MonoBehaviour
     public void GenerateQueueList(string selectedQM)
     {
         DestroyRowItems();
+        currentQMName = selectedQM;
 
         // Get queues in the selectedQM
         GameObject stateGameObject = GameObject.Find("State");
@@ -107,8 +110,11 @@ public class QMDetailsRightViewController : MonoBehaviour
 
     void ToDetailsClicked()
     {
+        
         // Show Current Details Window
         QMDetailsWindow.SetActive(true);
+        QMDetailsWindow.SendMessage("QueueManagerInfoInit", currentQMName);
+
         // Close the Queue List Window
         QMDetailQueueListWindow.SetActive(false);
     }
@@ -116,7 +122,8 @@ public class QMDetailsRightViewController : MonoBehaviour
 
     void ToQueueListsClicked()
     {
-
+        // current window
+        return;
     }
 
 }
