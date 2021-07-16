@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 using MQ;
 using System.Collections.Generic;
@@ -44,8 +44,10 @@ public class Queue : MonoBehaviour
         {
             // If a new queue with a lower rank (position) added. 
             // Increase our own rank
+            Debug.Log("Decreased my rank");
             this.rank--;
             repositionSelf();
+
         }
     }
 
