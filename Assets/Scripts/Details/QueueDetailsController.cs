@@ -101,12 +101,16 @@ public class QueueDetailsController : MonoBehaviour
     {
         QueueDetailLeftWindow.SetActive(true);
         currentSelected = temp;
-
+        
+        
         string qmName = temp[0];
         string queueName = temp[1];
 
         int starIdx = qmName.Length;
         string removeQMQueueName = queueName.Substring(starIdx+1);
+
+        Debug.Log("AAA"+ qmName + queueName);
+
 
         GameObject stateGameObject = GameObject.Find("State");
         State stateComponent = stateGameObject.GetComponent(typeof(State)) as State;
@@ -207,7 +211,7 @@ public class QueueDetailsController : MonoBehaviour
         QueueDetailLeftWindow.SetActive(false);
     }
 
-    // Reload Current Window
+    // Current Window
     void ToQueueDetailsClicked()
     {
         return;

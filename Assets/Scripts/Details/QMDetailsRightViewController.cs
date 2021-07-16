@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/*
+    The QM Detail Window: List of Queues
+*/
+
 public class QMDetailsRightViewController : MonoBehaviour
 {
     // Details Window Game Object
@@ -30,6 +34,7 @@ public class QMDetailsRightViewController : MonoBehaviour
         QueueRowItem = container.Find("QueueRowItem");
     }
 
+
     // Start is called before the first frame update
     void Start()
     {   
@@ -39,17 +44,20 @@ public class QMDetailsRightViewController : MonoBehaviour
         toQueueLists.onClick.AddListener(ToQueueListsClicked);
     }
 
+    // Given the QM Name -> Show Queues under the QM
     public void GenerateQueueList(string selectedQM)
     {
+        // Clear previous generate list
         DestroyRowItems();
+
+
         currentQMName = selectedQM;
 
         // Get queues in the selectedQM
         GameObject stateGameObject = GameObject.Find("State");
         State stateComponent = stateGameObject.GetComponent(typeof(State)) as State;
-
         List<MQ.Queue> queues = stateComponent.GetAllQueuesInQmgr(selectedQM);
-        
+        // Hide the template row
         QueueRowItem.gameObject.SetActive(false);
 
         // Row Origin Position
@@ -92,11 +100,14 @@ public class QMDetailsRightViewController : MonoBehaviour
     // Queue is selected -> To Queue Details Winodw
     void queueRowItemSelected(int rowidx, string qmName, string queueName)
     {
-        // To Queue Detail Window
+
         QMDetailQueueListWindow.SetActive(false);
         QueueDetailWindow.SetActive(true);
-
+        
+        Debug.Log("The parameters to Queue Details Controller: "+ qmName + " " + queueName);
+        queueName = qmName + '.' + queueName;
         List<string> temp = new List<string>() { qmName, queueName };
+
         QueueDetailWindow.SendMessage("GetQueueBasicInfo", temp);
     }
 
