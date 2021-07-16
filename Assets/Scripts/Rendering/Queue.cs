@@ -21,7 +21,7 @@ public class Queue : MonoBehaviour
     public static GameObject prefabInFocus;
 
     // TODO: REMOVE THIS LATER DEMO
-    public static QMDetailsController tempWindow;
+    public static QueueDetailsController QueueDetailWindow;
 
     // Used for positioning
     public int rank;
@@ -34,7 +34,6 @@ public class Queue : MonoBehaviour
             // Increase our own rank
             this.rank++;
             repositionSelf();
-
         }
     }
 
@@ -156,8 +155,6 @@ public class Queue : MonoBehaviour
 
         }
 
-        
-
         textMesh.transform.rotation = Quaternion.LookRotation(usedQueue.textMesh.transform.position - Camera.main.transform.position);
         
 
@@ -166,13 +163,11 @@ public class Queue : MonoBehaviour
 
     }
 
+    /*
+    A queue is selected
+    */
     void OnMouseUp()
     {
-        // TODO: SHOWQING QM DETAILS FIX DEMO TEST
-        tempWindow.Clicked();
-       
-
-
         // Click on twice = Deactivate focus
         if (queueInFocus == instantiatedQueue)
         {
@@ -193,6 +188,11 @@ public class Queue : MonoBehaviour
         Camera.main.transform.LookAt(this.position);
         Camera.main.transform.position = new Vector3(2.5f, 15f, -13f) + this.position;
         Debug.Log("Moving Camera to Queue" + this.name);
+
+        // A Queue is selected -> Show Info Panel
+        List<string> temp = new List<string>(){this.parent.name, this.name};
+        QueueDetailWindow.GetQueueBasicInfo(temp);
+        
     }
 
     void OnMouseEnter()

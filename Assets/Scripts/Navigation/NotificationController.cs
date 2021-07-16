@@ -16,7 +16,6 @@ public class NotificationController : MonoBehaviour
     public Text messageSuccess, messageError, messageInfo, messageWarning;
 
     string currentDate = (DateTime.Now).ToString();
-    public string example = "hello";
 
     // Start is called before the first frame update
     void Start()
@@ -34,6 +33,11 @@ public class NotificationController : MonoBehaviour
         closewarningNotification.onClick.AddListener(closeWindowWarning);
     }
 
+    void CloseNotification()
+    {
+        successNotification.SetActive(false);
+    }
+
     /*
     * Notification Window Generation for all 4 types of notification window
     */
@@ -42,6 +46,7 @@ public class NotificationController : MonoBehaviour
         successNotification.SetActive(true);
         timeSuccessNotification.text = (DateTime.Now).ToString();
         messageSuccess.text = info;
+
     }
 
     public void errorMessageWindowGenerator(string info)

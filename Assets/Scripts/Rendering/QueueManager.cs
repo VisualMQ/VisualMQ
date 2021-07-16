@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class QueueManager : MonoBehaviour
 {
+    // Prefabs
     private GameObject blockPrefab;
     private GameObject linePrefab;
 
@@ -23,6 +24,8 @@ public class QueueManager : MonoBehaviour
     public Dictionary<string, Vector3> offsets;
     public Dictionary<string, int> numberOfRenderedQueues;
     public Dictionary<string, int[]> dimensions;
+
+    public static QMDetailsController QMDetailWindow;
 
     // Unity calls this method at the complete beginning, even before Start
     void Awake()
@@ -56,6 +59,7 @@ public class QueueManager : MonoBehaviour
         dimensions[numberOfQueuesList[1].Key] = smallArea;
         dimensions[numberOfQueuesList[0].Key] = smallArea;
 
+
         // Render 2 large areas on top of each other
         for (int x = 0; x < largeArea[0]; x++)
         {
@@ -65,11 +69,13 @@ public class QueueManager : MonoBehaviour
                 GameObject lowerBlock = Instantiate(blockPrefab, new Vector3(sXZ * x, 0, sXZ * z) + baseLoc, Quaternion.identity);
                 lowerBlock.name = qmName + QM_NAME_DELIMITER + lowerBlock.name;
                 lowerBlock.transform.parent = this.transform;
+                lowerBlock.name = "Block_lower_large";
 
                 // Large area
                 GameObject upperBlock = Instantiate(blockPrefab, new Vector3(sXZ * x, 0, sXZ * z) + baseLoc + offsets[numberOfQueuesList[2].Key], Quaternion.identity);
                 upperBlock.name = qmName + QM_NAME_DELIMITER + upperBlock.name;
                 upperBlock.transform.parent = this.transform;
+                upperBlock.name = "Block_upper_large";
             }
         }
         // Render 2 small areas
@@ -81,11 +87,13 @@ public class QueueManager : MonoBehaviour
                 GameObject lowerBlock = Instantiate(blockPrefab, new Vector3(sXZ * x, 0, sXZ * z) + baseLoc + offsets[numberOfQueuesList[1].Key], Quaternion.identity);
                 lowerBlock.name = qmName + QM_NAME_DELIMITER + lowerBlock.name;
                 lowerBlock.transform.parent = this.transform;
+                lowerBlock.name = "Block_lower_small";
 
                 // Small area
                 GameObject upperBlock = Instantiate(blockPrefab, new Vector3(sXZ * x, 0, sXZ * z) + baseLoc + offsets[numberOfQueuesList[0].Key], Quaternion.identity);
                 upperBlock.name = qmName + QM_NAME_DELIMITER + upperBlock.name;
                 upperBlock.transform.parent = this.transform;
+                upperBlock.name = "Block_upper_smaller";
             }
         }
 
@@ -98,6 +106,7 @@ public class QueueManager : MonoBehaviour
             GameObject line2 = Instantiate(linePrefab, new Vector3(sXZ * x, sY * 1.001f, -2) + baseLoc, Quaternion.Euler(0f, 90f, 0f));
             line2.transform.parent = this.transform;
         }
+
         // Render lines between areas among Z-axis
         for (int z = 0; z < largeArea[1] + smallArea[0]; z++)
         {
@@ -205,8 +214,24 @@ public class QueueManager : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetMouseButtonDown(0)) 
+        {
+            Vector3 mousePos = Input.mousePosition;
+
+            if (mousePos.y == 0f)
+            {
+                Debug.Log(mousePos.y);
+                QMDetailWindow.QueueManagerInfoInit(this.name);
+            }
+           
+        }
 
     }
+
+    private void OnMouseDown() 
+    {
+    }
+
 
     // This method is called from State object on the periodical update
     public void UpdateQueues(List<MQ.Queue> queues)
