@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 
 public class State : MonoBehaviour
 {
     // TODO: Change, right now dynamic updates do not work with Queue areas
-    private const float UPDATE_INTERVAL = 100000.0f;
+    private const float UPDATE_INTERVAL = 10.0f;
+    // Distance between two QMs
+    private const int DISTANCE_BETWEEN_QMS = 10;
+
     private float updateCountdown = UPDATE_INTERVAL;
 
     // Main dictionary keeping all connection and their rendered counterparts
@@ -19,10 +23,10 @@ public class State : MonoBehaviour
         qmgrs.Add(newMqClient, null);
     }
 
-    
+
     void Start()
     {
-        
+
     }
 
 
@@ -42,11 +46,11 @@ public class State : MonoBehaviour
             MQ.Client newMqClient = null;
             foreach (KeyValuePair<MQ.Client, GameObject> entry in qmgrs)
             {
-                if (entry.Value == null) {
+                if (entry.Value == null)
+                {
                     newMqClient = entry.Key;
                     break;
                 }
-
             }
             MQ.QueueManager newQmgr = newMqClient.GetQmgr();
             List<MQ.Queue> newQueues = newMqClient.GetAllQueues();
@@ -56,11 +60,15 @@ public class State : MonoBehaviour
             // GameObject is just an Entity/Container for Components that perform the real functionality
 
             GameObject qmgrGameObject = new GameObject(newQmgr.qmgrName, typeof(QueueManager));
-
             QueueManager qmgrComponent = qmgrGameObject.GetComponent(typeof(QueueManager)) as QueueManager;
             qmgrComponent.qmName = newQmgr.qmgrName;
             qmgrComponent.queues = newQueues;
             qmgrComponent.channels = newChannels;
+
+            // Get the rendering position according its order
+            Vector3 position = GetQueueMangagerPosition();
+            Debug.Log("New position" + position);
+            qmgrComponent.baseLoc = position;
             qmgrs[newMqClient] = qmgrGameObject;
 
             qmgrGameObject.transform.parent = this.transform;
@@ -99,16 +107,16 @@ public class State : MonoBehaviour
     // Get Number of QM Registered -> For Navigation Check box
     public int GetNumberOfRegisteredQM()
     {
-        return qmgrs.Count; 
+        return qmgrs.Count;
     }
 
-    
+
     // Get MQ Name List -> For Navigation Check box
     public List<string> RegisteredQMNameList()
     {
         List<string> mqlist = new List<string>();
 
-        foreach (MQ.Client client in qmgrs.Keys) 
+        foreach (MQ.Client client in qmgrs.Keys)
         {
             mqlist.Add(client.GetQueueManagerName());
         }
@@ -120,7 +128,7 @@ public class State : MonoBehaviour
     // Return the details of selected QM
     public MQ.QueueManager GetSelectedQmgr(string selectedQMName)
     {
-        foreach (MQ.Client client in qmgrs.Keys) 
+        foreach (MQ.Client client in qmgrs.Keys)
         {
             if (client.GetQueueManagerName() == selectedQMName)
             {
@@ -136,7 +144,7 @@ public class State : MonoBehaviour
     {
         List<string> queuesList = new List<string>();
 
-        foreach (MQ.Client client in qmgrs.Keys) 
+        foreach (MQ.Client client in qmgrs.Keys)
         {
             if (client.GetQueueManagerName() == selectedQMName)
             {
@@ -208,5 +216,31 @@ public class State : MonoBehaviour
         }
         return null;
     }
+
+
+    public Vector3 GetQueueMangagerPosition()
+    {
+        QueueManager[] renderedQMs = FindObjectsOfType<QueueManager>();
+        int numberOfRenderedQMs = renderedQMs.Length;
+        Vector3 result = new Vector3();
+        if (numberOfRenderedQMs <= 1)
+        {
+            return result;
+        }
+        if (numberOfRenderedQMs % 2 == 0)
+        {
+            QueueManager lastQM = renderedQMs[numberOfRenderedQMs - 1];
+            result = lastQM.baseLoc;
+            result.z = result.z + lastQM.GetQueueManagerSize()[1] + DISTANCE_BETWEEN_QMS;
+        }
+        else
+        {
+            QueueManager lastQM = renderedQMs[numberOfRenderedQMs - 1];
+            result = lastQM.baseLoc;
+            result.x = result.x + lastQM.GetQueueManagerSize()[0] + DISTANCE_BETWEEN_QMS;
+        }
+        return result;
+    }
+
 }
 
