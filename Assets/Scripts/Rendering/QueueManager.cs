@@ -12,7 +12,9 @@ public class QueueManager : MonoBehaviour
     // Scale factor of blocks in different axes
     private const float sXZ = 4f;
     private const float sY = 0.1286252f;
+    private const string QM_NAME_DELIMITER = ".";
 
+    public string qmName;
     public List<MQ.Queue> queues;
     public List<MQ.Channel> channels;
     public Vector3 baseLoc;
@@ -61,10 +63,12 @@ public class QueueManager : MonoBehaviour
             {
                 // Large area
                 GameObject lowerBlock = Instantiate(blockPrefab, new Vector3(sXZ * x, 0, sXZ * z) + baseLoc, Quaternion.identity);
+                lowerBlock.name = qmName + QM_NAME_DELIMITER + lowerBlock.name;
                 lowerBlock.transform.parent = this.transform;
 
                 // Large area
                 GameObject upperBlock = Instantiate(blockPrefab, new Vector3(sXZ * x, 0, sXZ * z) + baseLoc + offsets[numberOfQueuesList[2].Key], Quaternion.identity);
+                upperBlock.name = qmName + QM_NAME_DELIMITER + upperBlock.name;
                 upperBlock.transform.parent = this.transform;
             }
         }
@@ -75,10 +79,12 @@ public class QueueManager : MonoBehaviour
             {
                 // Small area
                 GameObject lowerBlock = Instantiate(blockPrefab, new Vector3(sXZ * x, 0, sXZ * z) + baseLoc + offsets[numberOfQueuesList[1].Key], Quaternion.identity);
+                lowerBlock.name = qmName + QM_NAME_DELIMITER + lowerBlock.name;
                 lowerBlock.transform.parent = this.transform;
 
                 // Small area
                 GameObject upperBlock = Instantiate(blockPrefab, new Vector3(sXZ * x, 0, sXZ * z) + baseLoc + offsets[numberOfQueuesList[0].Key], Quaternion.identity);
+                upperBlock.name = qmName + QM_NAME_DELIMITER + upperBlock.name;
                 upperBlock.transform.parent = this.transform;
             }
         }
@@ -125,7 +131,8 @@ public class QueueManager : MonoBehaviour
             string queueType = queue.GetTypeName();
             int i = numberOfRenderedQueues[queueType]++;
 
-            GameObject queueGameObject = new GameObject(queue.queueName, typeof(Queue));
+            string uniqueQueueName = qmName + QM_NAME_DELIMITER + queue.queueName;
+            GameObject queueGameObject = new GameObject(uniqueQueueName, typeof(Queue)); //Globally unique queue name
             Queue queueComponent = queueGameObject.GetComponent(typeof(Queue)) as Queue;
             queueComponent.rank = i;
                 
@@ -176,8 +183,9 @@ public class QueueManager : MonoBehaviour
                 int j = numberOfReceiverChannels++;
                 position = new Vector3(sXZ * (largeArea[0] + smallArea[1] - j - 1), 0, -sXZ) + baseLoc;
             }
-            
-            GameObject channelGameObject = new GameObject(channel.channelName, typeof(Channel));
+
+            string uniqueChannelName = qmName + QM_NAME_DELIMITER + channel.channelName;
+            GameObject channelGameObject = new GameObject(uniqueChannelName, typeof(Channel)); //Globally unique channel name
             Channel channelComponent = channelGameObject.GetComponent(typeof(Channel)) as Channel;
             channelComponent.position = position + queueManagerHeight;
             channelComponent.channel = channel;
@@ -218,7 +226,8 @@ public class QueueManager : MonoBehaviour
                 string queueType = queue.GetTypeName();
                 int i = numberOfRenderedQueues[queueType]++;
 
-                GameObject queueGameObject = new GameObject(queue.queueName, typeof(Queue));
+                string uniqueQueueName = qmName + QM_NAME_DELIMITER + queue.queueName;
+                GameObject queueGameObject = new GameObject(uniqueQueueName, typeof(Queue));
                 Queue queueComponent = queueGameObject.GetComponent(typeof(Queue)) as Queue;
                 queueComponent.rank = i;
 
@@ -232,7 +241,7 @@ public class QueueManager : MonoBehaviour
                 queueGameObject.transform.parent = this.transform;
 
                 gameObject.BroadcastMessage("newQueueAdded", i);
-                
+
             }
         }
 
