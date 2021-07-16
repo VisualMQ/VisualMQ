@@ -8,7 +8,6 @@ using UnityEngine;
 
 namespace MQ
 {
-
     // Library for communication with IBM MQ system
     public class Client
     {
@@ -28,12 +27,12 @@ namespace MQ
             client = new HttpClient();
             client.BaseAddress = new Uri(baseUrl);
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            
+
             Authenticate();
 
         }
 
-        public string GetQueueManagerName(){
+        public string GetQueueManagerName() {
             return this.qmgr;
         }
 
@@ -44,7 +43,7 @@ namespace MQ
             string body = "{\"username\":\"" + username + "\",\"password\":\"" + apikey + "\"}";
             request.Content = new StringContent(body, Encoding.UTF8, "application/json");
             HttpResponseMessage response = client.SendAsync(request).Result;
-            
+
             if (!response.IsSuccessStatusCode)
             { //Invalid credentials or API endpoints
                 throw new Exception();
@@ -124,7 +123,6 @@ namespace MQ
     /// 
     public class Parser
     {
-
         public static List<QueueManager> Parse(_QueueManagerResponseJson qmgrResponseJson)
         {
             List<QueueManager> qmgrs = new List<QueueManager>();
@@ -133,10 +131,20 @@ namespace MQ
                 QueueManager qmgr = new QueueManager();
                 qmgr.qmgrName = qmgrJson.name;
                 qmgr.state = qmgrJson.state;
-                qmgr.instVer = qmgrJson.instVer;
+
+                qmgr.installationName = qmgrJson.extended.installationName;
+                qmgr.permitStandby = qmgrJson.extended.permitStandby;
+                qmgr.isDefaultQmgr = qmgrJson.extended.isDefaultQmgr;
+
+                qmgr.publishSubscribeState = qmgrJson.status.publishSubscribeState;
+                qmgr.connectionCount = qmgrJson.status.connectionCount;
+                qmgr.channelInitiatorState = qmgrJson.status.channelInitiatorState;
+                qmgr.ldapConnectionState = qmgrJson.status.ldapConnectionState;
+                qmgr.started = qmgrJson.status.started;
 
                 qmgrs.Add(qmgr);
             }
+            
             return qmgrs;
         }
 
@@ -165,11 +173,15 @@ namespace MQ
                         {
                             queue = new TransmissionQueue();
                             ((TransmissionQueue)queue).currentDepth = queueJson.status.currentDepth;
+                            ((TransmissionQueue)queue).openInputCount = queueJson.status.openInputCount;
+                            ((TransmissionQueue)queue).openOutputCount = queueJson.status.openOutputCount;
                         }
                         else
                         {
                             queue = new LocalQueue();
                             ((LocalQueue)queue).currentDepth = queueJson.status.currentDepth;
+                            ((LocalQueue)queue).openInputCount = queueJson.status.openInputCount;
+                            ((LocalQueue)queue).openOutputCount = queueJson.status.openOutputCount;
                         }
                         break;
                     
@@ -251,11 +263,29 @@ namespace MQ
     [Serializable]
     public class _QueueManagerJson
     {
-        public string instVer;
         public string name;
         public string state;
+        public _QueueManagerExtendedJson extended;
+        public _QueueManagerStatusJson status;
     }
 
+    [Serializable]
+    public class _QueueManagerExtendedJson
+    {
+        public string installationName;
+        public string permitStandby;
+        public bool isDefaultQmgr;
+    }
+
+    [Serializable]
+    public class _QueueManagerStatusJson
+    {
+        public string publishSubscribeState;
+        public int connectionCount;
+        public string channelInitiatorState;
+        public string ldapConnectionState;
+        public string started;
+    }
     [Serializable]
     public class _QueueResponseJson
     {
@@ -319,6 +349,8 @@ namespace MQ
     public class _QueueStatusJson
     {
         public int currentDepth;
+        public int openInputCount;
+        public int openOutputCount;
     }
 
     [Serializable]
