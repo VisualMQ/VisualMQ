@@ -95,7 +95,7 @@ public class NavigationController : MonoBehaviour
             RectTransform recTransform = item.GetComponent<RectTransform>();
             recTransform.anchoredPosition = new Vector2(0, -rowHeight * i + startY);
             item.gameObject.SetActive(true);
-
+            
             item.Find("TextQMName").GetComponent<Text>().text = mqlist[i];
         }
 

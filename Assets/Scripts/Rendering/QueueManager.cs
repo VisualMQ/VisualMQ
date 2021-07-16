@@ -66,13 +66,12 @@ public class QueueManager : MonoBehaviour
                 // Large area
                 GameObject lowerBlock = Instantiate(blockPrefab, new Vector3(sXZ * x, 0, sXZ * z) + baseLoc, Quaternion.identity);
                 lowerBlock.transform.parent = this.transform;
-                lowerBlock.name = this.name+"Block";
+                lowerBlock.name = "Block_lower_large";
 
                 // Large area
                 GameObject upperBlock = Instantiate(blockPrefab, new Vector3(sXZ * x, 0, sXZ * z) + baseLoc + offsets[numberOfQueuesList[2].Key], Quaternion.identity);
                 upperBlock.transform.parent = this.transform;
-                upperBlock.name = this.name+"Block";
-
+                upperBlock.name = "Block_upper_large";
             }
         }
         // Render 2 small areas
@@ -83,12 +82,12 @@ public class QueueManager : MonoBehaviour
                 // Small area
                 GameObject lowerBlock = Instantiate(blockPrefab, new Vector3(sXZ * x, 0, sXZ * z) + baseLoc + offsets[numberOfQueuesList[1].Key], Quaternion.identity);
                 lowerBlock.transform.parent = this.transform;
-                lowerBlock.name = this.name+"Block";
+                lowerBlock.name = "Block_lower_small";
 
                 // Small area
                 GameObject upperBlock = Instantiate(blockPrefab, new Vector3(sXZ * x, 0, sXZ * z) + baseLoc + offsets[numberOfQueuesList[0].Key], Quaternion.identity);
                 upperBlock.transform.parent = this.transform;
-                upperBlock.name = this.name+"Block";
+                upperBlock.name = "Block_upper_smaller";
             }
         }
 
@@ -213,7 +212,6 @@ public class QueueManager : MonoBehaviour
 
             if (mousePos.y == 0f)
             {
-                Debug.Log("HIHI");
                 Debug.Log(mousePos.y);
                 QMDetailWindow.QueueManagerInfoInit(this.name);
             }
@@ -224,7 +222,6 @@ public class QueueManager : MonoBehaviour
 
     private void OnMouseDown() 
     {
-        Debug.Log("TESTING");
     }
 
 

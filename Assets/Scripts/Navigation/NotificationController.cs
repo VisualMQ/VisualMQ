@@ -16,7 +16,6 @@ public class NotificationController : MonoBehaviour
     public Text messageSuccess, messageError, messageInfo, messageWarning;
 
     string currentDate = (DateTime.Now).ToString();
-    //public string example = "hello";
 
     // Start is called before the first frame update
     void Start()
