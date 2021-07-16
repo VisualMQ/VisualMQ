@@ -15,9 +15,9 @@ public class QueueManager : MonoBehaviour
 
     public List<MQ.Queue> queues;
     public List<MQ.Channel> channels;
+    public Vector3 baseLoc;
     public Dictionary<string, GameObject> renderedQueues = new Dictionary<string, GameObject>();
 
-  
     public Dictionary<string, Vector3> offsets;
     public Dictionary<string, int> numberOfRenderedQueues;
     public Dictionary<string, int[]> dimensions;
@@ -33,49 +33,13 @@ public class QueueManager : MonoBehaviour
     {
         Debug.Log("Rendering " + queues.Count + " queues.");
 
-        // Compute how many queues are of each type
-        Dictionary<string, int> numberOfQueues = new Dictionary<string, int>();
-        numberOfQueues[MQ.AliasQueue.typeName] = 0;
-        numberOfQueues[MQ.RemoteQueue.typeName] = 0;
-        numberOfQueues[MQ.TransmissionQueue.typeName] = 0;
-        numberOfQueues[MQ.LocalQueue.typeName] = 0;
-        foreach (MQ.Queue queue in queues)
-        {
-            numberOfQueues[queue.GetTypeName()]++;
-        }
-
-        /* We will have 2 large rectangle areas and 2 small rectangle areas
-           -----------
-           |2    |4  |
-           |     |   |
-           X-----X----
-           |1    |3  |
-           |     |   |
-           X-----X----
-         
-            We sort types of queues (Alias/Remote..) based on the number of queues
-            of that type there are. Two highest have the 2 large areas, two smallest
-            have the 2 small areas.
-            The large area is formed based on the queue with the highest number of
-            queues, the small are based on the queue type with the second smallest number
-            of queues.
-        */
+        Dictionary<string, int> numberOfQueues = GetNumberOfQueuesOfType();
         List<KeyValuePair<string, int>> numberOfQueuesList = numberOfQueues.ToList();
         numberOfQueuesList.Sort((x, y) => x.Value.CompareTo(y.Value));
 
-        KeyValuePair<string, int> highestQueueType = numberOfQueuesList[3];
-        KeyValuePair<string, int> secondSmallestQueueType = numberOfQueuesList[1];
-
-
-        /*
-            Each area has associated offset vector and dimension.
-            Offset determines its position. See offsets variable later on.
-            On diagram the offset is represented by X.
-            Dimensions/areas are 2-element int array specifying the 2 rectangle axes sizes.
-            The first element of the int array is always the greater one.
-        */
-        int[] largeArea = ComputeRectangleArea(highestQueueType.Value);
-        int[] smallArea = ComputeRectangleArea(secondSmallestQueueType.Value, largeArea[1]);
+        List<int[]> areas = GetLargeSmallArea();
+        int[] largeArea = areas[0];
+        int[] smallArea = areas[1];
         // By design, larger side of smallArea is equal to smaller side of largeArea
         // See the diagram
         Debug.Assert(largeArea[1] == smallArea[0]);
@@ -96,11 +60,11 @@ public class QueueManager : MonoBehaviour
             for (int z = 0; z < largeArea[1]; z++)
             {
                 // Large area
-                GameObject lowerBlock = Instantiate(blockPrefab, new Vector3(sXZ * x, 0, sXZ * z), Quaternion.identity);
+                GameObject lowerBlock = Instantiate(blockPrefab, new Vector3(sXZ * x, 0, sXZ * z) + baseLoc, Quaternion.identity);
                 lowerBlock.transform.parent = this.transform;
 
                 // Large area
-                GameObject upperBlock = Instantiate(blockPrefab, new Vector3(sXZ * x, 0, sXZ * z) + offsets[numberOfQueuesList[2].Key], Quaternion.identity);
+                GameObject upperBlock = Instantiate(blockPrefab, new Vector3(sXZ * x, 0, sXZ * z) + baseLoc + offsets[numberOfQueuesList[2].Key], Quaternion.identity);
                 upperBlock.transform.parent = this.transform;
             }
         }
@@ -110,11 +74,11 @@ public class QueueManager : MonoBehaviour
             for (int z = 0; z < smallArea[0]; z++)
             {
                 // Small area
-                GameObject lowerBlock = Instantiate(blockPrefab, new Vector3(sXZ * x, 0, sXZ * z) + offsets[numberOfQueuesList[1].Key], Quaternion.identity);
+                GameObject lowerBlock = Instantiate(blockPrefab, new Vector3(sXZ * x, 0, sXZ * z) + baseLoc + offsets[numberOfQueuesList[1].Key], Quaternion.identity);
                 lowerBlock.transform.parent = this.transform;
 
                 // Small area
-                GameObject upperBlock = Instantiate(blockPrefab, new Vector3(sXZ * x, 0, sXZ * z) + offsets[numberOfQueuesList[0].Key], Quaternion.identity);
+                GameObject upperBlock = Instantiate(blockPrefab, new Vector3(sXZ * x, 0, sXZ * z) + baseLoc + offsets[numberOfQueuesList[0].Key], Quaternion.identity);
                 upperBlock.transform.parent = this.transform;
             }
         }
@@ -122,20 +86,33 @@ public class QueueManager : MonoBehaviour
         // Render lines between areas among X-axis
         for (int x = 0; x < largeArea[0] + smallArea[1]; x++)
         {
-            GameObject line = Instantiate(linePrefab, new Vector3(sXZ * x, sY * 1.001f, -2) + offsets[numberOfQueuesList[2].Key], Quaternion.Euler(0f, 90f, 0f));
+            GameObject line = Instantiate(linePrefab, new Vector3(sXZ * x, sY * 1.001f, -2) + baseLoc + offsets[numberOfQueuesList[2].Key], Quaternion.Euler(0f, 90f, 0f));
             line.transform.parent = this.transform;
 
-            GameObject line2 = Instantiate(linePrefab, new Vector3(sXZ * x, sY * 1.001f, -2), Quaternion.Euler(0f, 90f, 0f));
+            GameObject line2 = Instantiate(linePrefab, new Vector3(sXZ * x, sY * 1.001f, -2) + baseLoc, Quaternion.Euler(0f, 90f, 0f));
             line2.transform.parent = this.transform;
         }
         // Render lines between areas among Z-axis
         for (int z = 0; z < largeArea[1] + smallArea[0]; z++)
         {
-            GameObject line = Instantiate(linePrefab, new Vector3(-2, sY * 1.001f, sXZ * z) + offsets[numberOfQueuesList[1].Key], Quaternion.identity);
+            GameObject line = Instantiate(linePrefab, new Vector3(-2, sY * 1.001f, sXZ * z) + baseLoc + offsets[numberOfQueuesList[1].Key], Quaternion.identity);
             line.transform.parent = this.transform;
         }
 
-      
+      	// TODO: There is a bug that text is on top of everything
+        //foreach (KeyValuePair<string, Vector3> entry in offsets)
+        //{
+        //   GameObject textName = new GameObject();
+        //   TextMesh textMesh = textName.AddComponent<TextMesh>() as TextMesh;
+        //   textMesh.text = entry.Key;
+        //   textMesh.anchor = TextAnchor.MiddleCenter;
+        //   textMesh.alignment = TextAlignment.Center;
+        //   textMesh.color = Color.black;
+        //   textMesh.fontSize = 24;
+        //   textMesh.characterSize = 0.25f;
+        //   textMesh.transform.Rotate(90, 0, 0);
+        //   textMesh.transform.position = entry.Value + new Vector3(-0.3f, 0.01f, -1.5f) + baseLoc;
+        //}
 
         // Render inidividual queues
         numberOfRenderedQueues = new Dictionary<string, int>();
@@ -161,16 +138,27 @@ public class QueueManager : MonoBehaviour
             // TODO: REMOVE?
             renderedQueues.Add(queue.queueName, queueGameObject);
 
-            
-
         }
 
         // Render area for channels and channels on them
         for (int x = 0; x < largeArea[0] + smallArea[1]; x++)
         {
-            GameObject lowerBlock = Instantiate(blockPrefab, new Vector3(sXZ * x, 0, -sXZ), Quaternion.identity);
+            GameObject lowerBlock = Instantiate(blockPrefab, new Vector3(sXZ * x, 0, -sXZ) + baseLoc, Quaternion.identity);
             lowerBlock.transform.parent = this.transform;
         }
+
+        // TODO: There is a bug that text is on top of everything
+        //GameObject textNameC = new GameObject();
+        //TextMesh textMesh1 = textNameC.AddComponent<TextMesh>() as TextMesh;
+        //textMesh1.text = "Channels";
+        //textMesh1.anchor = TextAnchor.MiddleCenter;
+        //textMesh1.alignment = TextAlignment.Center;
+        //textMesh1.color = Color.black;
+        //textMesh1.fontSize = 24;
+        //textMesh1.characterSize = 0.25f;
+        //textMesh1.transform.Rotate(90, 0, 0);
+        //textMesh1.transform.position = new Vector3(-0.3f, 0.01f, -1.5f-sXZ) + baseLoc;
+
         int numberOfSenderChannels = 0;
         int numberOfReceiverChannels = 0;
         foreach (MQ.Channel channel in channels)
@@ -181,12 +169,12 @@ public class QueueManager : MonoBehaviour
             if (channel is MQ.SenderChannel)
             {
                 int i = numberOfSenderChannels++;
-                position = new Vector3(sXZ * i, 0, -sXZ);
+                position = new Vector3(sXZ * i, 0, -sXZ) + baseLoc;
             }
             else if (channel is MQ.ReceiverChannel)
             {
                 int j = numberOfReceiverChannels++;
-                position = new Vector3(sXZ * (largeArea[0] + smallArea[1] - j - 1), 0, -sXZ);
+                position = new Vector3(sXZ * (largeArea[0] + smallArea[1] - j - 1), 0, -sXZ) + baseLoc;
             }
             
             GameObject channelGameObject = new GameObject(channel.channelName, typeof(Channel));
@@ -204,7 +192,7 @@ public class QueueManager : MonoBehaviour
         Vector3 position = new Vector3(sXZ * (rank % dimensions[queueType][0]), 0, sXZ * (rank / dimensions[queueType][0]));
         Vector3 queueManagerHeight = new Vector3(0, sY * 2, 0);
         Debug.Log("POSITIONING RANK" + rank);
-        return (offset + position + queueManagerHeight);  
+        return (offset + position + queueManagerHeight + baseLoc);  
     }
 
     void Update()
@@ -295,9 +283,87 @@ public class QueueManager : MonoBehaviour
 
     }
 
+
+    public Dictionary<string, int> GetNumberOfQueuesOfType()
+    {
+        // Compute how many queues are of each type
+        Dictionary<string, int> numberOfQueues = new Dictionary<string, int>
+        {
+            [MQ.AliasQueue.typeName] = 0,
+            [MQ.RemoteQueue.typeName] = 0,
+            [MQ.TransmissionQueue.typeName] = 0,
+            [MQ.LocalQueue.typeName] = 0
+        };
+        foreach (MQ.Queue queue in queues)
+        {
+            numberOfQueues[queue.GetTypeName()]++;
+        }
+        return numberOfQueues;
+    }
+
+
+    /* We will have 2 large rectangle areas and 2 small rectangle areas
+       -----------
+       |2    |4  |
+       |     |   |
+       X-----X----
+       |1    |3  |
+       |     |   |
+       X-----X----
+
+        We sort types of queues (Alias/Remote..) based on the number of queues
+        of that type there are. Two highest have the 2 large areas, two smallest
+        have the 2 small areas.
+        The large area is formed based on the queue with the highest number of
+        queues, the small are based on the queue type with the second smallest number
+        of queues.
+    */
+
+    /*
+        Each area has associated offset vector and dimension.
+        Offset determines its position. See offsets variable later on.
+        On diagram the offset is represented by X.
+        Dimensions/areas are 2-element int array specifying the 2 rectangle axes sizes.
+        The first element of the int array is always the greater one.
+    */
+    public List<int[]> GetLargeSmallArea()
+    {
+        List<int[]> result = new List<int[]>();
+        Dictionary<string, int> numberOfQueues = GetNumberOfQueuesOfType();
+
+        List<KeyValuePair<string, int>> numberOfQueuesList = numberOfQueues.ToList();
+        numberOfQueuesList.Sort((x, y) => x.Value.CompareTo(y.Value));
+
+        KeyValuePair<string, int> highestQueueType = numberOfQueuesList[3];
+        KeyValuePair<string, int> secondSmallestQueueType = numberOfQueuesList[1];
+
+        int[] largeArea = QueueManager.ComputeRectangleArea(highestQueueType.Value);
+        int[] smallArea = QueueManager.ComputeRectangleArea(secondSmallestQueueType.Value, largeArea[1]);
+
+        result.Add(largeArea);
+        result.Add(smallArea);
+
+        return result;
+    }
+
+
+    public int[] GetQueueManagerSize()
+    {
+        List<int[]> areas = GetLargeSmallArea();
+
+        // Length in x axe
+        int x = (int) sXZ * (areas[0][0] + areas[1][1]);
+        // Length in z axe "+1" is for channel length
+        int y = (int) sXZ * (areas[0][1] + areas[1][0] + 1);
+
+        int[] size = new int[] { x, y };
+        return size;
+    }
+
+
     // Our algorithm for creating a rectangle that can hold N queues
     // This method returns dimensions of that rectangle
-    private int[] ComputeRectangleArea(int N)
+    public static int[] ComputeRectangleArea(int N)
     {
         int a = 1;
         int b = 0;
@@ -318,7 +384,7 @@ public class QueueManager : MonoBehaviour
 
     // Returns dimensions of a rectangle that can hold N queues but
     // one size of the rectangle is constrained to size a
-    private static int[] ComputeRectangleArea(int N, int a)
+    public static int[] ComputeRectangleArea(int N, int a)
     {
         int b = N / a;
         int[] res = { Math.Max(a, b + 1), Math.Min(a, b + 1) };
