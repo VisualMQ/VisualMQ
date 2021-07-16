@@ -99,20 +99,20 @@ public class QueueManager : MonoBehaviour
             line.transform.parent = this.transform;
         }
 
-      	// TODO: Add text on blocks
-        foreach (KeyValuePair<string, Vector3> entry in offsets)
-        {
-           GameObject textName = new GameObject();
-           TextMesh textMesh = textName.AddComponent<TextMesh>() as TextMesh;
-           textMesh.text = entry.Key;
-           textMesh.anchor = TextAnchor.MiddleCenter;
-           textMesh.alignment = TextAlignment.Center;
-           textMesh.color = Color.black;
-           textMesh.fontSize = 24;
-           textMesh.characterSize = 0.25f;
-           textMesh.transform.Rotate(90, 0, 0);
-           textMesh.transform.position = entry.Value + new Vector3(-0.3f, 0.01f, -1.5f) + baseLoc;
-        }
+      	// TODO: There is a bug that text is on top of everything
+        //foreach (KeyValuePair<string, Vector3> entry in offsets)
+        //{
+        //   GameObject textName = new GameObject();
+        //   TextMesh textMesh = textName.AddComponent<TextMesh>() as TextMesh;
+        //   textMesh.text = entry.Key;
+        //   textMesh.anchor = TextAnchor.MiddleCenter;
+        //   textMesh.alignment = TextAlignment.Center;
+        //   textMesh.color = Color.black;
+        //   textMesh.fontSize = 24;
+        //   textMesh.characterSize = 0.25f;
+        //   textMesh.transform.Rotate(90, 0, 0);
+        //   textMesh.transform.position = entry.Value + new Vector3(-0.3f, 0.01f, -1.5f) + baseLoc;
+        //}
 
         // Render inidividual queues
         numberOfRenderedQueues = new Dictionary<string, int>();
@@ -147,16 +147,17 @@ public class QueueManager : MonoBehaviour
             lowerBlock.transform.parent = this.transform;
         }
 
-        GameObject textNameC = new GameObject();
-        TextMesh textMesh1 = textNameC.AddComponent<TextMesh>() as TextMesh;
-        textMesh1.text = "Channels";
-        textMesh1.anchor = TextAnchor.MiddleCenter;
-        textMesh1.alignment = TextAlignment.Center;
-        textMesh1.color = Color.black;
-        textMesh1.fontSize = 24;
-        textMesh1.characterSize = 0.25f;
-        textMesh1.transform.Rotate(90, 0, 0);
-        textMesh1.transform.position = new Vector3(-0.3f, 0.01f, -1.5f-sXZ) + baseLoc;
+        // TODO: There is a bug that text is on top of everything
+        //GameObject textNameC = new GameObject();
+        //TextMesh textMesh1 = textNameC.AddComponent<TextMesh>() as TextMesh;
+        //textMesh1.text = "Channels";
+        //textMesh1.anchor = TextAnchor.MiddleCenter;
+        //textMesh1.alignment = TextAlignment.Center;
+        //textMesh1.color = Color.black;
+        //textMesh1.fontSize = 24;
+        //textMesh1.characterSize = 0.25f;
+        //textMesh1.transform.Rotate(90, 0, 0);
+        //textMesh1.transform.position = new Vector3(-0.3f, 0.01f, -1.5f-sXZ) + baseLoc;
 
         int numberOfSenderChannels = 0;
         int numberOfReceiverChannels = 0;

@@ -16,10 +16,6 @@ public class State : MonoBehaviour
     // Main dictionary keeping all connection and their rendered counterparts
     private Dictionary<MQ.Client, GameObject> qmgrs = new Dictionary<MQ.Client, GameObject>();
 
-    // Array for recording the postion of the last rendered manager
-    private List<GameObject> renderedQueueManagers = new List<GameObject>();
-    // Scale factor of blocks
-    private const int blockSize = 4;
 
     // Use this method for adding new Mq connections (aka connections to different Qmgrs)
     public void AddNewMqClient(MQ.Client newMqClient)
