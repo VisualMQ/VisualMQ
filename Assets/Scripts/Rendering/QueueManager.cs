@@ -16,8 +16,6 @@ public class QueueManager : MonoBehaviour
     public List<MQ.Queue> queues;
     public List<MQ.Channel> channels;
     public Vector3 baseLoc;
-    public int[] largeArea;
-    public int[] smallArea;
     public Dictionary<string, GameObject> renderedQueues = new Dictionary<string, GameObject>();
 
     public Dictionary<string, Vector3> offsets;
@@ -35,49 +33,13 @@ public class QueueManager : MonoBehaviour
     {
         Debug.Log("Rendering " + queues.Count + " queues.");
 
-        // Compute how many queues are of each type
-        Dictionary<string, int> numberOfQueues = new Dictionary<string, int>();
-        numberOfQueues[MQ.AliasQueue.typeName] = 0;
-        numberOfQueues[MQ.RemoteQueue.typeName] = 0;
-        numberOfQueues[MQ.TransmissionQueue.typeName] = 0;
-        numberOfQueues[MQ.LocalQueue.typeName] = 0;
-        foreach (MQ.Queue queue in queues)
-        {
-            numberOfQueues[queue.GetTypeName()]++;
-        }
-
-        /* We will have 2 large rectangle areas and 2 small rectangle areas
-           -----------
-           |2    |4  |
-           |     |   |
-           X-----X----
-           |1    |3  |
-           |     |   |
-           X-----X----
-         
-            We sort types of queues (Alias/Remote..) based on the number of queues
-            of that type there are. Two highest have the 2 large areas, two smallest
-            have the 2 small areas.
-            The large area is formed based on the queue with the highest number of
-            queues, the small are based on the queue type with the second smallest number
-            of queues.
-        */
+        Dictionary<string, int> numberOfQueues = GetNumberOfQueuesOfType();
         List<KeyValuePair<string, int>> numberOfQueuesList = numberOfQueues.ToList();
         numberOfQueuesList.Sort((x, y) => x.Value.CompareTo(y.Value));
 
-        KeyValuePair<string, int> highestQueueType = numberOfQueuesList[3];
-        KeyValuePair<string, int> secondSmallestQueueType = numberOfQueuesList[1];
-
-
-        /*
-            Each area has associated offset vector and dimension.
-            Offset determines its position. See offsets variable later on.
-            On diagram the offset is represented by X.
-            Dimensions/areas are 2-element int array specifying the 2 rectangle axes sizes.
-            The first element of the int array is always the greater one.
-        */
-        int[] largeArea = ComputeRectangleArea(highestQueueType.Value);
-        int[] smallArea = ComputeRectangleArea(secondSmallestQueueType.Value, largeArea[1]);
+        List<int[]> areas = GetLargeSmallArea();
+        int[] largeArea = areas[0];
+        int[] smallArea = areas[1];
         // By design, larger side of smallArea is equal to smaller side of largeArea
         // See the diagram
         Debug.Assert(largeArea[1] == smallArea[0]);
@@ -175,8 +137,6 @@ public class QueueManager : MonoBehaviour
             // queueComponent.repositionSelf();
             // TODO: REMOVE?
             renderedQueues.Add(queue.queueName, queueGameObject);
-
-            
 
         }
 
@@ -321,6 +281,84 @@ public class QueueManager : MonoBehaviour
         }
 
     }
+
+
+    public Dictionary<string, int> GetNumberOfQueuesOfType()
+    {
+        // Compute how many queues are of each type
+        Dictionary<string, int> numberOfQueues = new Dictionary<string, int>
+        {
+            [MQ.AliasQueue.typeName] = 0,
+            [MQ.RemoteQueue.typeName] = 0,
+            [MQ.TransmissionQueue.typeName] = 0,
+            [MQ.LocalQueue.typeName] = 0
+        };
+        foreach (MQ.Queue queue in queues)
+        {
+            numberOfQueues[queue.GetTypeName()]++;
+        }
+        return numberOfQueues;
+    }
+
+
+    /* We will have 2 large rectangle areas and 2 small rectangle areas
+       -----------
+       |2    |4  |
+       |     |   |
+       X-----X----
+       |1    |3  |
+       |     |   |
+       X-----X----
+
+        We sort types of queues (Alias/Remote..) based on the number of queues
+        of that type there are. Two highest have the 2 large areas, two smallest
+        have the 2 small areas.
+        The large area is formed based on the queue with the highest number of
+        queues, the small are based on the queue type with the second smallest number
+        of queues.
+    */
+
+    /*
+        Each area has associated offset vector and dimension.
+        Offset determines its position. See offsets variable later on.
+        On diagram the offset is represented by X.
+        Dimensions/areas are 2-element int array specifying the 2 rectangle axes sizes.
+        The first element of the int array is always the greater one.
+    */
+    public List<int[]> GetLargeSmallArea()
+    {
+        List<int[]> result = new List<int[]>();
+        Dictionary<string, int> numberOfQueues = GetNumberOfQueuesOfType();
+
+        List<KeyValuePair<string, int>> numberOfQueuesList = numberOfQueues.ToList();
+        numberOfQueuesList.Sort((x, y) => x.Value.CompareTo(y.Value));
+
+        KeyValuePair<string, int> highestQueueType = numberOfQueuesList[3];
+        KeyValuePair<string, int> secondSmallestQueueType = numberOfQueuesList[1];
+
+        int[] largeArea = QueueManager.ComputeRectangleArea(highestQueueType.Value);
+        int[] smallArea = QueueManager.ComputeRectangleArea(secondSmallestQueueType.Value, largeArea[1]);
+
+        result.Add(largeArea);
+        result.Add(smallArea);
+
+        return result;
+    }
+
+
+    public int[] GetQueueManagerSize()
+    {
+        List<int[]> areas = GetLargeSmallArea();
+
+        // Length in x axe
+        int x = (int) sXZ * (areas[0][0] + areas[1][1]);
+        // Length in z axe "+1" is for channel length
+        int y = (int) sXZ * (areas[0][1] + areas[1][0] + 1);
+
+        int[] size = new int[] { x, y };
+        return size;
+    }
+
 
     // Our algorithm for creating a rectangle that can hold N queues
     // This method returns dimensions of that rectangle
