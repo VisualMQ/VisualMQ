@@ -65,6 +65,7 @@ public class State : MonoBehaviour
             qmgrComponent.qmName = newQmgr.qmgrName;
             qmgrComponent.queues = newQueues;
             dependencyGraph.CreateDependencyGraph(newQueues, newChannels, newQmgr.qmgrName); //Create Dependency Graph
+
             ///DELETE: debug info
             foreach (KeyValuePair<string, List<string>> dependency in dependencyGraph.graph)
             {
