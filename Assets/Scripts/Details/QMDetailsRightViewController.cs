@@ -106,6 +106,7 @@ public class QMDetailsRightViewController : MonoBehaviour
         
         Debug.Log("The parameters to Queue Details Controller: "+ qmName + " " + queueName);
         queueName = qmName + '.' + queueName;
+        
         List<string> temp = new List<string>() { qmName, queueName };
 
         QueueDetailWindow.SendMessage("GetQueueBasicInfo", temp);

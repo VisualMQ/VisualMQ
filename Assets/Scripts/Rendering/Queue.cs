@@ -1,8 +1,11 @@
 ﻿using UnityEngine;
-using System.Collections;
-using MQ;
-using System.Collections.Generic;
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine.EventSystems;
+using MQ;
+
+
 
 public class Queue : MonoBehaviour
 {
@@ -168,6 +171,12 @@ public class Queue : MonoBehaviour
     */
     void OnMouseUp()
     {
+        // If user clicks on UI objects, Return
+        if (EventSystem.current.IsPointerOverGameObject())
+        {
+            return;
+        }
+        
         // Click on twice = Deactivate focus
         if (queueInFocus == instantiatedQueue)
         {
