@@ -37,6 +37,7 @@ public class QueueDetailsController : MonoBehaviour
 
     public List<string> currentSelected;
 
+
     private void Awake() {
 
         // Locate the Button
@@ -70,12 +71,15 @@ public class QueueDetailsController : MonoBehaviour
         textQueue4_targetQueue = textGroupAlias.Find("TextQueue_4").GetComponent<Text>();
         textQueue5_currentPath = textGroupAlias.Find("TextQueue_5").GetComponent<Text>();
 
+        // Link Queue Detail Window
+        Queue.QueueDetailWindow = this;
         
     }
 
     // Start is called before the first frame update
     void Start()
     {
+        
         //Button Listeners
         returnButton.onClick.AddListener(ReturnClicked);
         closeButton.onClick.AddListener(CloseClicked);
@@ -88,17 +92,14 @@ public class QueueDetailsController : MonoBehaviour
 
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
+    
     /*
-        Content Generation
+        Queue Content Generation
+        Parameters: QM name and Queue name in a list
     */
     public void GetQueueBasicInfo(List<string> temp)
     {
+        QueueDetailLeftWindow.SetActive(true);
         currentSelected = temp;
         string qmName = temp[0];
         string queueName = temp[1];

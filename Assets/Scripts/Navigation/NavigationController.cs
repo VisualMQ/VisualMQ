@@ -75,6 +75,9 @@ public class NavigationController : MonoBehaviour
     */
     void GenerateCheckBox()
     {
+        // Destroy Previous Object
+        DestroyQMSelector();
+
         // Get Current Number of Check Box
         GameObject stateGameObject = GameObject.Find("State");
         State stateComponent = stateGameObject.GetComponent(typeof(State)) as State;
@@ -92,10 +95,20 @@ public class NavigationController : MonoBehaviour
             RectTransform recTransform = item.GetComponent<RectTransform>();
             recTransform.anchoredPosition = new Vector2(0, -rowHeight * i + startY);
             item.gameObject.SetActive(true);
-
+            
             item.Find("TextQMName").GetComponent<Text>().text = mqlist[i];
         }
 
+    }
+
+    void DestroyQMSelector() {
+        foreach (Transform child in leftPanelContainer) 
+        {
+            if(child.gameObject.name == "QMSelectorRowItem(Clone)")
+            {
+                GameObject.Destroy(child.gameObject);
+            }
+        }
     }
 
 }
