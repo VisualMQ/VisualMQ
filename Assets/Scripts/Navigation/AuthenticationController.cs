@@ -10,11 +10,10 @@ public class AuthenticationController : MonoBehaviour
     // This Authentication Object
     public GameObject Authentication;
 
-    // Four Input Fields
-    public InputField userName, apiKey, urlInput, QMInput;
-
-    // Four Warning Text Fields
-    public Text warningURL, warningAPI, warningUserName, warningQueueName;
+    // Transform & Objects
+    private Transform containerQMName, containerUserName, containerAPI, containerURL;
+    private InputField userNameInput, apiKey, urlInput, QMInput; // Four Input Fields
+    private Text warningURL, warningAPI, warningUserName, warningQueueName; // Four Warning Text Fields
 
     // Buttons
     public Button submit, cancel;
@@ -27,15 +26,32 @@ public class AuthenticationController : MonoBehaviour
     private string successMessage = "A New Queue Manager Added.";
     private string errorMessage = "Fail to add this Queue Manager. Please try later.";
 
-    // Variables for make a connection
-    private string userNameT;
-    private string apiKeyT;
-    private string MQURLT;
-    private string QMNameT;
+    private string userNameT, apiKeyT, MQURLT, QMNameT; // Authentication Info
 
     // Reference NotificationController
     private NotificationController notificationScript;
 
+    private void Awake() 
+    {
+        // Locate the elements
+
+        containerQMName = transform.Find("QMNameGameObject");
+        warningQueueName = containerQMName.Find("TextWarningQueueName").GetComponent<Text>();
+        QMInput = containerQMName.Find("InputFieldQueueName").GetComponent<InputField>();
+
+        containerUserName = transform.Find("UserNameGameObject");
+        warningUserName = containerUserName.Find("TextWarningTypeUser").GetComponent<Text>();
+        userNameInput = containerUserName.Find("InputFieldUserName").GetComponent<InputField>();
+
+        containerAPI = transform.Find("APIGameObject");
+        warningAPI = containerAPI.Find("TextWarningAPI").GetComponent<Text>();
+        apiKey = containerAPI.Find("InputFieldAPI").GetComponent<InputField>();
+
+        containerURL = transform.Find("URLGameObject");
+        warningURL = containerURL.Find("TextWarningURL").GetComponent<Text>();
+        urlInput = containerURL.Find("InputFieldURL").GetComponent<InputField>();
+
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -51,7 +67,7 @@ public class AuthenticationController : MonoBehaviour
     void ConfirmButtonClicked()
     {
         // Get Current Input Text and Form Checking
-        userNameT = userName.text;
+        userNameT = userNameInput.text;
         apiKeyT = apiKey.text;
         MQURLT = urlInput.text;
         QMNameT = QMInput.text;
@@ -184,7 +200,7 @@ public class AuthenticationController : MonoBehaviour
     // Clean all input fields
     void CleanAllInputField()
     {
-        userName.text = "";
+        userNameInput.text = "";
         apiKey.text = "";
         urlInput.text = "";
         QMInput.text = "";

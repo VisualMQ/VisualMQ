@@ -57,12 +57,14 @@ public class QueueDetailsRightViewController : MonoBehaviour
         currentSelected = temp;
         string qmName = temp[0];
         string queueName = temp[1];
-        Debug.Log(qmName + queueName);
+
+        int starIdx = qmName.Length;
+        string removeQMQueueName = queueName.Substring(starIdx+1);
 
         // Get List of MQ.Message
         GameObject stateGameObject = GameObject.Find("State");
         State stateComponent = stateGameObject.GetComponent(typeof(State)) as State;
-        List<MQ.Message> messages = stateComponent.GetAllMessages(qmName,queueName);
+        List<MQ.Message> messages = stateComponent.GetAllMessages(qmName,removeQMQueueName);
 
         int size = messages.Count;
 
