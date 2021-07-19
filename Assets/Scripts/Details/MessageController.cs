@@ -38,8 +38,15 @@ public class MessageController : MonoBehaviour
 
         GameObject stateGameObject = GameObject.Find("State");
         State stateComponent = stateGameObject.GetComponent(typeof(State)) as State;
+        string qmName= temp[0];
+        string queueName = temp[1];
+        string messID = temp[2];
 
-        MQ.Message message = stateComponent.GetMessage(temp[0],temp[1], temp[2]);
+        int starIdx = qmName.Length;
+        string removeQueueName = queueName.Substring(starIdx+1);
+
+
+        MQ.Message message = stateComponent.GetMessage(qmName, removeQueueName, messID);
         text0MessageID.text = message.messageId;
         text1Format.text = message.format;
     }
