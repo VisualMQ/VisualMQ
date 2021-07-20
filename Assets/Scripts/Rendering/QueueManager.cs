@@ -198,65 +198,40 @@ public class QueueManager : MonoBehaviour
             Channel channelComponent = channelGameObject.GetComponent(typeof(Channel)) as Channel;
             channelComponent.position = position + queueManagerHeight;
             channelComponent.channel = channel;
+            channelComponent.parent = this;
             channelGameObject.transform.parent = this.transform;
         }
 
 
-        //create path object
-        GameObject path = new GameObject("Path2", typeof(PathCreation.AutoPathGenerator));
-        PathCreation.AutoPathGenerator pathGenerator = path.GetComponent(typeof(PathCreation.AutoPathGenerator)) as PathCreation.AutoPathGenerator;
 
-        //add waypoints to path object
-        State state = GameObject.Find("State").GetComponent(typeof(State)) as State;
-        List<string> testDependency = state.dependencyGraph.graph["QM1.DEV.QUEUE.ALIAS2"];
-        List<Transform> testTransform = new List<Transform>();
-        foreach (string waypoint in testDependency)
-        {
-            GameObject waypointObject = GameObject.Find(waypoint);
-
-            Debug.Log("Current Waypoint Object is: " + waypointObject);
-
-            testTransform.Add(waypointObject.transform);
-        }
-        pathGenerator.waypoints = testTransform.ToArray();
-
-        //create "message" object
-        GameObject follower = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        follower.AddComponent(typeof(PathCreation.PathFollower));
-        PathCreation.PathFollower followGenerator = follower.GetComponent(typeof(PathCreation.PathFollower)) as PathCreation.PathFollower;
-
-        //have this message object follow the path defined in path object
-        followGenerator.pathCreator = path.GetComponent(typeof(PathCreation.PathCreator)) as PathCreation.PathCreator;
-        followGenerator.endOfPathInstruction = PathCreation.EndOfPathInstruction.Loop;
 
         ////////////////
 
         //create path object
-        GameObject path3 = new GameObject("Path3", typeof(PathCreation.AutoPathGenerator));
-        PathCreation.AutoPathGenerator pathGenerator3 = path3.GetComponent(typeof(PathCreation.AutoPathGenerator)) as PathCreation.AutoPathGenerator;
+        //GameObject path3 = new GameObject("Path3", typeof(PathCreation.AutoPathGenerator));
+        //PathCreation.AutoPathGenerator pathGenerator3 = path3.GetComponent(typeof(PathCreation.AutoPathGenerator)) as PathCreation.AutoPathGenerator;
 
-        //add waypoints to path object
-        List<string> testDependency3 = state.dependencyGraph.graph["QM1.DEV.QUEUE.ALIAS1"];
-        List<Transform> testTransform3 = new List<Transform>();
-        foreach (string waypoint in testDependency3)
-        {
-            GameObject waypointObject = GameObject.Find(waypoint);
+        ////add waypoints to path object
+        //List<string> testDependency3 = state.dependencyGraph.graph["QM1.DEV.QUEUE.ALIAS1"];
+        //List<Transform> testTransform3 = new List<Transform>();
+        //foreach (string waypoint in testDependency3)
+        //{
+        //    GameObject waypointObject = GameObject.Find(waypoint);
 
-            Debug.Log("Current Waypoint Object is: " + waypointObject);
+        //    Debug.Log("Current Waypoint Object is: " + waypointObject);
 
-            testTransform3.Add(waypointObject.transform);
-        }
-        pathGenerator3.waypoints = testTransform3.ToArray();
+        //    testTransform3.Add(waypointObject.transform);
+        //}
+        //pathGenerator3.waypoints = testTransform3.ToArray();
 
-        //create "message" object
-        GameObject follower3 = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        follower3.AddComponent(typeof(PathCreation.PathFollower));
-        PathCreation.PathFollower followGenerator3 = follower3.GetComponent(typeof(PathCreation.PathFollower)) as PathCreation.PathFollower;
+        ////create "message" object
+        //GameObject follower3 = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        //follower3.AddComponent(typeof(PathCreation.PathFollower));
+        //PathCreation.PathFollower followGenerator3 = follower3.GetComponent(typeof(PathCreation.PathFollower)) as PathCreation.PathFollower;
 
-        //have this message object follow the path defined in path object
-        followGenerator3.pathCreator = path3.GetComponent(typeof(PathCreation.PathCreator)) as PathCreation.PathCreator;
-        followGenerator3.endOfPathInstruction = PathCreation.EndOfPathInstruction.Loop;
-
+        ////have this message object follow the path defined in path object
+        //followGenerator3.pathCreator = path3.GetComponent(typeof(PathCreation.PathCreator)) as PathCreation.PathCreator;
+        //followGenerator3.endOfPathInstruction = PathCreation.EndOfPathInstruction.Loop;
 
     }
 
