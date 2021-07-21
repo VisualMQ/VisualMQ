@@ -182,10 +182,10 @@ public class Queue : MonoBehaviour
         {
             Material queueIconColor;
             // The color of queue icon would switch every 0.5 seconds
-            if (flickerTime % 1 > 0.5f)
+            if (flickerTime % 1 > 0.618f) // Golden ratio :)
             {
                 // Here the icon use BlockWhite material to distinguish with the QueueWhite material
-                queueIconColor = Resources.Load("Materials/BlockWhite") as Material;
+                queueIconColor = Resources.Load("Materials/QueueWhite2") as Material;
             }
             else
             {
@@ -196,7 +196,7 @@ public class Queue : MonoBehaviour
             {
                 Material material = queuePrefabMeshRenderer.materials[i];
                 // Here there are three possible materials for the Queue Icon, use them to find and change its material
-                if (material.name.Contains("QueueBlue") || material.name.Contains("QueueRed") || material.name.Contains("BlockWhite"))
+                if (material.name.Contains("QueueBlue") || material.name.Contains("QueueRed") || material.name.Contains("QueueWhite2"))
                 {
                     newQueueMaterials[i] = queueIconColor;
                 }
