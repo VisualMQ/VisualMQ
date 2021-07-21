@@ -97,6 +97,18 @@ public class QueueManager : MonoBehaviour
             }
         }
 
+        GameObject topCamera =  GameObject.Find("TopCamera");
+        topCamera.transform.rotation = Quaternion.identity;
+        topCamera.transform.rotation = Quaternion.AngleAxis(90, new Vector3(1, 0, 0));
+        GameObject target = GameObject.Find("Block_lower_large");
+        Vector3 topPosition = target.transform.position;
+        topPosition.y += 25f;
+        topPosition.y += 10f;
+        topPosition.y += 10f;
+        topCamera.transform.position = topPosition;
+
+
+
         // Render lines between areas among X-axis
         for (int x = 0; x < largeArea[0] + smallArea[1]; x++)
         {
@@ -226,11 +238,42 @@ public class QueueManager : MonoBehaviour
            
         }
 
+        if (Input.GetKey(KeyCode.V))
+        {
+            topView();
+        }
+
+    }
+
+    void topView()
+    {
+        GameObject mainCamera =  GameObject.Find("Main Camera");
+        mainCamera.transform.rotation = Quaternion.identity;
+        mainCamera.transform.rotation = Quaternion.AngleAxis(90, new Vector3(1, 0, 0));
+        // mainCamera.transform.rotation = Quaternion.AngleAxis(60, new Vector3(1, 0, 0));
+        Vector3 targetPosition = this.transform.position;
+        targetPosition.y += 20f;
+        targetPosition.x += 15f;
+        targetPosition.z += 5f; 
+        mainCamera.transform.position =  targetPosition;
     }
 
     private void OnMouseDown() 
     {
     }
+
+    // void onMouseUp()
+    // {
+    //     GameObject mainCamera =  GameObject.Find("Main Camera");
+    //     mainCamera.transform.rotation = Quaternion.identity;
+    //     mainCamera.transform.rotation = Quaternion.AngleAxis(90, new Vector3(1, 0, 0));
+    //     // mainCamera.transform.rotation = Quaternion.AngleAxis(60, new Vector3(1, 0, 0));
+    //     Vector3 targetPosition = this.transform.position;
+    //     targetPosition.y += 18f;
+    //     // targetPosition.x += 10f;
+    //     // targetPosition.z -= 5f; 
+    //     mainCamera.transform.position =  targetPosition;
+    // }
 
 
     // This method is called from State object on the periodical update

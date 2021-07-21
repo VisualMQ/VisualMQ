@@ -8,6 +8,7 @@ public class Queue : MonoBehaviour
 {
 
     public Vector3 position;
+    // public Camera mainCamera;
     public MQ.Queue queue;
     public GameObject messagePrefab;
     public List<GameObject> messages;
@@ -112,6 +113,9 @@ public class Queue : MonoBehaviour
         textMesh.transform.position = new Vector3(instantiatedQueue.transform.position.x, instantiatedQueue.transform.position.y + 5, instantiatedQueue.transform.position.z);
 
         
+        
+        
+        
     }
 
 
@@ -185,8 +189,18 @@ public class Queue : MonoBehaviour
         prefabInFocus = instantiatedQueue;
         instantiatedQueue.transform.localScale = new Vector3(1.05f, 1.05f, 1.05f);
         /*Do whatever here as per your need*/
-        Camera.main.transform.LookAt(this.position);
-        Camera.main.transform.position = new Vector3(2.5f, 15f, -13f) + this.position;
+        GameObject mainCamera =  GameObject.Find("Main Camera");
+        mainCamera.transform.rotation = Quaternion.identity;
+        mainCamera.transform.rotation = Quaternion.AngleAxis(70, new Vector3(1, 0, 0));
+        // mainCamera.transform.rotation = Quaternion.AngleAxis(60, new Vector3(1, 0, 0));
+        Vector3 targetPosition = this.transform.position;
+        targetPosition.y += 18f;
+        targetPosition.x += 10f;
+        targetPosition.z -= 5f; 
+        mainCamera.transform.position =  targetPosition;
+        // Camera.main.transform.LookAt(this.position);
+        // Camera.main.transform.position = new Vector3(2.5f, 15f, -13f) + this.position;
+
         Debug.Log("Moving Camera to Queue" + this.name);
 
         // A Queue is selected -> Show Info Panel
