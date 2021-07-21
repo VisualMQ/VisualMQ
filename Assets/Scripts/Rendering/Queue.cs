@@ -171,7 +171,7 @@ public class Queue : MonoBehaviour
     */
     void OnMouseUp()
     {
-        // If user clicks on UI objects, Return
+        // If user clicks on UI objects, Return: Avoid Click through
         if (EventSystem.current.IsPointerOverGameObject())
         {
             return;
