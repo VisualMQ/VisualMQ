@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 using MQ;
 
 
@@ -28,6 +29,12 @@ public class Queue : MonoBehaviour
 
     // Used for positioning
     public int rank;
+
+    // Use MeshRenderer to change and update the Queue object
+    private MeshRenderer queuePrefabMeshRenderer;
+
+    // Use for flickering the Queue Icon
+    private float flickerTime;
 
     void newQueueAdded(int rank)
     {
@@ -94,6 +101,8 @@ public class Queue : MonoBehaviour
         if (queue.holdsMessages)
         {
             int currentDepth = queue.currentDepth;
+            // Assign Queue MeshRenderer here for rendering the color of Queue Icon
+            queuePrefabMeshRenderer = gameObject.GetComponentInChildren<MeshRenderer>();
             CreateMessages(currentDepth, queue.maxNumberOfMessages);
 
         }
@@ -159,9 +168,47 @@ public class Queue : MonoBehaviour
         }
 
         textMesh.transform.rotation = Quaternion.LookRotation(usedQueue.textMesh.transform.position - Camera.main.transform.position);
-        
 
-       // textMesh.transform.rotation = Quaternion.LookRotation(textMesh.transform.position - Camera.main.transform.position);
+
+        // textMesh.transform.rotation = Quaternion.LookRotation(textMesh.transform.position - Camera.main.transform.position);
+
+
+        // The Queue Icon would flicker if the utilization is higher than 60%
+        int currentDepth = queue.currentDepth;
+        int MaximumDepth = queue.maxNumberOfMessages;
+        flickerTime += Time.deltaTime;
+        double utilization = (double)currentDepth / (double)MaximumDepth;
+        if (utilization > 0.6)
+        {
+            Material queueIconColor;
+            // The color of queue icon would switch every 0.5 seconds
+            if (flickerTime % 1 > 0.618f) // Golden ratio :)
+            {
+                // Here the icon use BlockWhite material to distinguish with the QueueWhite material
+                queueIconColor = Resources.Load("Materials/QueueWhite2") as Material;
+            }
+            else
+            {
+                queueIconColor = Resources.Load("Materials/QueueRed") as Material;
+            }
+            Material[] newQueueMaterials = new Material[queuePrefabMeshRenderer.materials.Length];
+            for (int i = 0; i < queuePrefabMeshRenderer.materials.Length; i++)
+            {
+                Material material = queuePrefabMeshRenderer.materials[i];
+                // Here there are three possible materials for the Queue Icon, use them to find and change its material
+                if (material.name.Contains("QueueBlue") || material.name.Contains("QueueRed") || material.name.Contains("QueueWhite2"))
+                {
+                    newQueueMaterials[i] = queueIconColor;
+                }
+                else
+                {
+                    newQueueMaterials[i] = material;
+                }
+            }
+            // Upate the Queue with new materials
+            queuePrefabMeshRenderer.materials = newQueueMaterials;
+
+        }
 
 
     }
@@ -171,7 +218,7 @@ public class Queue : MonoBehaviour
     */
     void OnMouseUp()
     {
-        // If user clicks on UI objects, Return
+        // If user clicks on UI objects, Return: Avoid Click through
         if (EventSystem.current.IsPointerOverGameObject())
         {
             return;
@@ -336,7 +383,6 @@ public class Queue : MonoBehaviour
         // Change color of icon on top of queue to correspond to messages
         // This relies on the fact the Queue prefab is first in hieararchy
         // see GetComponentInChildren method
-        MeshRenderer queuePrefabMeshRenderer = gameObject.GetComponentInChildren<MeshRenderer>();
         Material[] queueMaterials = queuePrefabMeshRenderer.materials;
         Material[] newQueueMaterials = new Material[queueMaterials.Length];
         for (int i = 0; i < queueMaterials.Length; i++)
