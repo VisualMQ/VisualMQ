@@ -236,8 +236,8 @@ public class QueueManager : MonoBehaviour
 
     void Update()
     {
-        // Check for mouse input
-        if (Input.GetMouseButton(0))
+        // Check for RIGHT mouse input
+        if (Input.GetMouseButton(1))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
