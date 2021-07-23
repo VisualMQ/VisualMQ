@@ -8,26 +8,33 @@ public class NavigationController : MonoBehaviour
     // Windows Gameobject
     public GameObject Authentication;
     public GameObject FilterWindow;
+    public GameObject HelpWindow;
     
     // Buttons
-    private Button expandQMSelector, authenticateNewQM, applyFilter;
+    private Button expandQMSelector, authenticateNewQM, applyFilter, activeHelpWindow;
 
-    // Left Panel
+    // Left Panel and Container
     public GameObject leftPanel;
     private Transform checkboxItem;
     private Transform leftPanelContainer;
 
+    // QM Selector
     private Dictionary<string, bool> QMVisibility = new Dictionary<string, bool>();
 
+
+    // Locate the Objects
     private void Awake() 
     {
         // Locate the Game Obejct: Button
         expandQMSelector = transform.Find("ButtonExpandSidePanel").GetComponent<Button>();
         authenticateNewQM = transform.Find("ButtonConnectNewMQ").GetComponent<Button>();
         applyFilter = transform.Find("ButtonAddFilter").GetComponent<Button>();
+        activeHelpWindow = transform.Find("ButtonHelp").GetComponent<Button>();
+
         // Button Listener
         expandQMSelector.onClick.AddListener(LeftPanelButtonClicked);
         applyFilter.onClick.AddListener(AddFilterButtonClicked);
+        activeHelpWindow.onClick.AddListener(activeHelpWindowButtonClicked);
 
         // Locate the Game Object: Left Panel
         leftPanelContainer = transform.Find("LeftPanel");
@@ -43,6 +50,7 @@ public class NavigationController : MonoBehaviour
         Authentication.SetActive(false); 
         leftPanel.SetActive(false);
         FilterWindow.SetActive(false);
+        HelpWindow.SetActive(false);
     }
 
 
@@ -62,17 +70,19 @@ public class NavigationController : MonoBehaviour
         }
     }
 
-    /*
-        Button Listener: Filter
-    */
+    // Button Listener: Filter
     void AddFilterButtonClicked()
     {
         FilterWindow.SetActive(true);
     }
 
-    /*
-        Load QM Selector
-    */
+    // Button Listener: Help Button
+    void activeHelpWindowButtonClicked()
+    {
+        HelpWindow.SetActive(true);
+    }
+
+    // Load QM Selector
     void GenerateCheckBox()
     {
         // Destroy Previous Object

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 
 public class QueueManager : MonoBehaviour
@@ -26,6 +27,9 @@ public class QueueManager : MonoBehaviour
     public Dictionary<string, int[]> dimensions;
 
     public static QMDetailsController QMDetailWindow;
+
+    public GameObject blockParent;
+
 
     // Unity calls this method at the complete beginning, even before Start
     void Awake()
@@ -66,34 +70,50 @@ public class QueueManager : MonoBehaviour
             for (int z = 0; z < largeArea[1]; z++)
             {
                 // Large area
-                GameObject lowerBlock = Instantiate(blockPrefab, new Vector3(sXZ * x, 0, sXZ * z) + baseLoc, Quaternion.identity);
+                GameObject lowerBlock = Instantiate(blockPrefab, new Vector3(sXZ * x, 0, sXZ * z) + baseLoc, Quaternion.identity) as GameObject;
                 lowerBlock.name = qmName + QM_NAME_DELIMITER + lowerBlock.name;
                 lowerBlock.transform.parent = this.transform;
-                lowerBlock.name = "Block_lower_large";
+
+                lowerBlock.name = "Block."+qmName;
+                lowerBlock.AddComponent<MeshCollider>().convex = true;
+
+                /*
+                // Add mesh Colider
+                MeshCollider mc = lowerBlock.transform.parent.gameObject.AddComponent<MeshCollider>();
+                mc.sharedMesh = lowerBlock.GetComponent<MeshFilter>().sharedMesh; */
 
                 // Large area
-                GameObject upperBlock = Instantiate(blockPrefab, new Vector3(sXZ * x, 0, sXZ * z) + baseLoc + offsets[numberOfQueuesList[2].Key], Quaternion.identity);
+                GameObject upperBlock = Instantiate(blockPrefab, new Vector3(sXZ * x, 0, sXZ * z) + baseLoc + offsets[numberOfQueuesList[2].Key], Quaternion.identity) as GameObject;
                 upperBlock.name = qmName + QM_NAME_DELIMITER + upperBlock.name;
                 upperBlock.transform.parent = this.transform;
-                upperBlock.name = "Block_upper_large";
+
+                upperBlock.name = "Block."+qmName;
+                upperBlock.AddComponent<MeshCollider>().convex = true;
+
             }
         }
+
         // Render 2 small areas
         for (int x = 0; x < smallArea[1]; x++)
         {
             for (int z = 0; z < smallArea[0]; z++)
             {
                 // Small area
-                GameObject lowerBlock = Instantiate(blockPrefab, new Vector3(sXZ * x, 0, sXZ * z) + baseLoc + offsets[numberOfQueuesList[1].Key], Quaternion.identity);
+                GameObject lowerBlock = Instantiate(blockPrefab, new Vector3(sXZ * x, 0, sXZ * z) + baseLoc + offsets[numberOfQueuesList[1].Key], Quaternion.identity) as GameObject;
                 lowerBlock.name = qmName + QM_NAME_DELIMITER + lowerBlock.name;
                 lowerBlock.transform.parent = this.transform;
-                lowerBlock.name = "Block_lower_small";
+
+                lowerBlock.name = "Block."+qmName;
+                lowerBlock.AddComponent<MeshCollider>().convex = true;
+
 
                 // Small area
-                GameObject upperBlock = Instantiate(blockPrefab, new Vector3(sXZ * x, 0, sXZ * z) + baseLoc + offsets[numberOfQueuesList[0].Key], Quaternion.identity);
+                GameObject upperBlock = Instantiate(blockPrefab, new Vector3(sXZ * x, 0, sXZ * z) + baseLoc + offsets[numberOfQueuesList[0].Key], Quaternion.identity) as GameObject;
                 upperBlock.name = qmName + QM_NAME_DELIMITER + upperBlock.name;
                 upperBlock.transform.parent = this.transform;
-                upperBlock.name = "Block_upper_smaller";
+
+                upperBlock.name = "Block."+qmName;
+                upperBlock.AddComponent<MeshCollider>().convex = true;
             }
         }
 
@@ -157,7 +177,6 @@ public class QueueManager : MonoBehaviour
             Queue queueComponent = queueGameObject.GetComponent(typeof(Queue)) as Queue;
             queueComponent.rank = i;
                 
-                
             queueComponent.queue = queue;
 
             queueComponent.parent = this;
@@ -172,7 +191,9 @@ public class QueueManager : MonoBehaviour
         for (int x = 0; x < largeArea[0] + smallArea[1]; x++)
         {
             GameObject lowerBlock = Instantiate(blockPrefab, new Vector3(sXZ * x, 0, -sXZ) + baseLoc, Quaternion.identity);
+            lowerBlock.name = "Block."+qmName;
             lowerBlock.transform.parent = this.transform;
+            lowerBlock.AddComponent<MeshCollider>().convex = true;
         }
 
         // TODO: There is a bug that text is on top of everything
@@ -224,19 +245,28 @@ public class QueueManager : MonoBehaviour
         return (offset + position + queueManagerHeight + baseLoc);  
     }
 
+
     void Update()
     {
-        if (Input.GetMouseButtonDown(0)) 
+        // Check for RIGHT mouse input
+        if (Input.GetMouseButton(1))
         {
-            Vector3 mousePos = Input.mousePosition;
-
-            if (mousePos.y == 0f)
-            {
-                Debug.Log(mousePos.y);
-                QMDetailWindow.QueueManagerInfoInit(this.name);
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            // Casts the ray and get the first game object hit
+            if (Physics.Raycast(ray, out hit)) {
+                string objectname = hit.transform.name;
+                string objectType = objectname.Substring(0, 5);
+                string qmName = objectname.Substring(6);
+                if (objectType == "Block")
+                {
+                    Debug.Log("QM Block is clicked: "+qmName);
+                    // use the qmname trigger the qm detail window
+                    QMDetailWindow.QueueManagerInfoInit(qmName);
+                }
             }
-           
         }
+
 
         if (Input.GetKey(KeyCode.V))
         {
@@ -260,6 +290,7 @@ public class QueueManager : MonoBehaviour
 
     private void OnMouseDown() 
     {
+
     }
 
     // void onMouseUp()

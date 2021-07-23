@@ -157,12 +157,14 @@ public class State : MonoBehaviour
     // Return the detail of one queue
     public MQ.Queue GetQueueDetails(string selectedQMName, string selectedQueueName)
     {
+
         foreach (MQ.Client client in qmgrs.Keys)
         {
             if (client.GetQueueManagerName() == selectedQMName)
             {
                 foreach (MQ.Queue queue in client.GetAllQueues())
                 {
+
                     if (queue.queueName == selectedQueueName)
                     {
                         return client.GetQueue(selectedQueueName);
