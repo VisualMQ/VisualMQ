@@ -76,6 +76,7 @@ public class QueueManager : MonoBehaviour
 
                 lowerBlock.name = "Block."+qmName;
                 lowerBlock.AddComponent<MeshCollider>().convex = true;
+                lowerBlock.AddComponent(typeof(QMClicked));
 
                 /*
                 // Add mesh Colider
@@ -89,6 +90,7 @@ public class QueueManager : MonoBehaviour
 
                 upperBlock.name = "Block."+qmName;
                 upperBlock.AddComponent<MeshCollider>().convex = true;
+                upperBlock.AddComponent(typeof(QMClicked));
 
             }
         }
@@ -105,6 +107,7 @@ public class QueueManager : MonoBehaviour
 
                 lowerBlock.name = "Block."+qmName;
                 lowerBlock.AddComponent<MeshCollider>().convex = true;
+                lowerBlock.AddComponent(typeof(QMClicked));
 
 
                 // Small area
@@ -114,6 +117,7 @@ public class QueueManager : MonoBehaviour
 
                 upperBlock.name = "Block."+qmName;
                 upperBlock.AddComponent<MeshCollider>().convex = true;
+                upperBlock.AddComponent(typeof(QMClicked));
             }
         }
 
@@ -254,7 +258,27 @@ public class QueueManager : MonoBehaviour
                 }
             }
         }
+
+        if (Input.GetKey(KeyCode.T))
+        {
+            topView();
+        }
     }
+
+
+    void topView()
+    {
+        GameObject mainCamera = GameObject.Find("Main Camera");
+        mainCamera.transform.rotation = Quaternion.identity;
+        mainCamera.transform.rotation = Quaternion.AngleAxis(90, new Vector3(1, 0, 0));
+        Vector3 targetPosition = this.transform.position;
+        targetPosition.y += 20f;
+        targetPosition.x += 15f;
+        targetPosition.z += 5f;
+        mainCamera.transform.position =  targetPosition;
+    }
+
+
 
 
     // This method is called from State object on the periodical update
