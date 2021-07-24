@@ -91,7 +91,23 @@ public class State : MonoBehaviour
                 List<MQ.Queue> queues = mqClient.GetAllQueues();
                 QueueManager qmgrComponent = renderedQmgr.GetComponent(typeof(QueueManager)) as QueueManager;
                 qmgrComponent.UpdateQueues(queues);
-
+                int count = 0;
+                foreach (KeyValuePair<string, GameObject> pair in qmgrComponent.renderedQueues)
+                {   count++;
+                    Debug.Log("================Updating message"+count+"===============");
+                    Queue queueComponent = pair.Value.GetComponent(typeof(Queue)) as Queue;
+                    MQ.Queue updateQueue = this.GetQueueDetails(qmgrComponent.qmName,pair.Key);
+                    queueComponent.UpdateMessages(updateQueue.currentDepth);
+                }
+                // int count = 0;
+                // foreach (KeyValuePair<MQ.Queue, GameObject> pair in qmgrComponent.MQQueueObjectQueue)
+                // {   count++;
+                //     Debug.Log("================Updating message"+count+"===============");
+                //     Queue queueComponent = pair.Value.GetComponent(typeof(Queue)) as Queue;
+                //     queueComponent.UpdateMessages(pair.Key.currentDepth);
+                // }
+                
+                
             }
 
             updateCountdown = UPDATE_INTERVAL;

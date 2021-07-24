@@ -21,6 +21,7 @@ public class QueueManager : MonoBehaviour
     public List<MQ.Channel> channels;
     public Vector3 baseLoc;
     public Dictionary<string, GameObject> renderedQueues = new Dictionary<string, GameObject>();
+    public Dictionary<MQ.Queue, GameObject> MQQueueObjectQueue = new Dictionary<MQ.Queue, GameObject>();
 
     public Dictionary<string, Vector3> offsets;
     public Dictionary<string, int> numberOfRenderedQueues;
@@ -176,6 +177,7 @@ public class QueueManager : MonoBehaviour
             // queueComponent.repositionSelf();
             // TODO: REMOVE?
             renderedQueues.Add(queue.queueName, queueGameObject);
+            MQQueueObjectQueue.Add(queue, queueGameObject);
 
         }
 
