@@ -123,7 +123,12 @@ public class Queue : MonoBehaviour
         textMesh.alignment = TextAlignment.Center;
         textMesh.transform.position = new Vector3(instantiatedQueue.transform.position.x, instantiatedQueue.transform.position.y + 5, instantiatedQueue.transform.position.z);
 
+        //var outline = gameObject.AddComponent<Outline>();
         
+        //outline.OutlineMode = Outline.Mode.OutlineAll;
+        //outline.OutlineColor = Color.yellow;
+        //outline.OutlineWidth = 5f;
+
     }
 
 
@@ -204,12 +209,11 @@ public class Queue : MonoBehaviour
                 {
                     newQueueMaterials[i] = material;
                 }
+
             }
             // Upate the Queue with new materials
             queuePrefabMeshRenderer.materials = newQueueMaterials;
-
         }
-
 
     }
 
@@ -224,18 +228,18 @@ public class Queue : MonoBehaviour
             return;
         }
 
-        // Click on twice = Deactivate focus
-        if (queueInFocus == instantiatedQueue)
-        {
-            queueInFocus.transform.localScale = prefabInFocus.transform.localScale;
-            queueInFocus = null;
-            return;
-        }
-        // If clicked on once, it's now the new in focus. Reset the previous focus
-        if (queueInFocus)
-        {
-            queueInFocus.transform.localScale = prefabInFocus.transform.localScale;
-        }
+        // Click on twice = Deactivate focus TODO: WHAT DOES THIS DO???
+        //if (queueInFocus == instantiatedQueue)
+        //{
+        //    queueInFocus.transform.localScale = prefabInFocus.transform.localScale;
+        //    queueInFocus = null;
+        //    return;
+        //}
+        //// If clicked on once, it's now the new in focus. Reset the previous focus
+        //if (queueInFocus)
+        //{
+        //    queueInFocus.transform.localScale = prefabInFocus.transform.localScale;
+        //}
 
         queueInFocus = instantiatedQueue;
         prefabInFocus = instantiatedQueue;
@@ -250,6 +254,20 @@ public class Queue : MonoBehaviour
         Debug.Log(this.parent.name + this.name);
         QueueDetailWindow.GetQueueBasicInfo(temp);
 
+
+        var outline = gameObject.GetComponent<Outline>();
+        if (outline == null)
+        {
+            outline = gameObject.AddComponent<Outline>();
+            outline.OutlineMode = Outline.Mode.OutlineAll;
+            outline.OutlineColor = Color.yellow;
+            outline.OutlineWidth = 5f;
+            outline.enabled = false;
+        }
+
+        
+        outline.enabled = !outline.enabled;
+
         CreateMessagePaths();
 
     }
@@ -257,11 +275,11 @@ public class Queue : MonoBehaviour
     void CreateMessagePaths()
     {
         State state = GameObject.Find("State").GetComponent(typeof(State)) as State;
-        List<string> testDependency = state.dependencyGraph.graph[this.name];
-        if (testDependency.Count == 0)
+        if (!state.dependencyGraph.graph.ContainsKey(this.name))
         {
-            return; //no dependency path
+            return; //no dependency for this queue
         }
+        List<string> testDependency = state.dependencyGraph.graph[this.name];
 
         int idx = 0;
         while (idx < testDependency.Count)
