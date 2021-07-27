@@ -16,7 +16,7 @@ public class QueueDetailsRightViewController : MonoBehaviour
     private Transform container;
 
     // Buttons
-    private Button closeButton, returnRight;
+    private Button closeButton, returnButton;
     private Transform tabButtonGroup; // parent of tab buttons
     private Button toQueueDetail, toMessageList, toConnection;
 
@@ -31,7 +31,7 @@ public class QueueDetailsRightViewController : MonoBehaviour
 
         // Locate the Buttons
         closeButton = transform.Find("ButtonClose").GetComponent<Button>();
-        returnRight = transform.Find("ButtonReturn").GetComponent<Button>();
+        returnButton = transform.Find("ButtonReturn").GetComponent<Button>();
 
         // Locate Tab Buttons
         tabButtonGroup = transform.Find("GameObjectTabButtons");
@@ -49,7 +49,7 @@ public class QueueDetailsRightViewController : MonoBehaviour
 
         // Button Listener
         closeButton.onClick.AddListener(closeWindowClicked);
-        returnRight.onClick.AddListener(returnToQueueList);
+        returnButton.onClick.AddListener(returnToQueueList);
 
         toQueueDetail.onClick.AddListener(ToQueueDetailsClicked);
         toMessageList.onClick.AddListener(toQueueMessageList);
@@ -131,9 +131,10 @@ public class QueueDetailsRightViewController : MonoBehaviour
     // To window Queue Detail
     private void ToQueueDetailsClicked()
     {
+        Debug.Log("To Queue Detail");
         WindowMessageLists.SetActive(false);  // close current
         WindowQueueDetails.SetActive(true);   // show left
-        //WindowQueueDetails.SendMessage("test");  // Reload Details
+        WindowQueueDetails.SendMessage("GetQueueBasicInfo", currentSelected);  // Reload Details
     }
 
     // Stay in current window
@@ -157,6 +158,7 @@ public class QueueDetailsRightViewController : MonoBehaviour
     {
         WindowMessageLists.SetActive(false);
         WindowConnections.SetActive(true);
+        WindowConnections.SendMessage("generateQueueTypeDetail", currentSelected);
     }
 
 }

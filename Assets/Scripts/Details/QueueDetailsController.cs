@@ -100,7 +100,6 @@ public class QueueDetailsController : MonoBehaviour
         text7_altered.text = queue.timeAltered;
         text8_depth.text = queue.currentDepth.ToString();
 
-
     }
 
 
@@ -144,6 +143,7 @@ public class QueueDetailsController : MonoBehaviour
     {
         WindowQueueDetails.SetActive(false);
         WindowConnections.SetActive(true);
+        WindowConnections.SendMessage("generateQueueTypeDetail", currentSelected);
     }
 
 }
