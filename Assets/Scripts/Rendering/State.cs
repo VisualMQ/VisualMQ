@@ -16,6 +16,7 @@ public class State : MonoBehaviour
     // Main dictionary keeping all connection and their rendered counterparts
     private Dictionary<MQ.Client, GameObject> qmgrs = new Dictionary<MQ.Client, GameObject>();
 
+    public DependencyGraph dependencyGraph = new DependencyGraph();
 
     // Use this method for adding new Mq connections (aka connections to different Qmgrs)
     public void AddNewMqClient(MQ.Client newMqClient)
@@ -63,6 +64,14 @@ public class State : MonoBehaviour
             QueueManager qmgrComponent = qmgrGameObject.GetComponent(typeof(QueueManager)) as QueueManager;
             qmgrComponent.qmName = newQmgr.qmgrName;
             qmgrComponent.queues = newQueues;
+            dependencyGraph.CreateDependencyGraph(newQueues, newChannels, newQmgr.qmgrName); //Create Dependency Graph
+
+            ///DELETE: debug info
+            foreach (KeyValuePair<string, List<string>> dependency in dependencyGraph.graph)
+            {
+                Debug.Log("Dependency for " + dependency.Key + " is: " + string.Join(" , ", dependency.Value.ToArray()));
+            }
+            ///
             qmgrComponent.channels = newChannels;
 
             // Get the rendering position according its order

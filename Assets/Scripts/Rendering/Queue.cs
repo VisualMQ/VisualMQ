@@ -123,7 +123,12 @@ public class Queue : MonoBehaviour
         textMesh.alignment = TextAlignment.Center;
         textMesh.transform.position = new Vector3(instantiatedQueue.transform.position.x, instantiatedQueue.transform.position.y + 5, instantiatedQueue.transform.position.z);
 
+        //var outline = gameObject.AddComponent<Outline>();
         
+        //outline.OutlineMode = Outline.Mode.OutlineAll;
+        //outline.OutlineColor = Color.yellow;
+        //outline.OutlineWidth = 5f;
+
     }
 
 
@@ -204,12 +209,11 @@ public class Queue : MonoBehaviour
                 {
                     newQueueMaterials[i] = material;
                 }
+
             }
             // Upate the Queue with new materials
             queuePrefabMeshRenderer.materials = newQueueMaterials;
-
         }
-
 
     }
 
@@ -223,19 +227,19 @@ public class Queue : MonoBehaviour
         {
             return;
         }
-        
-        // Click on twice = Deactivate focus
-        if (queueInFocus == instantiatedQueue)
-        {
-            queueInFocus.transform.localScale = prefabInFocus.transform.localScale;
-            queueInFocus = null;
-            return;
-        }
-        // If clicked on once, it's now the new in focus. Reset the previous focus
-        if (queueInFocus)
-        {
-            queueInFocus.transform.localScale = prefabInFocus.transform.localScale;
-        }
+
+        // Click on twice = Deactivate focus TODO: WHAT DOES THIS DO???
+        //if (queueInFocus == instantiatedQueue)
+        //{
+        //    queueInFocus.transform.localScale = prefabInFocus.transform.localScale;
+        //    queueInFocus = null;
+        //    return;
+        //}
+        //// If clicked on once, it's now the new in focus. Reset the previous focus
+        //if (queueInFocus)
+        //{
+        //    queueInFocus.transform.localScale = prefabInFocus.transform.localScale;
+        //}
 
         queueInFocus = instantiatedQueue;
         prefabInFocus = instantiatedQueue;
@@ -246,10 +250,103 @@ public class Queue : MonoBehaviour
         Debug.Log("Moving Camera to Queue" + this.name);
 
         // A Queue is selected -> Show Info Panel
-        List<string> temp = new List<string>(){this.parent.name, this.name};
+        List<string> temp = new List<string>() { this.parent.name, this.name };
         Debug.Log(this.parent.name + this.name);
         QueueDetailWindow.GetQueueBasicInfo(temp);
+
+
+        var outline = gameObject.GetComponent<Outline>();
+        if (outline == null)
+        {
+            outline = gameObject.AddComponent<Outline>();
+            outline.OutlineMode = Outline.Mode.OutlineAll;
+            outline.OutlineColor = Color.yellow;
+            outline.OutlineWidth = 5f;
+            outline.enabled = false;
+        }
+
         
+        outline.enabled = !outline.enabled;
+
+        CreateMessagePaths();
+
+    }
+
+    void CreateMessagePaths()
+    {
+        State state = GameObject.Find("State").GetComponent(typeof(State)) as State;
+        if (!state.dependencyGraph.graph.ContainsKey(this.name))
+        {
+            return; //no dependency for this queue
+        }
+        List<string> testDependency = state.dependencyGraph.graph[this.name];
+
+        int idx = 0;
+        while (idx < testDependency.Count)
+        {
+            Queue waypointQueue = GameObject.Find(testDependency[idx]).GetComponent(typeof(Queue)) as Queue;
+            if (waypointQueue.queue is MQ.RemoteQueue)
+            {
+                Debug.Log("Remote queue reached");
+                GameObject path = new GameObject("Path", typeof(PathCreation.AutoPathGenerator));
+                PathCreation.AutoPathGenerator pathGenerator = path.GetComponent(typeof(PathCreation.AutoPathGenerator)) as PathCreation.AutoPathGenerator;
+                List<Transform> testTransform = new List<Transform>();
+                for (int i = idx; i < idx + 5; i++)
+                {
+                    GameObject waypointObject = GameObject.Find(testDependency[i]);
+                    if (waypointObject == null)
+                    {
+                        break;
+                    }
+                    testTransform.Add(waypointObject.transform);
+                }
+                pathGenerator.waypoints = testTransform.ToArray();
+
+                //create "message" object
+                GameObject follower = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                follower.AddComponent(typeof(PathCreation.PathFollower));
+                PathCreation.PathFollower followGenerator = follower.GetComponent(typeof(PathCreation.PathFollower)) as PathCreation.PathFollower;
+
+                //have this message object follow the path defined in path object
+                followGenerator.pathCreator = path.GetComponent(typeof(PathCreation.PathCreator)) as PathCreation.PathCreator;
+                followGenerator.endOfPathInstruction = PathCreation.EndOfPathInstruction.Loop;
+
+                //increment idx
+                idx += 5;
+            } else if (waypointQueue.queue is MQ.AliasQueue)
+            {
+                Debug.Log("alias queue reached");
+                GameObject path = new GameObject("Path", typeof(PathCreation.AutoPathGenerator));
+                PathCreation.AutoPathGenerator pathGenerator = path.GetComponent(typeof(PathCreation.AutoPathGenerator)) as PathCreation.AutoPathGenerator;
+                List<Transform> testTransform = new List<Transform>();
+                for (int i = idx; i < idx + 2; i++)
+                {
+                    GameObject waypointObject = GameObject.Find(testDependency[i]);
+                    Debug.Log("Current Waypoint Object is: " + waypointObject);
+                    if (waypointObject == null)
+                    {
+                        break;
+                    }
+                    testTransform.Add(waypointObject.transform);
+                }
+                pathGenerator.waypoints = testTransform.ToArray();
+
+                //create "message" object
+                GameObject follower = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                follower.AddComponent(typeof(PathCreation.PathFollower));
+                PathCreation.PathFollower followGenerator = follower.GetComponent(typeof(PathCreation.PathFollower)) as PathCreation.PathFollower;
+
+                //have this message object follow the path defined in path object
+                followGenerator.pathCreator = path.GetComponent(typeof(PathCreation.PathCreator)) as PathCreation.PathCreator;
+                followGenerator.endOfPathInstruction = PathCreation.EndOfPathInstruction.Loop;
+
+                //increment idx
+                idx += 2;
+            } else
+            {
+                throw new Exception();
+            }
+        }
     }
 
     void OnMouseEnter()

@@ -229,6 +229,7 @@ namespace MQ
                 {
                     case "sender":
                         channel = new SenderChannel();
+                        ((SenderChannel)channel).transmissionQueueName = channelJson.sender.transmissionQueueName;
                         break;
 
                     case "receiver":
@@ -376,5 +377,12 @@ namespace MQ
     {
         public string type;
         public string name;
+        public _ChannelSenderJson sender;
+    }
+
+    [Serializable]
+    public class _ChannelSenderJson
+    {
+        public string transmissionQueueName;
     }
 }
