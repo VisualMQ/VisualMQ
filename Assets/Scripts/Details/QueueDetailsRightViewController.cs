@@ -7,9 +7,8 @@ public class QueueDetailsRightViewController : MonoBehaviour
 {
 
     // Windows Object
-    public GameObject QueueDetailLeftWindow;
-    public GameObject QueueDetailRightWindow;
-    public GameObject QMDetailRightWindow;
+    public GameObject WindowQueueDetails, WindowMessageLists, WindowConnections;
+    public GameObject WindowQMQueueList;
     public GameObject MessageWindow;
 
     // Message List Items
@@ -17,36 +16,44 @@ public class QueueDetailsRightViewController : MonoBehaviour
     private Transform container;
 
     // Buttons
-    private Button closeRight, returnRight;
-    private Button toLeft, toRight;
+    private Button closeButton, returnRight;
+    private Transform tabButtonGroup; // parent of tab buttons
+    private Button toQueueDetail, toMessageList, toConnection;
 
     public List<string> currentSelected;
 
-    private void Awake() {
+    private void Awake() 
+    {
         // Locate the Objects
         container = transform.Find("MessageRowContainer");
         MessageRowItem = container.Find("MessageRowItem");
         MessageRowItem.gameObject.SetActive(false);
 
         // Locate the Buttons
-        closeRight = transform.Find("ButtonCloseQueueRight").GetComponent<Button>();
-        returnRight = transform.Find("ButtonReturnRight").GetComponent<Button>();
-        toLeft = transform.Find("ButtonQueueDetails2").GetComponent<Button>();
-        toRight = transform.Find("ButtonMessageList2").GetComponent<Button>();
+        closeButton = transform.Find("ButtonClose").GetComponent<Button>();
+        returnRight = transform.Find("ButtonReturn").GetComponent<Button>();
+
+        // Locate Tab Buttons
+        tabButtonGroup = transform.Find("GameObjectTabButtons");
+        toQueueDetail = tabButtonGroup.Find("ButtonQueueDetails").GetComponent<Button>();
+        toMessageList = tabButtonGroup.Find("ButtonMessageList").GetComponent<Button>();
+        toConnection = tabButtonGroup.Find("ButtonConnections").GetComponent<Button>();
     }
     
     // Start is called before the first frame update
     void Start()
     {   
         // Default Hide
-        QueueDetailLeftWindow.SetActive(false);
-        QueueDetailRightWindow.SetActive(false);
+        WindowQueueDetails.SetActive(false);
+        WindowMessageLists.SetActive(false);
 
         // Button Listener
-        closeRight.onClick.AddListener(closeWindowClicked);
+        closeButton.onClick.AddListener(closeWindowClicked);
         returnRight.onClick.AddListener(returnToQueueList);
-        toLeft.onClick.AddListener(toQueueDetail);
-        toRight.onClick.AddListener(toQueueMessageList);
+
+        toQueueDetail.onClick.AddListener(ToQueueDetailsClicked);
+        toMessageList.onClick.AddListener(toQueueMessageList);
+        toConnection.onClick.AddListener(toConnectionClicked);
     }
 
     
@@ -87,7 +94,8 @@ public class QueueDetailsRightViewController : MonoBehaviour
         }
     }
 
-    void DestroyMessageList()
+    // destroy previous message lists
+    private void DestroyMessageList()
     {
         foreach (Transform child in container) 
         {
@@ -98,8 +106,8 @@ public class QueueDetailsRightViewController : MonoBehaviour
         }
     }
 
-
-    void messageRowItemSelected(int idx, string qmName, string queueName, string messageid)
+    // if a message selected -> pop out window for messages
+    private void messageRowItemSelected(int idx, string qmName, string queueName, string messageid)
     {
         MessageWindow.SetActive(true);
         Debug.Log(messageid);
@@ -108,35 +116,47 @@ public class QueueDetailsRightViewController : MonoBehaviour
     }
 
 
-    /*
-    * Button Listener Functions
-    */
-    void closeWindowClicked(){
-        QueueDetailRightWindow.SetActive(false);
-        QueueDetailLeftWindow.SetActive(false);
+
+// Button Listeners
+//
+//
+//
+
+    // Close window
+    private void closeWindowClicked(){
+        WindowMessageLists.SetActive(false);
+        WindowQueueDetails.SetActive(false);
     }
 
-    void toQueueDetail()
+    // To window Queue Detail
+    private void ToQueueDetailsClicked()
     {
-        QueueDetailRightWindow.SetActive(false); // close current
-        QueueDetailLeftWindow.SetActive(true);   // show left
-        //QueueDetailLeftWindow.SendMessage("test");  // Reload Details
+        WindowMessageLists.SetActive(false);  // close current
+        WindowQueueDetails.SetActive(true);   // show left
+        //WindowQueueDetails.SendMessage("test");  // Reload Details
     }
 
-    void toQueueMessageList()
+    // Stay in current window
+    private void toQueueMessageList()
     {
         return;
     }
 
-
-    void returnToQueueList()
+    // To QM Window (Queue List)
+    private void returnToQueueList()
     {
          // Close Current
-        QueueDetailRightWindow.SetActive(false);
+        WindowMessageLists.SetActive(false);
         // To Queue List Window (QMDetailRight)
-        QMDetailRightWindow.SetActive(true);
-        QMDetailRightWindow.SendMessage("GenerateQueueList", currentSelected[0]);
+        WindowQMQueueList.SetActive(true);
+        WindowQMQueueList.SendMessage("GenerateQueueList", currentSelected[0]);
     }
 
+    // To Queue Detail -- Cconnection Window
+    private void toConnectionClicked()
+    {
+        WindowMessageLists.SetActive(false);
+        WindowConnections.SetActive(true);
+    }
 
 }
