@@ -127,6 +127,7 @@ public class QueueDetailsController : MonoBehaviour
         text7_altered.text = queue.timeAltered;
         text8_depth.text = queue.currentDepth.ToString();
 
+        /*
         // Get Queue Type
         switch (queue.GetTypeName())
         {
@@ -146,6 +147,7 @@ public class QueueDetailsController : MonoBehaviour
                 Debug.Log("Default case");
                 break;
         }
+        */
     }
     
 

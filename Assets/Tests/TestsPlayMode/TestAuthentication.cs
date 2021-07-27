@@ -4,20 +4,19 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-public class TestExample
+public class TestAuthentication
 {
     // A Test behaves as an ordinary method
     [Test]
-    public void TestExampleSimplePasses()
+    public void TestAuthenticationSimplePasses()
     {
         // Use the Assert class to test conditions
-        
     }
 
     // A UnityTest behaves like a coroutine in Play Mode. In Edit Mode you can use
     // `yield return null;` to skip a frame.
     [UnityTest]
-    public IEnumerator TestExampleWithEnumeratorPasses()
+    public IEnumerator TestAuthenticationWithEnumeratorPasses()
     {
         // Use the Assert class to test conditions.
         // Use yield to skip a frame.
