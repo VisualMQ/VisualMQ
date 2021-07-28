@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+
+[RequireComponent(typeof(NameRenderer))]
 public class Channel : MonoBehaviour
 {
 

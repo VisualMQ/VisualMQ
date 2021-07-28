@@ -27,6 +27,7 @@ namespace MQ
             client = new HttpClient();
             client.BaseAddress = new Uri(baseUrl);
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            client.DefaultRequestHeaders.Add("ibm-mq-rest-csrf-token", "value");
 
             Authenticate();
 
@@ -60,7 +61,23 @@ namespace MQ
             }
             else
             {
-                throw new Exception();
+                throw new Exception(response.ReasonPhrase);
+            }
+        }
+
+        private string PostRequest(string endpoint, string jsonPayload)
+        {
+            StringContent payload = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+            Debug.Log(payload.ReadAsStringAsync());
+            HttpResponseMessage response = client.PostAsync(endpoint, payload).Result;
+            if (response.IsSuccessStatusCode)
+            {
+                string responseBody = response.Content.ReadAsStringAsync().Result;
+                return responseBody;
+            }
+            else
+            {
+                throw new Exception(response.ReasonPhrase);
             }
         }
 
@@ -112,6 +129,25 @@ namespace MQ
             _QueueResponseJson queueJson = JsonUtility.FromJson<_QueueResponseJson>(response);
             List<Queue> queues = Parser.Parse(queueJson);
             return queues[0];
+        }
+
+        public List<Application> GetAllApplications()
+        {
+            string jsonRequest = "{\"type\":\"runCommandJSON\",\"command\":\"display\",\"qualifier\":\"conn\",\"name\":\"*\",\"responseParameters\":[\"all\"],\"parameters\":{\"type\":\"*\"}}";
+            string response = PostRequest("/ibmmq/rest/v2/admin/action/qmgr/" + qmgr + "/mqsc", jsonRequest);
+            _ApplicationResponseJson applicationsJson = JsonUtility.FromJson<_ApplicationResponseJson>(response);
+            List<Application> applications = Parser.Parse(applicationsJson);
+            // Filter out all system connections, there are lots of them
+            // We can potentially change this in the future
+            List<Application> filteredApplications = new List<Application>();
+            foreach (Application application in applications)
+            {
+                if (application.appltype != "SYSTEM")
+                {
+                    filteredApplications.Add(application);
+                }
+            }
+            return filteredApplications;
         }
 
     }
@@ -223,8 +259,6 @@ namespace MQ
             foreach (_ChannelJson channelJson in channelResponseJson.channel)
             {
                 Channel channel = null;
-                Debug.Log(channelJson.name);
-                Debug.Log(channelJson.type);
                 switch (channelJson.type)
                 {
                     case "sender":
@@ -245,6 +279,26 @@ namespace MQ
                 channels.Add(channel);
             }
             return channels;
+        }
+
+        public static List<Application> Parse(_ApplicationResponseJson applicationResponseJson)
+        {
+            List<Application> applications = new List<Application>();
+            foreach (_ApplicationJson connnectionJson in applicationResponseJson.commandResponse)
+            {
+                Application application = new Application();
+                application.conn = connnectionJson.parameters.conn;
+                application.channel = connnectionJson.parameters.channel;
+                application.type = connnectionJson.parameters.type;
+                application.connopts = connnectionJson.parameters.connopts;
+                application.conntag = connnectionJson.parameters.conntag;
+                application.appltype = connnectionJson.parameters.appltype;
+                application.appldesc = connnectionJson.parameters.appldesc;
+                application.appltag = connnectionJson.parameters.appltag;
+                application.conname = connnectionJson.parameters.conname;
+                applications.Add(application);
+            }
+            return applications;
         }
     }
 
@@ -384,5 +438,31 @@ namespace MQ
     public class _ChannelSenderJson
     {
         public string transmissionQueueName;
+    }
+
+    [Serializable]
+    public class _ApplicationResponseJson
+    {
+        public List<_ApplicationJson> commandResponse;
+    }
+
+    [Serializable]
+    public class _ApplicationJson
+    {
+        public _ApplicationParametersJson parameters;
+    }
+
+    [Serializable]
+    public class _ApplicationParametersJson
+    {
+        public string conn;
+        public string channel;
+        public string type;
+        public string conntag;
+        public string conname;
+        public List<string> connopts;
+        public string appltype;
+        public string appldesc;
+        public string appltag;
     }
 }
