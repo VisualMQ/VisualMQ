@@ -137,7 +137,16 @@ namespace MQ
             string response = PostRequest("/ibmmq/rest/v2/admin/action/qmgr/" + qmgr + "/mqsc", jsonRequest);
             _ConnectionResponseJson connectionsJson = JsonUtility.FromJson<_ConnectionResponseJson>(response);
             List<Connection> connections = Parser.Parse(connectionsJson);
-            return connections;
+            // Filter out all system connections
+            List<Connection> filteredConnections = new List<Connection>();
+            foreach (Connection connection in connections)
+            {
+                if (connection.appltype != "SYSTEM")
+                {
+                    filteredConnections.Add(connection);
+                }
+            }
+            return filteredConnections;
         }
 
     }

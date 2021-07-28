@@ -19,6 +19,7 @@ public class QueueManager : MonoBehaviour
     public string qmName;
     public List<MQ.Queue> queues;
     public List<MQ.Channel> channels;
+    public List<MQ.Connection> connections;
     public Vector3 baseLoc;
     public Dictionary<string, GameObject> renderedQueues = new Dictionary<string, GameObject>();
 
@@ -222,6 +223,24 @@ public class QueueManager : MonoBehaviour
             channelComponent.parent = this;
             channelGameObject.transform.parent = this.transform;
         }
+
+
+        // Render connections
+        int numberOfConnections = 0;
+        foreach (MQ.Connection connection in connections)
+        {
+            string uniqueConnectionName = connection.appltag;
+            GameObject connectionGameObject = new GameObject(uniqueConnectionName, typeof(Connection));
+            Connection connectionComponent = connectionGameObject.GetComponent((typeof(Connection))) as Connection;
+            connectionComponent.connection = connection;
+            connectionGameObject.transform.position = new Vector3(-sXZ * (numberOfConnections / (2 * largeArea[1]) + 2), 0, sXZ * (numberOfConnections % (2 * largeArea[1]))) + baseLoc;
+            connectionGameObject.transform.parent = this.transform;
+
+            NameRenderer nameComponent = connectionGameObject.GetComponent(typeof(NameRenderer)) as NameRenderer;
+            nameComponent.objectName = connection.appltag;
+            numberOfConnections++;
+        }
+        
 
 
 
@@ -464,7 +483,7 @@ public class QueueManager : MonoBehaviour
         List<int[]> areas = GetLargeSmallArea();
 
         // Length in x axe
-        int x = (int) sXZ * (areas[0][0] + areas[1][1]);
+        int x = (int) sXZ * (areas[0][0] + areas[1][1] + (connections.Count / (2 * areas[0][1])) + 2);
         // Length in z axe "+1" is for channel length
         int y = (int) sXZ * (areas[0][1] + areas[1][0] + 1);
 
