@@ -11563,6 +11563,11 @@ MonoBehaviour:
   WindowQueueDetails: {fileID: 1982846574}
   WindowMessageLists: {fileID: 862236587}
   WindowConnections: {fileID: 1092247519}
+  WindowQMQueueList: {fileID: 82359487}
+  QueueDetailLocal: {fileID: 1458707009}
+  QueueDetailRemote: {fileID: 2106014790}
+  QueueDetailAlias: {fileID: 44241441}
+  QueueDetailTransmission: {fileID: 2133941847}
 --- !u!1 &1101819486
 GameObject:
   m_ObjectHideFlags: 0
@@ -21648,7 +21653,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 298, y: -332}
+  m_AnchoredPosition: {x: 300, y: -64.5}
   m_SizeDelta: {x: 600, y: 148}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2133941849

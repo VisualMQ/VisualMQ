@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using MQ;
 
 public class QueueDetailsConnectionsViewController : MonoBehaviour
 {
@@ -11,11 +12,12 @@ public class QueueDetailsConnectionsViewController : MonoBehaviour
     
     // Buttons
     private Button returnButton, closeButton;
+    private Transform tabButtonsGroups;
     private Button tab1QueueDetails, tab2MessageLists, tab3Connections;
     private Button showIncome, showOutcome;
 
     // Test Group Objects
-    private GameObject QueueDetailLocal, QueueDetailRemote, QueueDetailAlias, QueueDetailTransmission;
+    public GameObject QueueDetailLocal, QueueDetailRemote, QueueDetailAlias, QueueDetailTransmission;
 
     // Text Fields
     private Transform typeGroups;
@@ -45,11 +47,21 @@ public class QueueDetailsConnectionsViewController : MonoBehaviour
         showIncome = transform.Find("ButtonShowIncome").GetComponent<Button>();
         showOutcome = transform.Find("ButtonShowOutcome").GetComponent<Button>();
 
+        // Locate Tab Buttons
+        tabButtonsGroups = transform.Find("GameObjectTabButtons");
+        tab1QueueDetails = tabButtonsGroups.Find("ButtonQueueDetails").GetComponent<Button>();
+        tab2MessageLists = tabButtonsGroups.Find("ButtonMessageList").GetComponent<Button>();
+        tab3Connections = tabButtonsGroups.Find("ButtonConnections").GetComponent<Button>();
+
         // Button Listener
         closeButton.onClick.AddListener(closeWindowClicked);
         returnButton.onClick.AddListener(returnToQueueList);
         showIncome.onClick.AddListener(showIncomingPath);
         showOutcome.onClick.AddListener(showOutcomingPath);
+        tab1QueueDetails.onClick.AddListener(ToQueueDetailsClicked);
+        tab2MessageLists.onClick.AddListener(ToMessageListClicked);
+        tab3Connections.onClick.AddListener(ToConnectionClicked);
+
 
         // Locate Type Parents
         typeGroups = transform.Find("QueueTypesGameObject");
@@ -58,11 +70,11 @@ public class QueueDetailsConnectionsViewController : MonoBehaviour
         textGroupLocal = typeGroups.Find("QueueLocalGameObject");
         textGroupTransmission = typeGroups.Find("QueueTransmissionGameObject");
 
-        // Locate Type Objects
-        QueueDetailLocal = textGroupLocal.GetComponent<GameObject>();
-        QueueDetailRemote = textGroupRemote.GetComponent<GameObject>();
-        QueueDetailAlias = textGroupAlias.GetComponent<GameObject>();
-        QueueDetailTransmission = textGroupTransmission.GetComponent<GameObject>();
+        // // Locate Type Objects
+        // QueueDetailLocal = textGroupLocal.GetComponent<GameObject>();
+        // QueueDetailRemote = textGroupRemote.GetComponent<GameObject>();
+        // QueueDetailAlias = textGroupAlias.GetComponent<GameObject>();
+        // QueueDetailTransmission = textGroupTransmission.GetComponent<GameObject>();
 
         // Locate Text: Remote
         textQueue1_targetQM = textGroupRemote.Find("TextQueue_1").GetComponent<Text>();
@@ -83,6 +95,7 @@ public class QueueDetailsConnectionsViewController : MonoBehaviour
 
         // Hide
         WindowConnections.SetActive(false);
+        SetAllQueueTypeInfoObjectFalse();
 
     }
 
@@ -131,33 +144,45 @@ public class QueueDetailsConnectionsViewController : MonoBehaviour
 
     }
 
+    /* 
+    *
+    * Prepare Queue Detail
+    *
+    */
 
 
-    // Details: Local Queue
-    void GetQueueLocal(MQ.Queue queue)
-    {
-        SetAllQueueTypeInfoObjectFalse();
-        QueueDetailLocal.SetActive(true);
-
-    }
-
-    void GetQueueRemote(MQ.Queue queue)
+    // Type Details: Remote Queue
+    private void GetQueueRemote(MQ.Queue queue)
     {
         SetAllQueueTypeInfoObjectFalse();
         QueueDetailRemote.SetActive(true);
-        //textQueue1_targetQM.text = queue.targetQueueName;
-        //textqueue2_targetQueue.text = queue.targetQmgrName;
-        //textqueue3_transmission.text = queue.transmissionQueueName;
+        MQ.RemoteQueue queueremote = (MQ.RemoteQueue)queue;
+
+        textQueue1_targetQM.text = queueremote.targetQueueName.ToString();
+        textQueue2_targetQueue.text = queueremote.targetQmgrName.ToString();
+        textQueue3_transmission.text = queueremote.transmissionQueueName.ToString();
     }
 
     // Type Details: Alias
-    void GetQueueAlias(MQ.Queue queue)
+    private void GetQueueAlias(MQ.Queue queue)
     {
         SetAllQueueTypeInfoObjectFalse();
         QueueDetailAlias.SetActive(true);
+        MQ.AliasQueue queuealias = (MQ.AliasQueue)queue;
         
-        //textqueue4_targetQueue.text = ((AliasQueue)queue).targetQueueName;
+        textQueue4_targetQueue.text = queuealias.targetQueueName;
         textQueue5_currentPath.text = "";
+    }
+
+    // Tyep Details: Local Queue
+    private void GetQueueLocal(MQ.Queue queue)
+    {
+        SetAllQueueTypeInfoObjectFalse();
+        QueueDetailLocal.SetActive(true);
+        MQ.LocalQueue queuelocal = (MQ.LocalQueue)queue;
+
+        textQueue6_inputCount.text = queuelocal.openInputCount.ToString();
+        textQueue7_outputCount.text = queuelocal.openOutputCount.ToString();
     }
 
     // Type Details: Transmission
@@ -165,9 +190,10 @@ public class QueueDetailsConnectionsViewController : MonoBehaviour
     {
         SetAllQueueTypeInfoObjectFalse();
         QueueDetailTransmission.SetActive(true);
-        textQueue8_inputCount.text = "";
-        textQueue9_outputCount.text = "";
+        MQ.TransmissionQueue queuetrans = (MQ.TransmissionQueue)queue;
 
+        textQueue8_inputCount.text = queuetrans.openInputCount.ToString();
+        textQueue9_outputCount.text = queuetrans.openOutputCount.ToString();
     }
 
     // Hide all queue type details
@@ -181,10 +207,12 @@ public class QueueDetailsConnectionsViewController : MonoBehaviour
 
 
 
-// Button Listeners
-//
-//
-// 
+    /* 
+    *
+    * Button Listener
+    *
+    */
+
 
     // close current window
     private void closeWindowClicked()
@@ -195,7 +223,7 @@ public class QueueDetailsConnectionsViewController : MonoBehaviour
     // to QM queue list
     private void returnToQueueList()
     {
-        WindowMessageLists.SetActive(false);  // close current
+        WindowConnections.SetActive(false); // close current
         WindowQMQueueList.SetActive(true);   // show left
         WindowQMQueueList.SendMessage("GenerateQueueList", currentSelected[0]);
     }
@@ -203,27 +231,32 @@ public class QueueDetailsConnectionsViewController : MonoBehaviour
     // show incoming path
     private void showIncomingPath()
     {
-
+        Debug.Log("Clicked: Incoming Path");
     }
 
     // show outcoming path
     private void showOutcomingPath()
     {
-
+        Debug.Log("Clicked: Outcoming Path");
     }
 
     private void ToQueueDetailsClicked()
     {
         WindowConnections.SetActive(false);  // close current
-        WindowQueueDetails.SetActive(true);   // show left
+        WindowQueueDetails.SetActive(true);   // show detail window
         WindowQueueDetails.SendMessage("GetQueueBasicInfo", currentSelected);  // Reload Details
     }
 
     private void ToMessageListClicked()
     {
-        WindowConnections.SetActive(true);
+        WindowConnections.SetActive(false); // Close current
+        WindowMessageLists.SetActive(true);
         WindowMessageLists.SendMessage("GenerateMessageList", currentSelected);
-        WindowQueueDetails.SetActive(false); // Close current
+    }
+
+    private void ToConnectionClicked()
+    {
+        return;
     }
 
 }
