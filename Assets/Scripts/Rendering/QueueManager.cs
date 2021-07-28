@@ -170,6 +170,11 @@ public class QueueManager : MonoBehaviour
 
             queueComponent.parent = this;
             queueGameObject.transform.parent = this.transform;
+
+
+            NameRenderer nameRenderer = queueGameObject.GetComponent(typeof(NameRenderer)) as NameRenderer;
+            nameRenderer.objectName = queue.queueName;
+
             // queueComponent.repositionSelf();
             // TODO: REMOVE?
             renderedQueues.Add(queue.queueName, queueGameObject);
@@ -222,6 +227,9 @@ public class QueueManager : MonoBehaviour
             channelComponent.channel = channel;
             channelComponent.parent = this;
             channelGameObject.transform.parent = this.transform;
+
+            NameRenderer nameRenderer = channelGameObject.GetComponent(typeof(NameRenderer)) as NameRenderer;
+            nameRenderer.objectName = channel.channelName;
         }
 
 

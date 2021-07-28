@@ -61,6 +61,7 @@ public class NameRenderer : MonoBehaviour
                 distance = Vector3.Distance(firstQueue.position, Camera.main.transform.position);
             }
         }
-        textMesh.transform.rotation = Quaternion.LookRotation(usedQueue.textMesh.transform.position - Camera.main.transform.position);
+        TextMesh usedQueueTextMesh = usedQueue.GetComponentInChildren(typeof(TextMesh)) as TextMesh;
+        textMesh.transform.rotation = Quaternion.LookRotation(usedQueueTextMesh.transform.position - Camera.main.transform.position);
     }
 }
