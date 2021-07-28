@@ -27,6 +27,7 @@ namespace MQ
             client = new HttpClient();
             client.BaseAddress = new Uri(baseUrl);
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            client.DefaultRequestHeaders.Add("ibm-mq-rest-csrf-token", "value");
 
             Authenticate();
 
@@ -60,7 +61,23 @@ namespace MQ
             }
             else
             {
-                throw new Exception();
+                throw new Exception(response.ReasonPhrase);
+            }
+        }
+
+        private string PostRequest(string endpoint, string jsonPayload)
+        {
+            StringContent payload = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+            Debug.Log(payload.ReadAsStringAsync());
+            HttpResponseMessage response = client.PostAsync(endpoint, payload).Result;
+            if (response.IsSuccessStatusCode)
+            {
+                string responseBody = response.Content.ReadAsStringAsync().Result;
+                return responseBody;
+            }
+            else
+            {
+                throw new Exception(response.ReasonPhrase);
             }
         }
 
@@ -112,6 +129,15 @@ namespace MQ
             _QueueResponseJson queueJson = JsonUtility.FromJson<_QueueResponseJson>(response);
             List<Queue> queues = Parser.Parse(queueJson);
             return queues[0];
+        }
+
+        public List<Connection> GetAllConnections()
+        {
+            string jsonRequest = "{\"type\":\"runCommandJSON\",\"command\":\"display\",\"qualifier\":\"conn\",\"name\":\"*\",\"responseParameters\":[\"all\"],\"parameters\":{\"type\":\"*\"}}";
+            string response = PostRequest("/ibmmq/rest/v2/admin/action/qmgr/" + qmgr + "/mqsc", jsonRequest);
+            _ConnectionResponseJson connectionsJson = JsonUtility.FromJson<_ConnectionResponseJson>(response);
+            List<Connection> connections = Parser.Parse(connectionsJson);
+            return connections;
         }
 
     }
@@ -223,8 +249,6 @@ namespace MQ
             foreach (_ChannelJson channelJson in channelResponseJson.channel)
             {
                 Channel channel = null;
-                Debug.Log(channelJson.name);
-                Debug.Log(channelJson.type);
                 switch (channelJson.type)
                 {
                     case "sender":
@@ -245,6 +269,26 @@ namespace MQ
                 channels.Add(channel);
             }
             return channels;
+        }
+
+        public static List<Connection> Parse(_ConnectionResponseJson connectionResponseJson)
+        {
+            List<Connection> connections = new List<Connection>();
+            foreach (_ConnectionJson connnectionJson in connectionResponseJson.commandResponse)
+            {
+                Connection connection = new Connection();
+                connection.conn = connnectionJson.parameters.conn;
+                connection.channel = connnectionJson.parameters.channel;
+                connection.type = connnectionJson.parameters.type;
+                connection.connopts = connnectionJson.parameters.connopts;
+                connection.conntag = connnectionJson.parameters.conntag;
+                connection.appltype = connnectionJson.parameters.appltype;
+                connection.appldesc = connnectionJson.parameters.appldesc;
+                connection.appltag = connnectionJson.parameters.appltag;
+                connection.conname = connnectionJson.parameters.conname;
+                connections.Add(connection);
+            }
+            return connections;
         }
     }
 
@@ -384,5 +428,31 @@ namespace MQ
     public class _ChannelSenderJson
     {
         public string transmissionQueueName;
+    }
+
+    [Serializable]
+    public class _ConnectionResponseJson
+    {
+        public List<_ConnectionJson> commandResponse;
+    }
+
+    [Serializable]
+    public class _ConnectionJson
+    {
+        public _ConnectionParametersJson parameters;
+    }
+
+    [Serializable]
+    public class _ConnectionParametersJson
+    {
+        public string conn;
+        public string channel;
+        public string type;
+        public string conntag;
+        public string conname;
+        public List<string> connopts;
+        public string appltype;
+        public string appldesc;
+        public string appltag;
     }
 }
