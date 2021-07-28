@@ -62,6 +62,12 @@ public class NameRenderer : MonoBehaviour
             }
         }
         TextMesh usedQueueTextMesh = usedQueue.GetComponentInChildren(typeof(TextMesh)) as TextMesh;
+
+        if (usedQueueTextMesh == null) //TODO: Not sure why this would be throwing NPE at certain viewpoint...
+        {
+            return;
+        }
+
         textMesh.transform.rotation = Quaternion.LookRotation(usedQueueTextMesh.transform.position - Camera.main.transform.position);
     }
 }
