@@ -19,6 +19,7 @@ public class QueueManager : MonoBehaviour
     public string qmName;
     public List<MQ.Queue> queues;
     public List<MQ.Channel> channels;
+    public List<MQ.Application> applications;
     public Vector3 baseLoc;
     public Dictionary<string, GameObject> renderedQueues = new Dictionary<string, GameObject>();
 
@@ -169,6 +170,11 @@ public class QueueManager : MonoBehaviour
 
             queueComponent.parent = this;
             queueGameObject.transform.parent = this.transform;
+
+
+            NameRenderer nameRenderer = queueGameObject.GetComponent(typeof(NameRenderer)) as NameRenderer;
+            nameRenderer.objectName = queue.queueName;
+
             // queueComponent.repositionSelf();
             // TODO: REMOVE?
             renderedQueues.Add(queue.queueName, queueGameObject);
@@ -221,7 +227,28 @@ public class QueueManager : MonoBehaviour
             channelComponent.channel = channel;
             channelComponent.parent = this;
             channelGameObject.transform.parent = this.transform;
+
+            NameRenderer nameRenderer = channelGameObject.GetComponent(typeof(NameRenderer)) as NameRenderer;
+            nameRenderer.objectName = channel.channelName;
         }
+
+
+        // Render applications
+        int numberOfApplications = 0;
+        foreach (MQ.Application application in applications)
+        {
+            string uniqueConnectionName = application.appltag;
+            GameObject applicationGameObject = new GameObject(uniqueConnectionName, typeof(Application));
+            Application applicationComponent = applicationGameObject.GetComponent((typeof(Application))) as Application;
+            applicationComponent.application = application;
+            applicationGameObject.transform.position = new Vector3(-sXZ * (numberOfApplications / (2 * largeArea[1]) + 2), 0, sXZ * (numberOfApplications % (2 * largeArea[1]))) + baseLoc;
+            applicationGameObject.transform.parent = this.transform;
+
+            NameRenderer nameComponent = applicationGameObject.GetComponent(typeof(NameRenderer)) as NameRenderer;
+            nameComponent.objectName = application.appltag;
+            numberOfApplications++;
+        }
+        
 
 
 
@@ -276,18 +303,39 @@ public class QueueManager : MonoBehaviour
             RaycastHit hit;
             // Casts the ray and get the first game object hit
             if (Physics.Raycast(ray, out hit)) {
-                string objectname = hit.transform.name;
-                string objectType = objectname.Substring(0, 5);
-                string qmName = objectname.Substring(6);
-                if (objectType == "Block")
+                string objectName = hit.transform.name;
+                string objectType = objectName.Substring(0, 5);
+                string qmName = objectName.Substring(6);
+                if (objectName == "Block." + this.qmName)
                 {
+                    
                     Debug.Log("QM Block is clicked: "+qmName);
+                    // change to the position to observe the clicked qm
+                    topView();
                     // use the qmname trigger the qm detail window
                     QMDetailWindow.QueueManagerInfoInit(qmName);
+                    
+
                 }
             }
         }
+
     }
+
+    void topView()
+    {
+        GameObject targetObject = GameObject.Find(this.qmName);
+        GameObject mainCamera = GameObject.Find("Main Camera");
+        mainCamera.transform.rotation = Quaternion.identity;
+        mainCamera.transform.rotation = Quaternion.AngleAxis(90, new Vector3(1, 0, 0));
+        Vector3 targetPosition = targetObject.transform.position;
+        targetPosition.y += 20f;
+        targetPosition.x += 15f;
+        targetPosition.z += 5f;
+        targetPosition += this.baseLoc;
+        mainCamera.transform.position = targetPosition;
+    }
+
 
 
     // This method is called from State object on the periodical update
@@ -443,7 +491,7 @@ public class QueueManager : MonoBehaviour
         List<int[]> areas = GetLargeSmallArea();
 
         // Length in x axe
-        int x = (int) sXZ * (areas[0][0] + areas[1][1]);
+        int x = (int) sXZ * (areas[0][0] + areas[1][1] + (applications.Count / (2 * areas[0][1])) + 2);
         // Length in z axe "+1" is for channel length
         int y = (int) sXZ * (areas[0][1] + areas[1][0] + 1);
 
