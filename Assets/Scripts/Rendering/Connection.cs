@@ -20,7 +20,6 @@ public class Connection : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        Debug.Log("rendering connection " + connection.type);
         GameObject instantiatedConn = Instantiate(connectionPrefab);
         instantiatedConn.transform.parent = this.transform;
         instantiatedConn.transform.localPosition = Vector3.zero;

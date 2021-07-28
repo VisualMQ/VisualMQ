@@ -3,8 +3,8 @@ using System.Collections;
 
 
 
-//This component is used for rendering names (text) above objects
-//like queues, channels and applications
+// This component is used for rendering names (texts) above objects
+// like queues, channels and connections
 public class NameRenderer : MonoBehaviour
 {
 
