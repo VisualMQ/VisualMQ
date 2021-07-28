@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace MQ
 {
 
-    public class Connection
+    public class Application
     {
         public string conn;
         public string channel;

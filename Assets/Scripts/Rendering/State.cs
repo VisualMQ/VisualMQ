@@ -56,7 +56,7 @@ public class State : MonoBehaviour
             MQ.QueueManager newQmgr = newMqClient.GetQmgr();
             List<MQ.Queue> newQueues = newMqClient.GetAllQueues();
             List<MQ.Channel> newChannels = newMqClient.GetAllChannels();
-            List<MQ.Connection> newConnections = newMqClient.GetAllConnections();
+            List<MQ.Application> newApplications = newMqClient.GetAllApplications();
 
             // Render queue manager. Note that data is stored in Component (ie Script) not in GameObject!
             // GameObject is just an Entity/Container for Components that perform the real functionality
@@ -66,7 +66,7 @@ public class State : MonoBehaviour
             qmgrComponent.qmName = newQmgr.qmgrName;
             qmgrComponent.queues = newQueues;
             qmgrComponent.channels = newChannels;
-            qmgrComponent.connections = newConnections;
+            qmgrComponent.applications = newApplications;
             dependencyGraph.CreateDependencyGraph(newQueues, newChannels, newQmgr.qmgrName); //Create Dependency Graph
 
             ///DELETE: debug info

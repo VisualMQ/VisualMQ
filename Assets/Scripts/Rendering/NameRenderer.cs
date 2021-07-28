@@ -4,7 +4,7 @@ using System.Collections;
 
 
 // This component is used for rendering names (texts) above objects
-// like queues, channels and connections
+// like queues, channels and applications
 public class NameRenderer : MonoBehaviour
 {
 

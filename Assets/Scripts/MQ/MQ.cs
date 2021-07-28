@@ -131,23 +131,23 @@ namespace MQ
             return queues[0];
         }
 
-        public List<Connection> GetAllConnections()
+        public List<Application> GetAllApplications()
         {
             string jsonRequest = "{\"type\":\"runCommandJSON\",\"command\":\"display\",\"qualifier\":\"conn\",\"name\":\"*\",\"responseParameters\":[\"all\"],\"parameters\":{\"type\":\"*\"}}";
             string response = PostRequest("/ibmmq/rest/v2/admin/action/qmgr/" + qmgr + "/mqsc", jsonRequest);
-            _ConnectionResponseJson connectionsJson = JsonUtility.FromJson<_ConnectionResponseJson>(response);
-            List<Connection> connections = Parser.Parse(connectionsJson);
+            _ApplicationResponseJson applicationsJson = JsonUtility.FromJson<_ApplicationResponseJson>(response);
+            List<Application> applications = Parser.Parse(applicationsJson);
             // Filter out all system connections, there are lots of them
             // We can potentially change this in the future
-            List<Connection> filteredConnections = new List<Connection>();
-            foreach (Connection connection in connections)
+            List<Application> filteredApplications = new List<Application>();
+            foreach (Application application in applications)
             {
-                if (connection.appltype != "SYSTEM")
+                if (application.appltype != "SYSTEM")
                 {
-                    filteredConnections.Add(connection);
+                    filteredApplications.Add(application);
                 }
             }
-            return filteredConnections;
+            return filteredApplications;
         }
 
     }
@@ -281,24 +281,24 @@ namespace MQ
             return channels;
         }
 
-        public static List<Connection> Parse(_ConnectionResponseJson connectionResponseJson)
+        public static List<Application> Parse(_ApplicationResponseJson applicationResponseJson)
         {
-            List<Connection> connections = new List<Connection>();
-            foreach (_ConnectionJson connnectionJson in connectionResponseJson.commandResponse)
+            List<Application> applications = new List<Application>();
+            foreach (_ApplicationJson connnectionJson in applicationResponseJson.commandResponse)
             {
-                Connection connection = new Connection();
-                connection.conn = connnectionJson.parameters.conn;
-                connection.channel = connnectionJson.parameters.channel;
-                connection.type = connnectionJson.parameters.type;
-                connection.connopts = connnectionJson.parameters.connopts;
-                connection.conntag = connnectionJson.parameters.conntag;
-                connection.appltype = connnectionJson.parameters.appltype;
-                connection.appldesc = connnectionJson.parameters.appldesc;
-                connection.appltag = connnectionJson.parameters.appltag;
-                connection.conname = connnectionJson.parameters.conname;
-                connections.Add(connection);
+                Application application = new Application();
+                application.conn = connnectionJson.parameters.conn;
+                application.channel = connnectionJson.parameters.channel;
+                application.type = connnectionJson.parameters.type;
+                application.connopts = connnectionJson.parameters.connopts;
+                application.conntag = connnectionJson.parameters.conntag;
+                application.appltype = connnectionJson.parameters.appltype;
+                application.appldesc = connnectionJson.parameters.appldesc;
+                application.appltag = connnectionJson.parameters.appltag;
+                application.conname = connnectionJson.parameters.conname;
+                applications.Add(application);
             }
-            return connections;
+            return applications;
         }
     }
 
@@ -441,19 +441,19 @@ namespace MQ
     }
 
     [Serializable]
-    public class _ConnectionResponseJson
+    public class _ApplicationResponseJson
     {
-        public List<_ConnectionJson> commandResponse;
+        public List<_ApplicationJson> commandResponse;
     }
 
     [Serializable]
-    public class _ConnectionJson
+    public class _ApplicationJson
     {
-        public _ConnectionParametersJson parameters;
+        public _ApplicationParametersJson parameters;
     }
 
     [Serializable]
-    public class _ConnectionParametersJson
+    public class _ApplicationParametersJson
     {
         public string conn;
         public string channel;
