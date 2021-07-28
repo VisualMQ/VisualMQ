@@ -115,7 +115,7 @@ public class Queue : MonoBehaviour
         // TODO: Move this to prefab
         // Generate the initial text to be displayed above Queues.
         GameObject textObj = new GameObject();
-        textObj.transform.parent = instantiatedQueue.transform;
+        textObj.transform.parent = this.transform;
 
         textMesh = textObj.AddComponent<TextMesh>();
         textMesh.text = queue.queueName;
@@ -255,20 +255,62 @@ public class Queue : MonoBehaviour
         QueueDetailWindow.GetQueueBasicInfo(temp);
 
 
-        var outline = gameObject.GetComponent<Outline>();
+        var outline = instantiatedQueue.GetComponent<Outline>();
         if (outline == null)
         {
-            outline = gameObject.AddComponent<Outline>();
-            outline.OutlineMode = Outline.Mode.OutlineAll;
-            outline.OutlineColor = Color.yellow;
+            outline = instantiatedQueue.AddComponent<Outline>();
+            outline.OutlineMode = Outline.Mode.OutlineVisible;
+            outline.OutlineColor = Color.red;
             outline.OutlineWidth = 5f;
             outline.enabled = false;
         }
 
-        
+        outline.OutlineColor = Color.red;
         outline.enabled = !outline.enabled;
 
-        CreateMessagePaths();
+        HighlightDependency();
+
+        //CreateMessagePaths();
+
+    }
+
+    void HighlightDependency()
+    {
+        State state = GameObject.Find("State").GetComponent(typeof(State)) as State;
+        if (!state.dependencyGraph.graph.ContainsKey(this.name))
+        {
+            return; //no dependency for this queue
+        }
+        List<string> testDependency = state.dependencyGraph.graph[this.name];
+        HashSet<string> uniqueQueue = new HashSet<string>();
+        foreach (string qName in testDependency)
+        {
+            uniqueQueue.Add(qName);
+        }
+        uniqueQueue.Remove(this.name);
+
+        Debug.Log("dependency queue is" + uniqueQueue.ToString());
+
+        foreach (string qName in uniqueQueue)
+        {
+            //TODO: make sure that existing outline change colors as they suppose to when different queues are pressed.   
+            GameObject dependencyQueue = GameObject.Find(qName);
+            if (dependencyQueue == null)
+            {
+                continue; // objects from other QM has not been visualized
+            }
+            var outline = dependencyQueue.GetComponent<Outline>();
+            if (outline == null)
+            {
+                outline = dependencyQueue.AddComponent<Outline>();
+                outline.OutlineMode = Outline.Mode.OutlineVisible;
+                outline.OutlineColor = Color.yellow;
+                outline.OutlineWidth = 5f;
+                outline.enabled = false;
+            }
+            outline.OutlineColor = Color.yellow;
+            outline.enabled = !outline.enabled;
+        }
 
     }
 
