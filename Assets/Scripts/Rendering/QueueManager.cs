@@ -276,18 +276,39 @@ public class QueueManager : MonoBehaviour
             RaycastHit hit;
             // Casts the ray and get the first game object hit
             if (Physics.Raycast(ray, out hit)) {
-                string objectname = hit.transform.name;
-                string objectType = objectname.Substring(0, 5);
-                string qmName = objectname.Substring(6);
-                if (objectType == "Block")
+                string objectName = hit.transform.name;
+                string objectType = objectName.Substring(0, 5);
+                string qmName = objectName.Substring(6);
+                if (objectName == "Block." + this.qmName)
                 {
+                    
                     Debug.Log("QM Block is clicked: "+qmName);
+                    // change to the position to observe the clicked qm
+                    topView();
                     // use the qmname trigger the qm detail window
                     QMDetailWindow.QueueManagerInfoInit(qmName);
+                    
+
                 }
             }
         }
+
     }
+
+    void topView()
+    {
+        GameObject targetObject = GameObject.Find(this.qmName);
+        GameObject mainCamera = GameObject.Find("Main Camera");
+        mainCamera.transform.rotation = Quaternion.identity;
+        mainCamera.transform.rotation = Quaternion.AngleAxis(90, new Vector3(1, 0, 0));
+        Vector3 targetPosition = targetObject.transform.position;
+        targetPosition.y += 20f;
+        targetPosition.x += 15f;
+        targetPosition.z += 5f;
+        targetPosition += this.baseLoc;
+        mainCamera.transform.position = targetPosition;
+    }
+
 
 
     // This method is called from State object on the periodical update
