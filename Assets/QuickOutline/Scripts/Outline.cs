@@ -14,71 +14,72 @@ using UnityEngine;
 [DisallowMultipleComponent]
 
 public class Outline : MonoBehaviour {
-  private static HashSet<Mesh> registeredMeshes = new HashSet<Mesh>();
+    private static HashSet<Mesh> registeredMeshes = new HashSet<Mesh>();
 
-  public enum Mode {
-    OutlineAll,
-    OutlineVisible,
-    OutlineHidden,
-    OutlineAndSilhouette,
-    SilhouetteOnly
-  }
-
-  public Mode OutlineMode {
-    get { return outlineMode; }
-    set {
-      outlineMode = value;
-      needsUpdate = true;
+    public enum Mode {
+        OutlineAll,
+        OutlineVisible,
+        OutlineHidden,
+        OutlineAndSilhouette,
+        SilhouetteOnly
     }
-  }
 
-  public Color OutlineColor {
-    get { return outlineColor; }
-    set {
-      outlineColor = value;
-      needsUpdate = true;
+    public Mode OutlineMode {
+        get { return outlineMode; }
+        set {
+            outlineMode = value;
+            needsUpdate = true;
+        }
     }
-  }
 
-  public float OutlineWidth {
-    get { return outlineWidth; }
-    set {
-      outlineWidth = value;
-      needsUpdate = true;
+    public Color OutlineColor {
+        get { return outlineColor; }
+        set {
+            outlineColor = value;
+            needsUpdate = true;
+        }
     }
-  }
 
-  [Serializable]
-  private class ListVector3 {
-    public List<Vector3> data;
-  }
+    public float OutlineWidth {
+        get { return outlineWidth; }
+        set {
+            outlineWidth = value;
+            needsUpdate = true;
+        }
+    }
 
-  [SerializeField]
-  private Mode outlineMode;
+    [Serializable]
+    private class ListVector3 {
+        public List<Vector3> data;
+    }
 
-  [SerializeField]
-  private Color outlineColor = Color.white;
+    [SerializeField]
+    private Mode outlineMode;
 
-  [SerializeField, Range(0f, 10f)]
-  private float outlineWidth = 2f;
+    [SerializeField]
+    private Color outlineColor = Color.white;
 
-  [Header("Optional")]
+    [SerializeField, Range(0f, 10f)]
+    private float outlineWidth = 2f;
 
-  [SerializeField, Tooltip("Precompute enabled: Per-vertex calculations are performed in the editor and serialized with the object. "
-  + "Precompute disabled: Per-vertex calculations are performed at runtime in Awake(). This may cause a pause for large meshes.")]
-  private bool precomputeOutline;
+    [Header("Optional")]
 
-  [SerializeField, HideInInspector]
-  private List<Mesh> bakeKeys = new List<Mesh>();
+    [SerializeField, Tooltip("Precompute enabled: Per-vertex calculations are performed in the editor and serialized with the object. "
+    + "Precompute disabled: Per-vertex calculations are performed at runtime in Awake(). This may cause a pause for large meshes.")]
+    private bool precomputeOutline;
 
-  [SerializeField, HideInInspector]
-  private List<ListVector3> bakeValues = new List<ListVector3>();
+    [SerializeField, HideInInspector]
+    private List<Mesh> bakeKeys = new List<Mesh>();
 
-  private Renderer[] renderers;
-  private Material outlineMaskMaterial;
-  private Material outlineFillMaterial;
+    [SerializeField, HideInInspector]
+    private List<ListVector3> bakeValues = new List<ListVector3>();
 
-  private bool needsUpdate;
+    private Renderer[] renderers;
+    private Material outlineMaskMaterial;
+    private Material outlineFillMaterial;
+
+    private bool needsUpdate;
+
 
   void Awake() {
 
