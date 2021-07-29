@@ -19,6 +19,7 @@ public class QueueManager : MonoBehaviour
     public string qmName;
     public List<MQ.Queue> queues;
     public List<MQ.Channel> channels;
+    public List<MQ.Application> applications;
     public Vector3 baseLoc;
     public Dictionary<string, GameObject> renderedQueues = new Dictionary<string, GameObject>();
 
@@ -169,6 +170,11 @@ public class QueueManager : MonoBehaviour
 
             queueComponent.parent = this;
             queueGameObject.transform.parent = this.transform;
+
+
+            NameRenderer nameRenderer = queueGameObject.GetComponent(typeof(NameRenderer)) as NameRenderer;
+            nameRenderer.objectName = queue.queueName;
+
             // queueComponent.repositionSelf();
             // TODO: REMOVE?
             renderedQueues.Add(queue.queueName, queueGameObject);
@@ -221,7 +227,28 @@ public class QueueManager : MonoBehaviour
             channelComponent.channel = channel;
             channelComponent.parent = this;
             channelGameObject.transform.parent = this.transform;
+
+            NameRenderer nameRenderer = channelGameObject.GetComponent(typeof(NameRenderer)) as NameRenderer;
+            nameRenderer.objectName = channel.channelName;
         }
+
+
+        // Render applications
+        int numberOfApplications = 0;
+        foreach (MQ.Application application in applications)
+        {
+            string uniqueConnectionName = application.appltag;
+            GameObject applicationGameObject = new GameObject(uniqueConnectionName, typeof(Application));
+            Application applicationComponent = applicationGameObject.GetComponent((typeof(Application))) as Application;
+            applicationComponent.application = application;
+            applicationGameObject.transform.position = new Vector3(-sXZ * (numberOfApplications / (2 * largeArea[1]) + 2), 0, sXZ * (numberOfApplications % (2 * largeArea[1]))) + baseLoc;
+            applicationGameObject.transform.parent = this.transform;
+
+            NameRenderer nameComponent = applicationGameObject.GetComponent(typeof(NameRenderer)) as NameRenderer;
+            nameComponent.objectName = application.appltag;
+            numberOfApplications++;
+        }
+        
 
 
 
@@ -464,7 +491,7 @@ public class QueueManager : MonoBehaviour
         List<int[]> areas = GetLargeSmallArea();
 
         // Length in x axe
-        int x = (int) sXZ * (areas[0][0] + areas[1][1]);
+        int x = (int) sXZ * (areas[0][0] + areas[1][1] + (applications.Count / (2 * areas[0][1])) + 2);
         // Length in z axe "+1" is for channel length
         int y = (int) sXZ * (areas[0][1] + areas[1][0] + 1);
 
