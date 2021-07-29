@@ -3,7 +3,6 @@ using System.Collections.Generic;
 
 namespace MQ
 {
-
     public class Application
     {
         public string conn;

@@ -18,7 +18,7 @@ namespace MQ
 
     public class ReceiverChannel : Channel
     {
-
+        
     }
 }
 
