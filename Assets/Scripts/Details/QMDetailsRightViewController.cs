@@ -47,10 +47,11 @@ public class QMDetailsRightViewController : MonoBehaviour
     // Given the QM Name -> Show Queues under the QM
     public void GenerateQueueList(string selectedQM)
     {
+
         // Clear previous generate list
         DestroyRowItems();
-
-
+        QMDetailQueueListWindow.SetActive(true);
+        
         currentQMName = selectedQM;
 
         // Get queues in the selectedQM

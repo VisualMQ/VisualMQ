@@ -29,9 +29,9 @@ public class Application : MonoBehaviour
 
     }
 
-    // Update is called once per frame
+    // Detect Click on Application
     void Update()
     {
-
+        
     }
 }
