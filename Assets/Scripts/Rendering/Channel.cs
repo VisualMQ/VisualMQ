@@ -3,6 +3,8 @@ using System.Collections;
 
 
 [RequireComponent(typeof(NameRenderer))]
+[RequireComponent(typeof(HighlightRenderer))]
+
 public class Channel : MonoBehaviour
 {
 
@@ -30,6 +32,10 @@ public class Channel : MonoBehaviour
         instantiatedChannel = Instantiate(channelPrefab, new Vector3(0, 0, 0), Quaternion.Euler(-90f, 180f, 0f)) as GameObject;
         instantiatedChannel.transform.parent = this.transform;
         instantiatedChannel.transform.parent.position = this.position;
+        instantiatedChannel.name = this.name + ".Prefab";
+
+        MeshCollider mc = instantiatedChannel.transform.parent.gameObject.AddComponent<MeshCollider>();
+        mc.sharedMesh = instantiatedChannel.GetComponent<MeshFilter>().sharedMesh;
     }
 
     // Update is called once per frame

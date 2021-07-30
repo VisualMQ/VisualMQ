@@ -4,7 +4,7 @@ using System.Collections.Generic;
 public class Click : MonoBehaviour
 {
     private float downClickTime;
-    private const float CLICK_DELTA_TIME = 0.1f;
+    private const float CLICK_DELTA_TIME = 0.5f;
     private Vector3 clickpo;
     // Use this for initialization
     void Start()

@@ -3,6 +3,7 @@ using System.Collections;
 
 
 [RequireComponent(typeof(NameRenderer))]
+[RequireComponent(typeof(HighlightRenderer))]
 public class Application : MonoBehaviour
 {
 
@@ -23,6 +24,9 @@ public class Application : MonoBehaviour
         GameObject instantiatedConn = Instantiate(applicationPrefab);
         instantiatedConn.transform.parent = this.transform;
         instantiatedConn.transform.localPosition = Vector3.zero;
+        instantiatedConn.name = this.name + ".Prefab";
+        instantiatedConn.transform.name = instantiatedConn.name;
+
     }
 
     // Update is called once per frame
