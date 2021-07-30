@@ -289,7 +289,6 @@ public class QueueManager : MonoBehaviour
         Vector3 offset = offsets[queueType];
         Vector3 position = new Vector3(sXZ * (rank % dimensions[queueType][0]), 0, sXZ * (rank / dimensions[queueType][0]));
         Vector3 queueManagerHeight = new Vector3(0, sY * 2, 0);
-        Debug.Log("POSITIONING RANK" + rank);
         return (offset + position + queueManagerHeight + baseLoc);  
     }
 
