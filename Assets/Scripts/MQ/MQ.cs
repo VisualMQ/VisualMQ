@@ -68,7 +68,6 @@ namespace MQ
         private string PostRequest(string endpoint, string jsonPayload)
         {
             StringContent payload = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
-            Debug.Log(payload.ReadAsStringAsync());
             HttpResponseMessage response = client.PostAsync(endpoint, payload).Result;
             if (response.IsSuccessStatusCode)
             {
@@ -284,18 +283,31 @@ namespace MQ
         public static List<Application> Parse(_ApplicationResponseJson applicationResponseJson)
         {
             List<Application> applications = new List<Application>();
-            foreach (_ApplicationJson connnectionJson in applicationResponseJson.commandResponse)
+            foreach (_ApplicationJson applicationJson in applicationResponseJson.commandResponse)
             {
                 Application application = new Application();
-                application.conn = connnectionJson.parameters.conn;
-                application.channel = connnectionJson.parameters.channel;
-                application.type = connnectionJson.parameters.type;
-                application.connopts = connnectionJson.parameters.connopts;
-                application.conntag = connnectionJson.parameters.conntag;
-                application.appltype = connnectionJson.parameters.appltype;
-                application.appldesc = connnectionJson.parameters.appldesc;
-                application.appltag = connnectionJson.parameters.appltag;
-                application.conname = connnectionJson.parameters.conname;
+                application.conn = applicationJson.parameters.conn;
+                application.channel = applicationJson.parameters.channel;
+                application.type = applicationJson.parameters.type;
+                application.connopts = applicationJson.parameters.connopts;
+                application.conntag = applicationJson.parameters.conntag;
+                application.appltype = applicationJson.parameters.appltype;
+                application.appldesc = applicationJson.parameters.appldesc;
+                application.appltag = applicationJson.parameters.appltag;
+                application.conname = applicationJson.parameters.conname;
+                application.connectedObjects = new List<Application.ConnectedObject>();
+
+                foreach (_ApplicationObjectJson obj in applicationJson.parameters.objects)
+                {
+                    Application.ConnectedObject connectedObject = new Application.ConnectedObject();
+                    connectedObject.objname = obj.objname;
+                    connectedObject.objtype = obj.objtype;
+                    connectedObject.hstate = obj.hstate;
+                    connectedObject.openopts = obj.openopts;
+                    connectedObject.reada = obj.reada;
+                    application.connectedObjects.Add(connectedObject);
+                }
+
                 applications.Add(application);
             }
             return applications;
@@ -464,5 +476,17 @@ namespace MQ
         public string appltype;
         public string appldesc;
         public string appltag;
+        public List<_ApplicationObjectJson> objects;
+    }
+
+    [Serializable]
+    public class _ApplicationObjectJson
+    {
+        public string objname;
+        public string objtype;
+        public string hstate;
+        public string astate;
+        public string reada;
+        public List<string> openopts;
     }
 }
