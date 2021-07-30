@@ -112,7 +112,6 @@ public class Queue : MonoBehaviour
             queuePrefabMeshRenderer = GameObject.Find(this.name + ".Prefab").GetComponent<MeshRenderer>();
 
             Material[] queueMaterials = queuePrefabMeshRenderer.materials;
-            Debug.Log("materials are:" + queueMaterials[0].ToString());
 
             CreateMessages(currentDepth, queue.maxNumberOfMessages);
 
@@ -215,7 +214,6 @@ public class Queue : MonoBehaviour
 
         // A Queue is selected -> Show Info Panel
         List<string> temp = new List<string>() { this.parent.name, this.name };
-        Debug.Log(this.parent.name + this.name);
         QueueDetailWindow.GetQueueBasicInfo(temp);
 
 
@@ -252,8 +250,6 @@ public class Queue : MonoBehaviour
             uniqueQueue.Add(qName);
         }
         uniqueQueue.Remove(this.name);
-
-        Debug.Log("dependency queue is" + uniqueQueue.ToString());
 
         foreach (string qName in uniqueQueue)
         {
@@ -293,7 +289,6 @@ public class Queue : MonoBehaviour
             Queue waypointQueue = GameObject.Find(testDependency[idx]).GetComponent(typeof(Queue)) as Queue;
             if (waypointQueue.queue is MQ.RemoteQueue)
             {
-                Debug.Log("Remote queue reached");
                 GameObject path = new GameObject("Path", typeof(PathCreation.AutoPathGenerator));
                 PathCreation.AutoPathGenerator pathGenerator = path.GetComponent(typeof(PathCreation.AutoPathGenerator)) as PathCreation.AutoPathGenerator;
                 List<Transform> testTransform = new List<Transform>();
@@ -319,9 +314,9 @@ public class Queue : MonoBehaviour
 
                 //increment idx
                 idx += 5;
-            } else if (waypointQueue.queue is MQ.AliasQueue)
+            }
+            else if (waypointQueue.queue is MQ.AliasQueue)
             {
-                Debug.Log("alias queue reached");
                 GameObject path = new GameObject("Path", typeof(PathCreation.AutoPathGenerator));
                 PathCreation.AutoPathGenerator pathGenerator = path.GetComponent(typeof(PathCreation.AutoPathGenerator)) as PathCreation.AutoPathGenerator;
                 List<Transform> testTransform = new List<Transform>();
