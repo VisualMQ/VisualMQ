@@ -92,7 +92,7 @@ public class Queue : MonoBehaviour
             prefabName = "Prefabs/LocalQueue"; //TODO: undefined queue
         }
         queuePrefab = Resources.Load(prefabName) as GameObject;
-        instantiatedQueue = Instantiate(queuePrefab, new Vector3(0,0,0), Quaternion.identity) as GameObject;
+        instantiatedQueue = Instantiate(queuePrefab, new Vector3(0,0,0), Quaternion.Euler(-90f, 0f, 0f)) as GameObject;
         repositionSelf();
         
 
