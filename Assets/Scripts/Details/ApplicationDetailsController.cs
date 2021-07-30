@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ChannelDetailsController : MonoBehaviour
+public class ApplicationDetailsController : MonoBehaviour
 {
     private Button closeButton;
     
-    private void Awake()
+    private void Awake() 
     {
-
+        
     }
+
     // Start is called before the first frame update
     void Start()
     {

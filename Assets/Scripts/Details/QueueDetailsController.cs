@@ -8,6 +8,7 @@ public class QueueDetailsController : MonoBehaviour
     
     // Public Window
     public GameObject WindowQueueDetails, WindowMessageLists, WindowConnections;
+    public GameObject WindowQMQueueLists;
 
     // Text Fields Basic Info
     private Transform textGroup;
@@ -49,12 +50,7 @@ public class QueueDetailsController : MonoBehaviour
 
         // Link Queue Detail Window
         Queue.QueueDetailWindow = this;
-        
-    }
 
-
-    void Start()
-    {
         //Button Listeners
         returnButton.onClick.AddListener(ReturnClicked);
         closeButton.onClick.AddListener(CloseClicked);
@@ -62,6 +58,12 @@ public class QueueDetailsController : MonoBehaviour
         toQueueDetail.onClick.AddListener(ToQueueDetailsClicked);
         toMessageList.onClick.AddListener(ToMessageListClicked);
         toConnection.onClick.AddListener(ToConnectionClicked);
+        
+    }
+
+
+    private void Start()
+    {
 
     }
 
@@ -109,13 +111,12 @@ public class QueueDetailsController : MonoBehaviour
 //
 
 
-    // Return to Queue Lists (QM Window)
+    // Return to Queue Lists (in QM Window)
     private void ReturnClicked()
     {
         WindowQueueDetails.SetActive(false); // Close Current
-        
-        WindowMessageLists.SetActive(true);  // To Queue List Window (QMDetailRight)
-        WindowMessageLists.SendMessage("GenerateQueueList", currentSelected[0]);
+        WindowQMQueueLists.SetActive(true);  // To Queue List Window (QMDetailRight)
+        WindowQMQueueLists.SendMessage("GenerateQueueList", currentSelected[0]);
     }
 
     // Close current window
@@ -133,17 +134,18 @@ public class QueueDetailsController : MonoBehaviour
     // Switch to Message List Window
     private void ToMessageListClicked()
     {
+        WindowQueueDetails.SetActive(false); // Close current
+
         WindowMessageLists.SetActive(true);
         WindowMessageLists.SendMessage("GenerateMessageList", currentSelected);
-        WindowQueueDetails.SetActive(false); // Close current
     }
 
     // Switch to Connection Window
     private void ToConnectionClicked()
     {
-        WindowQueueDetails.SetActive(false);
         WindowConnections.SetActive(true);
         WindowConnections.SendMessage("generateQueueTypeDetail", currentSelected);
+        WindowQueueDetails.SetActive(false);
     }
 
 }
