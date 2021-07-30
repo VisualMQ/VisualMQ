@@ -25,9 +25,9 @@ public class Application : MonoBehaviour
         instantiatedConn.transform.localPosition = Vector3.zero;
     }
 
-    // Update is called once per frame
+    // Detect Click on Application
     void Update()
     {
-
+        
     }
 }

@@ -9,16 +9,17 @@ public class MessageController : MonoBehaviour
     public GameObject MessageWindow;
 
     // Button
-    public Button closeButton, closeButtonTop, downLoadButton, copyIdButton;
+    private Button closeButton, closeButtonTop, copyIdButton;
     private Text text0MessageID, text1Format;
-    private Text parentPath;
 
     void Awake()
     {
         // Locate GameObjects
         text0MessageID = transform.Find("TextMessageID").GetComponent<Text>();
         text1Format = transform.Find("TextMessageFormat").GetComponent<Text>();
-        //parentPath = transform.Find("ImagePath").Find("TextParentPath").GetComponent<Text>();
+        closeButton = transform.Find("ButtonCloseMessage").GetComponent<Button>();
+        closeButtonTop = transform.Find("ButtonCloseMessageTop").GetComponent<Button>();
+        copyIdButton = transform.Find("ButtonCopyMessage").GetComponent<Button>();
     }
 
     // Start is called before the first frame update
@@ -28,7 +29,6 @@ public class MessageController : MonoBehaviour
         // Button Listener
         closeButton.onClick.AddListener(CloseButtonClicked);
         closeButtonTop.onClick.AddListener(CloseButtonClicked);
-        downLoadButton.onClick.AddListener(DownLoadButtonClicked);
         copyIdButton.onClick.AddListener(CopyIdButtonClicked);
     }
 
@@ -45,34 +45,26 @@ public class MessageController : MonoBehaviour
         int starIdx = qmName.Length;
         string removeQueueName = queueName.Substring(starIdx+1);
 
-
         MQ.Message message = stateComponent.GetMessage(qmName, removeQueueName, messID);
         text0MessageID.text = message.messageId;
         text1Format.text = message.format;
     }
 
-    /*
-        BUTTON ACTIONS
-    */
-    void CloseButtonClicked()
+
+    // close message window
+    private void CloseButtonClicked()
     {
         MessageWindow.SetActive(false);
     }
 
-    void DownLoadButtonClicked()
+    // copy message id
+    private void CopyIdButtonClicked()
     {
-
+        GUIUtility.systemCopyBuffer = text0MessageID.text;
     }
 
-    void CopyIdButtonClicked()
-    {
-
-    }
-
-    /*
-        CONTENT PREPARE
-    */
-    void ClearAllFields()
+    // CONTENT PREPARE
+    private void ClearAllFields()
     {
         text0MessageID.text = "";
         text1Format.text = "";
