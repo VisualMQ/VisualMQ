@@ -81,22 +81,27 @@ public class Queue : MonoBehaviour
     {
       
         Vector3 endPosition = this.parent.ComputePosition(this.queue.GetTypeName(), this.rank);
-        if (this.instantiatedQueue.transform.parent.position.y < endPosition.y)
-        {
-           
-            this.instantiatedQueue.transform.parent.position = new Vector3(endPosition.x, this.instantiatedQueue.transform.parent.position.y + 0.1f, endPosition.z);
-        }
+        this.instantiatedQueue.transform.parent.position = 
+                Vector3.MoveTowards(this.instantiatedQueue.transform.parent.position,
+                endPosition, Time.deltaTime * 22.0f // (Yes, Magic number) 
+                );
+                
+              
+        
 
-        if (this.instantiatedQueue.transform.parent.position.y >= endPosition.y)
+        if (Vector3.Distance(transform.position, endPosition) < 0.001f)
         {
             foreach (GameObject messageobj in this.messages)
             {
                 messageobj.SetActive(true);
             }
-            this.instantiatedQueue.transform.parent.position = endPosition;
             CancelInvoke();
-
         }
+
+        
+      
+
+        
     }
 
   
