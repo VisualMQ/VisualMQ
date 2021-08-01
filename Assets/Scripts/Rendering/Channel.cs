@@ -29,7 +29,11 @@ public class Channel : MonoBehaviour
         GameObject channelPrefab = Resources.Load(prefabName) as GameObject;
         instantiatedChannel = Instantiate(channelPrefab) as GameObject;
         instantiatedChannel.transform.parent = gameObject.transform;
-        gameObject.transform.position = this.position;
+        instantiatedChannel.transform.localPosition = Vector3.zero;
+
+        // This is needed in order to rotate the model appropriately
+        // Unfortunately, I couldn't find a way how to import it from Blender
+        // so that this wouldn't be needed
         gameObject.transform.rotation = Quaternion.Euler(-90f, 180f, 0f);
 
         // Add mesh Colider

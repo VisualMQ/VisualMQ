@@ -223,8 +223,8 @@ public class QueueManager : MonoBehaviour
             string uniqueChannelName = qmName + QM_NAME_DELIMITER + channel.channelName;
             GameObject channelGameObject = new GameObject(uniqueChannelName, typeof(Channel)); //Globally unique channel name
             Channel channelComponent = channelGameObject.GetComponent(typeof(Channel)) as Channel;
-            channelComponent.position = position + queueManagerHeight;
             channelComponent.channel = channel;
+            channelGameObject.transform.position = position + queueManagerHeight;
             channelGameObject.transform.parent = this.transform;
 
             NameRenderer nameRenderer = channelGameObject.GetComponent(typeof(NameRenderer)) as NameRenderer;
