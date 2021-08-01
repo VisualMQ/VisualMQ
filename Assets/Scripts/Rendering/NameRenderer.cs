@@ -17,7 +17,18 @@ public class NameRenderer : MonoBehaviour
         // Generate the initial text to be displayed above Queues.
         GameObject textObj = new GameObject("NameText", typeof(TextMesh));
         textObj.transform.parent = gameObject.transform;
-        textObj.transform.localPosition = new Vector3(0, 5, 0);
+        // This is quick and dirty hack
+        // Since we have to rotate the Channel game object, so that
+        // mesh collider is aligned with mesh, the Channel game object
+        // is rotated and we need to position text with respect to different axis
+        if (TryGetComponent(out Channel channel))
+        {
+            textObj.transform.localPosition = new Vector3(0, 0, 5);
+        } else
+        {
+            textObj.transform.localPosition = new Vector3(0, 5, 0);
+        }
+        
         textMesh = textObj.GetComponent<TextMesh>();
         textMesh.text = objectName;
         textMesh.anchor = TextAnchor.MiddleCenter;

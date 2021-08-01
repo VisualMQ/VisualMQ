@@ -3,12 +3,12 @@ using System.Collections;
 
 
 [RequireComponent(typeof(NameRenderer))]
+[RequireComponent(typeof(MouseListener))]
 public class Channel : MonoBehaviour
 {
 
     public MQ.Channel channel;
     public Vector3 position;
-    public QueueManager parent;
     public GameObject instantiatedChannel;
     // Use this for initialization
     void Start()
@@ -27,9 +27,14 @@ public class Channel : MonoBehaviour
             prefabName = "not defined"; //TODO: throw an exception
         }
         GameObject channelPrefab = Resources.Load(prefabName) as GameObject;
-        instantiatedChannel = Instantiate(channelPrefab, new Vector3(0, 0, 0), Quaternion.Euler(-90f, 180f, 0f)) as GameObject;
-        instantiatedChannel.transform.parent = this.transform;
-        instantiatedChannel.transform.parent.position = this.position;
+        instantiatedChannel = Instantiate(channelPrefab) as GameObject;
+        instantiatedChannel.transform.parent = gameObject.transform;
+        gameObject.transform.position = this.position;
+        gameObject.transform.rotation = Quaternion.Euler(-90f, 180f, 0f);
+
+        // Add mesh Colider
+        MeshCollider mc = gameObject.AddComponent<MeshCollider>();
+        mc.sharedMesh = instantiatedChannel.GetComponent<MeshFilter>().sharedMesh;
     }
 
     // Update is called once per frame

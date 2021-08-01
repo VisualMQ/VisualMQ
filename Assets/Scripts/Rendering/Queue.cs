@@ -8,6 +8,7 @@ using MQ;
 
 
 [RequireComponent(typeof(NameRenderer))]
+[RequireComponent(typeof(MouseListener))]
 public class Queue : MonoBehaviour
 {
 
@@ -106,7 +107,7 @@ public class Queue : MonoBehaviour
         }
         
         // Add mesh Colider
-        MeshCollider mc = instantiatedQueue.transform.parent.gameObject.AddComponent<MeshCollider>();
+        MeshCollider mc = gameObject.AddComponent<MeshCollider>();
         mc.sharedMesh = instantiatedQueue.GetComponent<MeshFilter>().sharedMesh;
 
 
@@ -171,19 +172,6 @@ public class Queue : MonoBehaviour
         {
             return;
         }
-
-        // Click on twice = Deactivate focus TODO: WHAT DOES THIS DO???
-        //if (queueInFocus == instantiatedQueue)
-        //{
-        //    queueInFocus.transform.localScale = prefabInFocus.transform.localScale;
-        //    queueInFocus = null;
-        //    return;
-        //}
-        //// If clicked on once, it's now the new in focus. Reset the previous focus
-        //if (queueInFocus)
-        //{
-        //    queueInFocus.transform.localScale = prefabInFocus.transform.localScale;
-        //}
 
         queueInFocus = instantiatedQueue;
         prefabInFocus = instantiatedQueue;
@@ -299,15 +287,6 @@ public class Queue : MonoBehaviour
                 throw new Exception();
             }
         }
-    }
-
-    void OnMouseEnter()
-    {
-        instantiatedQueue.transform.localScale = new Vector3(1.05f, 1.05f, 1.05f);   
-    }
-    void OnMouseExit()
-    {
-        instantiatedQueue.transform.localScale = this.queuePrefab.transform.localScale;
     }
 
 

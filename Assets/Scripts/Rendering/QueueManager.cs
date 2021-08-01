@@ -225,7 +225,6 @@ public class QueueManager : MonoBehaviour
             Channel channelComponent = channelGameObject.GetComponent(typeof(Channel)) as Channel;
             channelComponent.position = position + queueManagerHeight;
             channelComponent.channel = channel;
-            channelComponent.parent = this;
             channelGameObject.transform.parent = this.transform;
 
             NameRenderer nameRenderer = channelGameObject.GetComponent(typeof(NameRenderer)) as NameRenderer;
