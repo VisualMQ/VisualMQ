@@ -18,10 +18,10 @@ public class NameRenderer : MonoBehaviour
         GameObject textObj = new GameObject("NameText", typeof(TextMesh));
         textObj.transform.parent = gameObject.transform;
 
-        // This is quick and dirty hack
-        // Since we have to rotate the Channel game object, so that
+        // This is quick and dirty hack: Since we have to rotate the Channel game object, so that
         // mesh collider is aligned with mesh, the Channel game object
         // is rotated and we need to position text with respect to different axis
+        // See Channel object
         if (TryGetComponent(out Channel _))
         {
             textObj.transform.localPosition = new Vector3(0, 0, 5);
