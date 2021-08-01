@@ -19,12 +19,7 @@ public class Queue : MonoBehaviour
 
     public QueueManager parent;
     public GameObject instantiatedQueue;
-    public GameObject queuePrefab;
-    public static GameObject queueInFocus;
-    public static GameObject prefabInFocus;
-
-    // TODO: REMOVE THIS LATER DEMO
-    public static QueueDetailsController QueueDetailWindow;
+    public GameObject queuePrefab;   
 
     // Used for positioning
     public int rank;
@@ -110,13 +105,6 @@ public class Queue : MonoBehaviour
         MeshCollider mc = gameObject.AddComponent<MeshCollider>();
         mc.sharedMesh = instantiatedQueue.GetComponent<MeshFilter>().sharedMesh;
 
-
-        //var outline = gameObject.AddComponent<Outline>();
-        
-        //outline.OutlineMode = Outline.Mode.OutlineAll;
-        //outline.OutlineColor = Color.yellow;
-        //outline.OutlineWidth = 5f;
-
     }
 
 
@@ -162,55 +150,6 @@ public class Queue : MonoBehaviour
 
     }
 
-    /*
-    A queue is selected
-    */
-    void OnMouseUp()
-    {
-        // If user clicks on UI objects, Return: Avoid Click through
-        if (EventSystem.current.IsPointerOverGameObject())
-        {
-            return;
-        }
-
-        queueInFocus = instantiatedQueue;
-        prefabInFocus = instantiatedQueue;
-        instantiatedQueue.transform.localScale = new Vector3(1.05f, 1.05f, 1.05f);
-        /*Do whatever here as per your need*/
-        GameObject mainCamera = GameObject.Find("Main Camera");
-        mainCamera.transform.rotation = Quaternion.identity;
-        mainCamera.transform.rotation = Quaternion.AngleAxis(70, new Vector3(1, 0, 0));
-        Vector3 targetPosition = this.transform.position;
-        targetPosition.y += 18f;
-        targetPosition.x += 10f;
-        targetPosition.z -= 5f;
-        mainCamera.transform.position =  targetPosition;
-        // Camera.main.transform.LookAt(this.position);
-        // Camera.main.transform.position = new Vector3(2.5f, 15f, -13f) + this.position;
-        Debug.Log("Moving Camera to Queue" + this.name);
-
-        // A Queue is selected -> Show Info Panel
-        List<string> temp = new List<string>() { this.parent.name, this.name };
-        Debug.Log(this.parent.name + this.name);
-        QueueDetailWindow.GetQueueBasicInfo(temp);
-
-
-        var outline = gameObject.GetComponent<Outline>();
-        if (outline == null)
-        {
-            outline = gameObject.AddComponent<Outline>();
-            outline.OutlineMode = Outline.Mode.OutlineAll;
-            outline.OutlineColor = Color.yellow;
-            outline.OutlineWidth = 5f;
-            outline.enabled = false;
-        }
-
-        
-        outline.enabled = !outline.enabled;
-
-        CreateMessagePaths();
-
-    }
 
     void CreateMessagePaths()
     {
