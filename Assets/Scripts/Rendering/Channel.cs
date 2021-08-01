@@ -8,8 +8,7 @@ public class Channel : MonoBehaviour
 {
 
     public MQ.Channel channel;
-    public Vector3 position;
-    public GameObject instantiatedChannel;
+
     // Use this for initialization
     void Start()
     {
@@ -27,7 +26,7 @@ public class Channel : MonoBehaviour
             prefabName = "not defined"; //TODO: throw an exception
         }
         GameObject channelPrefab = Resources.Load(prefabName) as GameObject;
-        instantiatedChannel = Instantiate(channelPrefab) as GameObject;
+        GameObject instantiatedChannel = Instantiate(channelPrefab) as GameObject;
         instantiatedChannel.transform.parent = gameObject.transform;
         instantiatedChannel.transform.localPosition = Vector3.zero;
 

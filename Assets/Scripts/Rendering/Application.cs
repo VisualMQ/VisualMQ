@@ -8,19 +8,11 @@ public class Application : MonoBehaviour
 {
 
     public MQ.Application application;
-    public Vector3 position;
-
-    public GameObject applicationPrefab;
-
-
-    void Awake()
-    {
-        applicationPrefab = Resources.Load("Prefabs/Application") as GameObject;
-    }
 
     // Use this for initialization
     void Start()
     {
+        GameObject applicationPrefab = Resources.Load("Prefabs/Application") as GameObject;
         GameObject instantiatedConn = Instantiate(applicationPrefab);
         instantiatedConn.transform.parent = gameObject.transform;
         instantiatedConn.transform.localPosition = Vector3.zero;
@@ -30,7 +22,7 @@ public class Application : MonoBehaviour
         mc.sharedMesh = instantiatedConn.GetComponent<MeshFilter>().sharedMesh;
     }
 
-    // Detect Click on Application
+    // Update is called once per frame
     void Update()
     {
         
