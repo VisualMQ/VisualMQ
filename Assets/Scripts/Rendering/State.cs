@@ -25,10 +25,10 @@ public class State : MonoBehaviour
     }
 
 
-    void Start()
-    {
+    //void Start()
+    //{
 
-    }
+    //}
 
 
     void Update()

@@ -4,21 +4,22 @@ using System.Collections.Generic;
 public class HighlightRenderer : MonoBehaviour
 {
     // Use this for initialization
-    void Start()
-    {
+    //void Start()
+    //{
 
-    }
+    //}
 
-    // Update is called once per frame
-    void Update()
-    {
+    //// Update is called once per frame
+    //void Update()
+    //{
 
-    }
+    //}
 
     public void Highlight(List<string> objectDependency)
     {
+
         var outline = GameObject.Find(gameObject.name + ".Prefab").GetComponent<Outline>();
-        if (objectDependency == null || objectDependency.Count == 0)
+        if (objectDependency.Count == 0 || (objectDependency.Count == 1 && gameObject.name != objectDependency[objectDependency.Count - 1]))
         {
             if (outline == null)
             {

@@ -120,8 +120,8 @@ public class Queue : MonoBehaviour
 
 
     // Update is called once per frame
-    void Update()
-    {
+    //void Update()
+    //{
         //// The Queue Icon would flicker if the utilization is higher than 60%
         //int currentDepth = queue.currentDepth;
         //int MaximumDepth = queue.maxNumberOfMessages;
@@ -159,7 +159,7 @@ public class Queue : MonoBehaviour
         //    queuePrefabMeshRenderer.materials = newQueueMaterials;
         //}
 
-    }
+    //}
 
 
     void CreateMessagePaths()
