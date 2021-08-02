@@ -223,9 +223,8 @@ public class QueueManager : MonoBehaviour
             string uniqueChannelName = qmName + QM_NAME_DELIMITER + channel.channelName;
             GameObject channelGameObject = new GameObject(uniqueChannelName, typeof(Channel)); //Globally unique channel name
             Channel channelComponent = channelGameObject.GetComponent(typeof(Channel)) as Channel;
-            channelComponent.position = position + queueManagerHeight;
             channelComponent.channel = channel;
-            channelComponent.parent = this;
+            channelGameObject.transform.position = position + queueManagerHeight;
             channelGameObject.transform.parent = this.transform;
 
             NameRenderer nameRenderer = channelGameObject.GetComponent(typeof(NameRenderer)) as NameRenderer;
@@ -289,7 +288,6 @@ public class QueueManager : MonoBehaviour
         Vector3 offset = offsets[queueType];
         Vector3 position = new Vector3(sXZ * (rank % dimensions[queueType][0]), 0, sXZ * (rank / dimensions[queueType][0]));
         Vector3 queueManagerHeight = new Vector3(0, sY * 2, 0);
-        Debug.Log("POSITIONING RANK" + rank);
         return (offset + position + queueManagerHeight + baseLoc);  
     }
 
