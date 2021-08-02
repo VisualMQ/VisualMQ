@@ -49,7 +49,7 @@ public class QueueDetailsController : MonoBehaviour
         text8_depth = textGroup.Find("Text8").GetComponent<Text>();
 
         // Link Queue Detail Window
-        Queue.QueueDetailWindow = this;
+        MouseListener.QueueDetailWindow = this;
 
         //Button Listeners
         returnButton.onClick.AddListener(ReturnClicked);

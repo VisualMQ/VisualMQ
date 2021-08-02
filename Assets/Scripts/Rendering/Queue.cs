@@ -9,7 +9,7 @@ using MQ;
 
 [RequireComponent(typeof(NameRenderer))]
 [RequireComponent(typeof(HighlightRenderer))]
-
+[RequireComponent(typeof(MouseListener))]
 public class Queue : MonoBehaviour
 {
 
@@ -20,12 +20,7 @@ public class Queue : MonoBehaviour
 
     public QueueManager parent;
     public GameObject instantiatedQueue;
-    public GameObject queuePrefab;
-    public static GameObject queueInFocus;
-    public static GameObject prefabInFocus;
-
-    // TODO: REMOVE THIS LATER DEMO
-    public static QueueDetailsController QueueDetailWindow;
+    public GameObject queuePrefab;   
 
     // Used for positioning
     public int rank;
@@ -118,14 +113,8 @@ public class Queue : MonoBehaviour
         }
         
         // Add mesh Colider
-        MeshCollider mc = instantiatedQueue.transform.parent.gameObject.AddComponent<MeshCollider>();
+        MeshCollider mc = gameObject.AddComponent<MeshCollider>();
         mc.sharedMesh = instantiatedQueue.GetComponent<MeshFilter>().sharedMesh;
-
-        //var outline = gameObject.AddComponent<Outline>();
-        
-        //outline.OutlineMode = Outline.Mode.OutlineAll;
-        //outline.OutlineColor = Color.yellow;
-        //outline.OutlineWidth = 5f;
 
     }
 
@@ -172,107 +161,6 @@ public class Queue : MonoBehaviour
 
     }
 
-    /*
-    A queue is selected
-    */
-    void OnMouseUp()
-    {
-        // If user clicks on UI objects, Return: Avoid Click through
-        if (EventSystem.current.IsPointerOverGameObject())
-        {
-            return;
-        }
-
-        // Click on twice = Deactivate focus TODO: WHAT DOES THIS DO???
-        //if (queueInFocus == instantiatedQueue)
-        //{
-        //    queueInFocus.transform.localScale = prefabInFocus.transform.localScale;
-        //    queueInFocus = null;
-        //    return;
-        //}
-        //// If clicked on once, it's now the new in focus. Reset the previous focus
-        //if (queueInFocus)
-        //{
-        //    queueInFocus.transform.localScale = prefabInFocus.transform.localScale;
-        //}
-
-        queueInFocus = instantiatedQueue;
-        prefabInFocus = instantiatedQueue;
-        instantiatedQueue.transform.localScale = new Vector3(1.05f, 1.05f, 1.05f);
-        /*Do whatever here as per your need*/
-        //GameObject mainCamera = GameObject.Find("Main Camera");
-        //mainCamera.transform.rotation = Quaternion.identity;
-        //mainCamera.transform.rotation = Quaternion.AngleAxis(70, new Vector3(1, 0, 0));
-        //Vector3 targetPosition = this.transform.position;
-        //targetPosition.y += 18f;
-        //targetPosition.x += 10f;
-        //targetPosition.z -= 5f;
-        //mainCamera.transform.position = targetPosition;
-        //// Camera.main.transform.LookAt(this.position);
-        //// Camera.main.transform.position = new Vector3(2.5f, 15f, -13f) + this.position;
-        //Debug.Log("Moving Camera to Queue" + this.name);
-
-        // A Queue is selected -> Show Info Panel
-        List<string> temp = new List<string>() { this.parent.name, this.name };
-        QueueDetailWindow.GetQueueBasicInfo(temp);
-
-
-        //var outline = instantiatedQueue.GetComponent<Outline>();
-        //if (outline == null)
-        //{
-        //    outline = instantiatedQueue.AddComponent<Outline>();
-        //    outline.OutlineMode = Outline.Mode.OutlineVisible;
-        //    outline.OutlineColor = Color.red;
-        //    outline.OutlineWidth = 5f;
-        //    outline.enabled = false;
-        //}
-
-        //outline.OutlineColor = Color.red;
-        //outline.enabled = !outline.enabled;
-
-        //HighlightDependency();
-
-        //CreateMessagePaths();
-
-    }
-
-    void HighlightDependency()
-    {
-        State state = GameObject.Find("State").GetComponent(typeof(State)) as State;
-        if (!state.dependencyGraph.graph.ContainsKey(this.name))
-        {
-            return; //no dependency for this queue
-        }
-        List<string> testDependency = state.dependencyGraph.graph[this.name];
-        HashSet<string> uniqueQueue = new HashSet<string>();
-        foreach (string qName in testDependency)
-        {
-            uniqueQueue.Add(qName);
-        }
-        uniqueQueue.Remove(this.name);
-
-        foreach (string qName in uniqueQueue)
-        {
-            //TODO: make sure that existing outline change colors as they suppose to when different queues are pressed.   
-            GameObject dependencyQueue = GameObject.Find(qName);
-            if (dependencyQueue == null)
-            {
-                continue; // objects from other QM has not been visualized
-            }
-            var outline = dependencyQueue.GetComponent<Outline>();
-            if (outline == null)
-            {
-                outline = dependencyQueue.AddComponent<Outline>();
-                outline.OutlineMode = Outline.Mode.OutlineVisible;
-                outline.OutlineColor = Color.yellow;
-                outline.OutlineWidth = 5f;
-                outline.enabled = false;
-            }
-            outline.OutlineColor = Color.yellow;
-            outline.enabled = !outline.enabled;
-        }
-
-    }
 
     void CreateMessagePaths()
     {
@@ -348,15 +236,6 @@ public class Queue : MonoBehaviour
                 throw new Exception();
             }
         }
-    }
-
-    void OnMouseEnter()
-    {
-        instantiatedQueue.transform.localScale = new Vector3(1.05f, 1.05f, 1.05f);   
-    }
-    void OnMouseExit()
-    {
-        instantiatedQueue.transform.localScale = this.queuePrefab.transform.localScale;
     }
 
 
