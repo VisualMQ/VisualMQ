@@ -10,6 +10,7 @@ public class Channel : MonoBehaviour
     public Vector3 position;
     public QueueManager parent;
     public GameObject instantiatedChannel;
+    
     // Use this for initialization
     void Start()
     {
