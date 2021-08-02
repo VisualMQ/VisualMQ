@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.EventSystems;
 
 public class Click : MonoBehaviour
 {
@@ -25,6 +26,10 @@ public class Click : MonoBehaviour
 
         if (Input.GetMouseButtonUp(0))
         {
+            if (EventSystem.current.IsPointerOverGameObject())
+            {
+                return;
+            }
             if (Time.time - downClickTime <= CLICK_DELTA_TIME)
             {
                 Ray ray = Camera.main.ScreenPointToRay(clickpo);
@@ -32,21 +37,21 @@ public class Click : MonoBehaviour
                 // Casts the ray and get the first game object hit
                 if (Physics.Raycast(ray, out hit, 100))
                 {
-                    string objectName = hit.transform.name;
-                    Debug.Log("I hit " + objectName + " !");
+                    //string objectName = hit.transform.name;
+                    //Debug.Log("I hit " + objectName + " !");
 
-                    State state = gameObject.GetComponent(typeof(State)) as State;
-                    if (!state.dependencyGraph.graph.ContainsKey(objectName))
-                    {
-                        List<string> noDependency = new List<string>();
-                        noDependency.Add(objectName);
-                        gameObject.BroadcastMessage("Highlight", noDependency, SendMessageOptions.DontRequireReceiver);
-                        return;
-                    }
-                    List<string> objectDependency = state.dependencyGraph.graph[objectName];
+                    //State state = gameObject.GetComponent(typeof(State)) as State;
+                    //if (!state.dependencyGraph.graph.ContainsKey(objectName))
+                    //{
+                    //    List<string> noDependency = new List<string>();
+                    //    noDependency.Add(objectName);
+                    //    gameObject.BroadcastMessage("Highlight", noDependency, SendMessageOptions.DontRequireReceiver);
+                    //    return;
+                    //}
+                    //List<string> objectDependency = state.dependencyGraph.graph[objectName];
 
-                    objectDependency.Add(objectName);
-                    gameObject.BroadcastMessage("Highlight", objectDependency, SendMessageOptions.DontRequireReceiver);
+                    //objectDependency.Add(objectName);
+                    //gameObject.BroadcastMessage("Highlight", objectDependency, SendMessageOptions.DontRequireReceiver);
                 }
                 else
                 {

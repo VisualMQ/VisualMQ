@@ -11,7 +11,7 @@ public class DependencyGraph
         graph = new Dictionary<string, List<string>>();
     }
 
-    public void CreateDependencyGraph (List<MQ.Queue> queues, List<MQ.Channel> channels, string qmgr) //TODO:Add channels and remote-local queue
+    public void CreateDependencyGraph (List<MQ.Queue> queues, List<MQ.Channel> channels, List<MQ.Application> applications, string qmgr) //TODO:Add channels and remote-local queue
     {
         foreach (MQ.Queue queue in queues)
         {
@@ -47,6 +47,29 @@ public class DependencyGraph
                 AddDependency(qmgr, ((MQ.AliasQueue)queue).targetQueueName, aliasDependency);// Dependency of the alias target queue
             }
         }
+
+        foreach (MQ.Application application in applications)
+        {
+            List<string> connectedQueues = application.GetConnectedQueues();
+
+            for (int i = 0; i < connectedQueues.Count; i++)
+            {
+                //TODO: improve efficiency
+                List<string> connectedApp = new List<string>
+                {
+                    qmgr + '.' + application.conn
+                };
+                AddDependency(qmgr, connectedQueues[i], connectedApp);
+            }
+
+            for (int i = 0; i < connectedQueues.Count; i++)
+            {
+                connectedQueues[i] = qmgr + '.' + connectedQueues[i];
+            }
+
+            AddDependency(qmgr, application.conn, connectedQueues);
+        }
+
     }
 
     private void AddDependency (string qmName, string queueName, List<string> dependency)

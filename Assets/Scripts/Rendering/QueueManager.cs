@@ -236,7 +236,7 @@ public class QueueManager : MonoBehaviour
         int numberOfApplications = 0;
         foreach (MQ.Application application in applications)
         {
-            string uniqueConnectionName = application.appltag;
+            string uniqueConnectionName = qmName + QM_NAME_DELIMITER + application.conn;
             GameObject applicationGameObject = new GameObject(uniqueConnectionName, typeof(Application));
             Application applicationComponent = applicationGameObject.GetComponent((typeof(Application))) as Application;
             applicationComponent.application = application;
@@ -244,7 +244,7 @@ public class QueueManager : MonoBehaviour
             applicationGameObject.transform.parent = this.transform;
 
             NameRenderer nameComponent = applicationGameObject.GetComponent(typeof(NameRenderer)) as NameRenderer;
-            nameComponent.objectName = application.appltag;
+            nameComponent.objectName = application.conn;
             numberOfApplications++;
         }
         
