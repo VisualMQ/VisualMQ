@@ -56,12 +56,56 @@ public class Queue : MonoBehaviour
         }
     }
 
-    public void repositionSelf()
+    public void repositionSelf(bool start = false)
     {
-        this.position = this.parent.ComputePosition(this.queue.GetTypeName(),this.rank);
+
+        this.position = this.parent.ComputePosition(this.queue.GetTypeName(), this.rank);
         this.instantiatedQueue.transform.parent = this.transform;
-        this.instantiatedQueue.transform.parent.position = this.position;
+
+        if (start)
+        {
+            this.instantiatedQueue.transform.parent.position = new Vector3(this.position.x, -10, this.position.z);
+            InvokeRepeating("createPositionAnimation", 1.0f, 0.01f);
+
+            foreach (GameObject messageobj in this.messages)
+            {
+                messageobj.SetActive(false);
+            }
+        }
+        else
+        {
+            this.instantiatedQueue.transform.parent.position = this.position;
+        }
+
     }
+
+    public void createPositionAnimation()
+    {
+
+        Vector3 endPosition = this.parent.ComputePosition(this.queue.GetTypeName(), this.rank);
+        this.instantiatedQueue.transform.parent.position =
+                Vector3.MoveTowards(this.instantiatedQueue.transform.parent.position,
+                endPosition, Time.deltaTime * 22.0f // (Yes, Magic number) 
+                );
+
+
+
+
+        if (Vector3.Distance(transform.position, endPosition) < 0.001f)
+        {
+            foreach (GameObject messageobj in this.messages)
+            {
+                messageobj.SetActive(true);
+            }
+            CancelInvoke();
+        }
+
+
+
+
+
+    }
+
 
 
     void Start()
@@ -92,7 +136,6 @@ public class Queue : MonoBehaviour
         instantiatedQueue = Instantiate(queuePrefab, new Vector3(0,0,0), Quaternion.identity) as GameObject;
         instantiatedQueue.name = this.name + ".Prefab";
 
-        repositionSelf();
         
         if (queue.holdsMessages)
         {
@@ -105,7 +148,9 @@ public class Queue : MonoBehaviour
             CreateMessages(currentDepth, queue.maxNumberOfMessages);
 
         }
-        
+
+        repositionSelf(true);
+
         // Add mesh Colider
         MeshCollider mc = gameObject.AddComponent<MeshCollider>();
         mc.sharedMesh = instantiatedQueue.GetComponent<MeshFilter>().sharedMesh;
@@ -220,8 +265,8 @@ public class Queue : MonoBehaviour
 
         for (int i = 0; i < messagePrefabNum; i++)
         {
-            Vector3 messagePosition = position;
-            messagePosition.y = position.y + (i + 1) * 0.2f;
+            Vector3 messagePosition = new Vector3(position.x, 0, position.z);
+            messagePosition.y = 0 + (i + 1) * 0.2f;
             GameObject instantiatedMessage = Instantiate(messagePrefab, messagePosition, Quaternion.identity) as GameObject;
             instantiatedMessage.transform.parent = this.transform;
             instantiatedMessage.GetComponent<MeshRenderer>().material = queueUtilisationColor;

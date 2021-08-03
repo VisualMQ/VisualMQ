@@ -24,7 +24,7 @@ public class HighlightRenderer : MonoBehaviour
         {
             outline = GameObject.Find(gameObject.name + ".Prefab").AddComponent<Outline>();
             outline.OutlineMode = Outline.Mode.OutlineVisible;
-            outline.OutlineColor = Color.red;
+            outline.OutlineColor = Color.yellow;
             outline.OutlineWidth = 5f;
             outline.enabled = false;
         }
@@ -32,13 +32,13 @@ public class HighlightRenderer : MonoBehaviour
 
         if (gameObject.name == objectDependency[objectDependency.Count - 1])
         {
-            outline.OutlineColor = Color.red;
+            outline.OutlineColor = Color.yellow;
             outline.enabled = true;
             return;
         }
         else if (objectDependency.Contains(gameObject.name))
         {
-            outline.OutlineColor = Color.yellow;
+            outline.OutlineColor = Color.cyan;
             outline.enabled = true;
             return;
         }
