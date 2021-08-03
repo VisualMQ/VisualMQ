@@ -255,14 +255,25 @@ public class QueueManager : MonoBehaviour
             int numberOfRenderedQMs = renderedQMs.Length;
             if (numberOfRenderedQMs % 2 != 0)
             {
-                Vector3 sumVector = new Vector3(0f, 0f, 0f);
+            
+              /*  Vector3 sumVector = baseLoc;
+                int[] sizeQueueManager = GetQueueManagerSize();
+                Vector3 sizeVector = new Vector3((float)sizeQueueManager[0] / 2, 0f, (float)sizeQueueManager[1] / 2);
 
+                Vector3 groupCenter = sizeVector + sumVector;*/
+
+                Vector3 sumVector = new Vector3(0f, 0f, 0f);
+                int count = 0;
                 foreach (Transform child in this.transform)
                 {
-                    sumVector += child.position;
+                    if (child.gameObject.name.Contains("Block"))
+                    {
+                        sumVector += child.position;
+                        count++;
+                    }
                 }
 
-                Vector3 groupCenter = sumVector / this.transform.childCount;
+                Vector3 groupCenter = sumVector / count;
 
                 this.transform.RotateAround(groupCenter, Vector3.up, 180);
             }
