@@ -232,6 +232,20 @@ public class State : MonoBehaviour
         return null;
     }
 
+    // Return the detail of one queue
+    public MQ.Channel GetChannelDetails(string qmgr, string channel)
+    {
+
+        foreach (MQ.Client client in qmgrs.Keys)
+        {
+            if (client.GetQueueManagerName() == qmgr)
+            {
+                return client.GetChannel(channel);
+            }
+        }
+        return null;
+    }
+
 
     public Vector3 GetQueueMangagerPosition()
     {
