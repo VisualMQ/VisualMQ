@@ -24,15 +24,14 @@ public class QMDetailsController : MonoBehaviour
     // The QM name used for trigerring the QM Details Window
     public string selectedQM = "QM1";
     
-    // TEST: The Button used to trigger the window
-    public Button testButton;
     
     void Awake()
     {
         QueueManager.QMDetailWindow = this;
     }
 
-    public void Clicked(){
+    public void Clicked()
+    {
         ClearAllInfoFields();
         QMDetailsWindow.SetActive(true);
         QueueManagerInfoInit(selectedQM);
@@ -42,8 +41,6 @@ public class QMDetailsController : MonoBehaviour
     void Start()
     {
 
-        // TEST
-        testButton.onClick.AddListener(Clicked);
         QMDetailsWindow.SetActive(false);
         QMDetailsRightWindow.SetActive(false);
 

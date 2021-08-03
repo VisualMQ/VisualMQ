@@ -40,6 +40,7 @@ public class NavigationController : MonoBehaviour
         leftPanelContainer = transform.Find("LeftPanel");
         checkboxItem = leftPanelContainer.Find("QMSelectorRowItem");
         checkboxItem.gameObject.SetActive(false);
+        
 
     }
 
@@ -98,6 +99,7 @@ public class NavigationController : MonoBehaviour
 
         float rowHeight = 48f;
         float startY = -24f;
+        
 
         for (int i = 0; i < size; i ++)
         {
@@ -106,9 +108,40 @@ public class NavigationController : MonoBehaviour
             recTransform.anchoredPosition = new Vector2(0, -rowHeight * i + startY);
             item.gameObject.SetActive(true);
             
+            
             item.Find("TextQMName").GetComponent<Text>().text = mqlist[i];
+
+            // connect the toggle to the corresponding QM
+            Transform toggleObject = item.Find("Toggle");
+            Toggle toggle = toggleObject.GetComponent<Toggle>();
+            GameObject qm = GameObject.Find(mqlist[i]);
+            toggle.onValueChanged.AddListener(delegate{
+                showSelector(toggle,qm);
+            });
         }
 
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
+
+    // for the toggle to control the appear of the QM
+    void showSelector(Toggle toggle, GameObject qm)
+    {
+        
+        if(toggle.isOn)
+        {
+            qm.SetActive(true);
+            Debug.Log("--- toggle is selected ---");
+        }
+        else
+        {
+            qm.SetActive(false);
+            Debug.Log("--- toggle is not selected ---");
+        }
     }
 
     void DestroyQMSelector() {
