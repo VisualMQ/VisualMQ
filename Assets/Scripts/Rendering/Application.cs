@@ -7,7 +7,6 @@ using System.Collections;
 [RequireComponent(typeof(MouseListener))]
 public class Application : MonoBehaviour
 {
-
     public MQ.Application application;
 
     // Use this for initialization
@@ -26,9 +25,4 @@ public class Application : MonoBehaviour
         mc.sharedMesh = instantiatedConn.GetComponent<MeshFilter>().sharedMesh;
     }
 
-    //// Update is called once per frame
-    //void Update()
-    //{
-        
-    //}
 }

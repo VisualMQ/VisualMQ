@@ -135,21 +135,6 @@ public class QueueManager : MonoBehaviour
             line.transform.parent = this.transform;
         }
 
-      	// TODO: There is a bug that text is on top of everything
-        //foreach (KeyValuePair<string, Vector3> entry in offsets)
-        //{
-        //   GameObject textName = new GameObject();
-        //   TextMesh textMesh = textName.AddComponent<TextMesh>() as TextMesh;
-        //   textMesh.text = entry.Key;
-        //   textMesh.anchor = TextAnchor.MiddleCenter;
-        //   textMesh.alignment = TextAlignment.Center;
-        //   textMesh.color = Color.black;
-        //   textMesh.fontSize = 24;
-        //   textMesh.characterSize = 0.25f;
-        //   textMesh.transform.Rotate(90, 0, 0);
-        //   textMesh.transform.position = entry.Value + new Vector3(-0.3f, 0.01f, -1.5f) + baseLoc;
-        //}
-
         // Render inidividual queues
         numberOfRenderedQueues = new Dictionary<string, int>();
         numberOfRenderedQueues[MQ.AliasQueue.typeName] = 0;
@@ -189,18 +174,6 @@ public class QueueManager : MonoBehaviour
             lowerBlock.transform.parent = this.transform;
             lowerBlock.AddComponent<MeshCollider>().convex = true;
         }
-
-        // TODO: There is a bug that text is on top of everything
-        //GameObject textNameC = new GameObject();
-        //TextMesh textMesh1 = textNameC.AddComponent<TextMesh>() as TextMesh;
-        //textMesh1.text = "Channels";
-        //textMesh1.anchor = TextAnchor.MiddleCenter;
-        //textMesh1.alignment = TextAlignment.Center;
-        //textMesh1.color = Color.black;
-        //textMesh1.fontSize = 24;
-        //textMesh1.characterSize = 0.25f;
-        //textMesh1.transform.Rotate(90, 0, 0);
-        //textMesh1.transform.position = new Vector3(-0.3f, 0.01f, -1.5f-sXZ) + baseLoc;
 
         int numberOfSenderChannels = 0;
         int numberOfReceiverChannels = 0;
@@ -247,38 +220,6 @@ public class QueueManager : MonoBehaviour
             nameComponent.objectName = application.conn;
             numberOfApplications++;
         }
-        
-
-
-
-
-        ////////////////
-
-        //create path object
-        //GameObject path3 = new GameObject("Path3", typeof(PathCreation.AutoPathGenerator));
-        //PathCreation.AutoPathGenerator pathGenerator3 = path3.GetComponent(typeof(PathCreation.AutoPathGenerator)) as PathCreation.AutoPathGenerator;
-
-        ////add waypoints to path object
-        //List<string> testDependency3 = state.dependencyGraph.graph["QM1.DEV.QUEUE.ALIAS1"];
-        //List<Transform> testTransform3 = new List<Transform>();
-        //foreach (string waypoint in testDependency3)
-        //{
-        //    GameObject waypointObject = GameObject.Find(waypoint);
-
-        //    Debug.Log("Current Waypoint Object is: " + waypointObject);
-
-        //    testTransform3.Add(waypointObject.transform);
-        //}
-        //pathGenerator3.waypoints = testTransform3.ToArray();
-
-        ////create "message" object
-        //GameObject follower3 = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        //follower3.AddComponent(typeof(PathCreation.PathFollower));
-        //PathCreation.PathFollower followGenerator3 = follower3.GetComponent(typeof(PathCreation.PathFollower)) as PathCreation.PathFollower;
-
-        ////have this message object follow the path defined in path object
-        //followGenerator3.pathCreator = path3.GetComponent(typeof(PathCreation.PathCreator)) as PathCreation.PathCreator;
-        //followGenerator3.endOfPathInstruction = PathCreation.EndOfPathInstruction.Loop;
 
     }
 

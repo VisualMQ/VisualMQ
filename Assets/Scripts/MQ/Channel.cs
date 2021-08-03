@@ -6,7 +6,6 @@ namespace MQ
 {
     public abstract class Channel
     {
-
         public string channelName;
         public string channelType;
     }

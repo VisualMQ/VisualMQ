@@ -25,12 +25,6 @@ public class State : MonoBehaviour
     }
 
 
-    //void Start()
-    //{
-
-    //}
-
-
     void Update()
     {
         // If there are no MQ client and no Qmgrs rendered, there is nothing to update

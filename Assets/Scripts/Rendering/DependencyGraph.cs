@@ -13,6 +13,18 @@ public class DependencyGraph
 
     public void CreateDependencyGraph (List<MQ.Queue> queues, List<MQ.Channel> channels, List<MQ.Application> applications, string qmgr) //TODO:Add channels and remote-local queue
     {
+        foreach (MQ.Channel channel in channels)
+        {
+            if (channel is MQ.SenderChannel)
+            {
+                List<string> transDependency = new List<string>();
+                transDependency.Add(qmgr + "." + channel.channelName); //sender channel
+                transDependency.Add(qmgr + "." + ((MQ.SenderChannel)channel).transmissionQueueName); //transmission queue
+                AddDependency(qmgr, channel.channelName, transDependency);
+            }
+
+        }
+
         foreach (MQ.Queue queue in queues)
         {
             if (queue is MQ.RemoteQueue)
@@ -77,11 +89,7 @@ public class DependencyGraph
         //Debug.Log("current queue name is: " + queueName);
         if (!graph.ContainsKey(qmName + "." + queueName))
         {
-            //Debug.Log(graph.Count);
             graph.Add(qmName + "." + queueName, dependency);
-            //Debug.Log(graph.Count);
-            //Debug.Log("current dependency is: " + string.Join(" , ", dependency.ToArray()));
-            //Debug.Log("Dependency added for " + queueName);
         }
         else
         {

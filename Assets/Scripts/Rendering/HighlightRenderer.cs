@@ -3,17 +3,6 @@ using System.Collections.Generic;
 
 public class HighlightRenderer : MonoBehaviour
 {
-    // Use this for initialization
-    //void Start()
-    //{
-
-    //}
-
-    //// Update is called once per frame
-    //void Update()
-    //{
-
-    //}
 
     public void Highlight(List<string> objectDependency)
     {
