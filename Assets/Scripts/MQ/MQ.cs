@@ -139,6 +139,15 @@ namespace MQ
             return channels[0];
         }
 
+        public Application GetApplication(string application)
+        {
+            string jsonRequest = "{\"type\":\"runCommandJSON\",\"command\":\"display\",\"qualifier\":\"conn\",\"name\":\"" + application + "\",\"responseParameters\":[\"all\"],\"parameters\":{\"type\":\"*\"}}";
+            string response = PostRequest("/ibmmq/rest/v2/admin/action/qmgr/" + qmgr + "/mqsc", jsonRequest);
+            _ApplicationResponseJson applicationsJson = JsonUtility.FromJson<_ApplicationResponseJson>(response);
+            List<Application> applications = Parser.Parse(applicationsJson);
+            return applications[0];
+        }
+
         public List<Application> GetAllApplications()
         {
             string jsonRequest = "{\"type\":\"runCommandJSON\",\"command\":\"display\",\"qualifier\":\"conn\",\"name\":\"*\",\"responseParameters\":[\"all\"],\"parameters\":{\"type\":\"*\"}}";

@@ -8,6 +8,7 @@ public class MouseListener : MonoBehaviour
     // Sidebars for different entities
     public static QueueDetailsController QueueDetailWindow;
     public static ChannelDetailsController channelDetailsWindow;
+    public static ApplicationDetailsController applicationDetailsWindow;
 
     // Use this for initialization
     void Start()
@@ -60,6 +61,11 @@ public class MouseListener : MonoBehaviour
         {
             Channel channel = gameObject.GetComponent<Channel>();
             channelDetailsWindow.GetChannelDetails(transform.parent.name, channel.channel.channelName);
+        }
+        else if (TryGetComponent(out Application _))
+        {
+            Application application = gameObject.GetComponent<Application>();
+            applicationDetailsWindow.GetApplicationDetails(transform.parent.name, application.application.conn);
         }
 
         // Highlight the selected object
