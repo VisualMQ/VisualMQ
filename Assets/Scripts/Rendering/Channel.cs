@@ -1,12 +1,9 @@
 ﻿using UnityEngine;
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
-using MQ;
+
 
 [RequireComponent(typeof(NameRenderer))]
+[RequireComponent(typeof(HighlightRenderer))]
 [RequireComponent(typeof(MouseListener))]
 public class Channel : MonoBehaviour
 {
@@ -30,10 +27,12 @@ public class Channel : MonoBehaviour
             prefabName = "not defined"; //TODO: throw an exception
         }
         GameObject channelPrefab = Resources.Load(prefabName) as GameObject;
-
         GameObject instantiatedChannel = Instantiate(channelPrefab) as GameObject;
         instantiatedChannel.transform.parent = gameObject.transform;
         instantiatedChannel.transform.localPosition = Vector3.zero;
+
+        instantiatedChannel.name = this.name + ".Prefab";
+        instantiatedChannel.transform.name = instantiatedChannel.name;
 
         // This is needed in order to rotate the model appropriately
         // Unfortunately, I couldn't find a way how to import it from Blender
@@ -42,14 +41,7 @@ public class Channel : MonoBehaviour
 
         // Add mesh Colider
         MeshCollider mc = gameObject.AddComponent<MeshCollider>();
-
         mc.sharedMesh = instantiatedChannel.GetComponent<MeshFilter>().sharedMesh;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
 }
-

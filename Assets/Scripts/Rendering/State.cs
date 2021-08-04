@@ -24,12 +24,6 @@ public class State : MonoBehaviour
     }
 
 
-    void Start()
-    {
-
-    }
-
-
     void Update()
     {
         // If there are no MQ client and no Qmgrs rendered, there is nothing to update
@@ -66,7 +60,7 @@ public class State : MonoBehaviour
             qmgrComponent.queues = newQueues;
             qmgrComponent.channels = newChannels;
             qmgrComponent.applications = newApplications;
-            dependencyGraph.CreateDependencyGraph(newQueues, newChannels, newQmgr.qmgrName); //Create Dependency Graph
+            dependencyGraph.CreateDependencyGraph(newQueues, newChannels, newApplications, newQmgr.qmgrName); //Create Dependency Graph
 
             ///DELETE: debug info
             foreach (KeyValuePair<string, List<string>> dependency in dependencyGraph.graph)
@@ -81,8 +75,8 @@ public class State : MonoBehaviour
             qmgrComponent.baseLoc = position;
             qmgrs[newMqClient] = qmgrGameObject;
 
-           
 
+            qmgrGameObject.transform.parent = this.transform;
 
             return;
         }

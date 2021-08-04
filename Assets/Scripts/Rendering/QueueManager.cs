@@ -142,8 +142,6 @@ public class QueueManager : MonoBehaviour
             line.transform.parent = this.transform;
         }
 
-    
-
         // Render inidividual queues
         numberOfRenderedQueues = new Dictionary<string, int>();
         numberOfRenderedQueues[MQ.AliasQueue.typeName] = 0;
@@ -184,7 +182,6 @@ public class QueueManager : MonoBehaviour
             lowerBlock.AddComponent<MeshCollider>().convex = true;
         }
 
-
         int numberOfSenderChannels = 0;
         int numberOfReceiverChannels = 0;
         foreach (MQ.Channel channel in channels)
@@ -219,7 +216,7 @@ public class QueueManager : MonoBehaviour
         int numberOfApplications = 0;
         foreach (MQ.Application application in applications)
         {
-            string uniqueConnectionName = application.appltag;
+            string uniqueConnectionName = qmName + QM_NAME_DELIMITER + application.conn;
             GameObject applicationGameObject = new GameObject(uniqueConnectionName, typeof(Application));
             Application applicationComponent = applicationGameObject.GetComponent((typeof(Application))) as Application;
             applicationComponent.application = application;
@@ -227,13 +224,9 @@ public class QueueManager : MonoBehaviour
             applicationGameObject.transform.parent = this.transform;
 
             NameRenderer nameComponent = applicationGameObject.GetComponent(typeof(NameRenderer)) as NameRenderer;
-            nameComponent.objectName = application.appltag;
+            nameComponent.objectName = application.conn;
             numberOfApplications++;
         }
-
-
-
-
     }
 
     public UnityEngine.Vector3 ComputePosition(string queueType, int rank)
