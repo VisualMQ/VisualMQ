@@ -6,7 +6,6 @@ using UnityEngine;
 
 public class State : MonoBehaviour
 {
-    // TODO: Change, right now dynamic updates do not work with Queue areas
     private const float UPDATE_INTERVAL = 10.0f;
     // Distance between two QMs
     private const int DISTANCE_BETWEEN_QMS = 10;
@@ -76,7 +75,8 @@ public class State : MonoBehaviour
             qmgrComponent.baseLoc = position;
             qmgrs[newMqClient] = qmgrGameObject;
 
-            qmgrGameObject.transform.parent = this.transform;
+           
+
 
             return;
         }
