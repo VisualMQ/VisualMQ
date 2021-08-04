@@ -32,13 +32,13 @@ public class MouseListener : MonoBehaviour
             return;
         }
 
-        GameObject mainCamera = GameObject.Find("Main Camera");
-        mainCamera.transform.rotation = Quaternion.AngleAxis(70, new Vector3(1, 0, 0));
-        Vector3 targetPosition = this.transform.position;
-        targetPosition.y += 18f;
-        targetPosition.x += 5f;
-        targetPosition.z -= 5f;
-        mainCamera.transform.position = targetPosition;
+        //GameObject mainCamera = GameObject.Find("Main Camera");
+        //mainCamera.transform.rotation = Quaternion.AngleAxis(70, new Vector3(1, 0, 0));
+        //Vector3 targetPosition = this.transform.position;
+        //targetPosition.y += 18f;
+        //targetPosition.x += 5f;
+        //targetPosition.z -= 5f;
+        //mainCamera.transform.position = targetPosition;
 
         // If a queue is clicked on show Queue details window
         if (TryGetComponent(out Queue _))
