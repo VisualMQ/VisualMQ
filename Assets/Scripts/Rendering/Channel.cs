@@ -3,6 +3,7 @@ using System.Collections;
 
 
 [RequireComponent(typeof(NameRenderer))]
+[RequireComponent(typeof(HighlightRenderer))]
 [RequireComponent(typeof(MouseListener))]
 public class Channel : MonoBehaviour
 {
@@ -29,6 +30,9 @@ public class Channel : MonoBehaviour
         instantiatedChannel.transform.parent = gameObject.transform;
         instantiatedChannel.transform.localPosition = Vector3.zero;
 
+        instantiatedChannel.name = this.name + ".Prefab";
+        instantiatedChannel.transform.name = instantiatedChannel.name;
+
         // This is needed in order to rotate the model appropriately
         // Unfortunately, I couldn't find a way how to import it from Blender
         // so that this wouldn't be needed
@@ -39,9 +43,4 @@ public class Channel : MonoBehaviour
         mc.sharedMesh = instantiatedChannel.GetComponent<MeshFilter>().sharedMesh;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
 }

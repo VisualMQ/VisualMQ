@@ -11,8 +11,20 @@ public class DependencyGraph
         graph = new Dictionary<string, List<string>>();
     }
 
-    public void CreateDependencyGraph (List<MQ.Queue> queues, List<MQ.Channel> channels, string qmgr) //TODO:Add channels and remote-local queue
+    public void CreateDependencyGraph (List<MQ.Queue> queues, List<MQ.Channel> channels, List<MQ.Application> applications, string qmgr) //TODO:Add channels and remote-local queue
     {
+        foreach (MQ.Channel channel in channels)
+        {
+            if (channel is MQ.SenderChannel)
+            {
+                List<string> transDependency = new List<string>();
+                transDependency.Add(qmgr + "." + channel.channelName); //sender channel
+                transDependency.Add(qmgr + "." + ((MQ.SenderChannel)channel).transmissionQueueName); //transmission queue
+                AddDependency(qmgr, channel.channelName, transDependency);
+            }
+
+        }
+
         foreach (MQ.Queue queue in queues)
         {
             if (queue is MQ.RemoteQueue)
@@ -47,6 +59,29 @@ public class DependencyGraph
                 AddDependency(qmgr, ((MQ.AliasQueue)queue).targetQueueName, aliasDependency);// Dependency of the alias target queue
             }
         }
+
+        foreach (MQ.Application application in applications)
+        {
+            List<string> connectedQueues = application.GetConnectedQueues();
+
+            for (int i = 0; i < connectedQueues.Count; i++)
+            {
+                //TODO: improve efficiency
+                List<string> connectedApp = new List<string>
+                {
+                    qmgr + '.' + application.conn
+                };
+                AddDependency(qmgr, connectedQueues[i], connectedApp);
+            }
+
+            for (int i = 0; i < connectedQueues.Count; i++)
+            {
+                connectedQueues[i] = qmgr + '.' + connectedQueues[i];
+            }
+
+            AddDependency(qmgr, application.conn, connectedQueues);
+        }
+
     }
 
     private void AddDependency (string qmName, string queueName, List<string> dependency)
@@ -54,11 +89,7 @@ public class DependencyGraph
         //Debug.Log("current queue name is: " + queueName);
         if (!graph.ContainsKey(qmName + "." + queueName))
         {
-            //Debug.Log(graph.Count);
             graph.Add(qmName + "." + queueName, dependency);
-            //Debug.Log(graph.Count);
-            //Debug.Log("current dependency is: " + string.Join(" , ", dependency.ToArray()));
-            //Debug.Log("Dependency added for " + queueName);
         }
         else
         {

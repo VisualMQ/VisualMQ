@@ -84,8 +84,6 @@ public class QueueDetailsController : MonoBehaviour
         int starIdx = qmName.Length;
         string removeQMQueueName = queueName.Substring(starIdx+1);
 
-        Debug.Log("AAA"+ qmName + queueName);
-
 
         GameObject stateGameObject = GameObject.Find("State");
         State stateComponent = stateGameObject.GetComponent(typeof(State)) as State;
