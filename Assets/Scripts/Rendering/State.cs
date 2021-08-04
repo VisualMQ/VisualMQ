@@ -75,8 +75,8 @@ public class State : MonoBehaviour
             qmgrComponent.baseLoc = position;
             qmgrs[newMqClient] = qmgrGameObject;
 
-           
 
+            qmgrGameObject.transform.parent = this.transform;
 
             return;
         }

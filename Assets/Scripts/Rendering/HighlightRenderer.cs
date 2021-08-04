@@ -6,7 +6,6 @@ public class HighlightRenderer : MonoBehaviour
 
     public void Highlight(List<string> objectDependency)
     {
-
         var outline = GameObject.Find(gameObject.name + ".Prefab").GetComponent<Outline>();
         if (objectDependency.Count == 0 || (objectDependency.Count == 1 && gameObject.name != objectDependency[objectDependency.Count - 1]))
         {
