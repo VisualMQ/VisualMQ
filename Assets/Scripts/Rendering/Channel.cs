@@ -1,6 +1,10 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
-
+using System.Collections.Generic;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
+using MQ;
 
 [RequireComponent(typeof(NameRenderer))]
 [RequireComponent(typeof(MouseListener))]
@@ -26,6 +30,7 @@ public class Channel : MonoBehaviour
             prefabName = "not defined"; //TODO: throw an exception
         }
         GameObject channelPrefab = Resources.Load(prefabName) as GameObject;
+
         GameObject instantiatedChannel = Instantiate(channelPrefab) as GameObject;
         instantiatedChannel.transform.parent = gameObject.transform;
         instantiatedChannel.transform.localPosition = Vector3.zero;
@@ -37,6 +42,7 @@ public class Channel : MonoBehaviour
 
         // Add mesh Colider
         MeshCollider mc = gameObject.AddComponent<MeshCollider>();
+
         mc.sharedMesh = instantiatedChannel.GetComponent<MeshFilter>().sharedMesh;
     }
 
@@ -46,3 +52,4 @@ public class Channel : MonoBehaviour
 
     }
 }
+
