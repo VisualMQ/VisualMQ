@@ -1,4 +1,14 @@
-﻿using System;
+﻿/*
+ * FileName: State.cs
+ * Authors : VisualMQ
+ * Description : This class implements the functionality for rendering the internal state.
+ *               Primary logic occurs within the 'update' method called upon each frame by the Unity runtime.
+ *               Upon each calling of update:
+ *               - Determine if a new QM (Queue Manager) connection has been instantiated, if so render it.
+ *               - Determine if any chances are made to Queues within QMs, if so render the differences.
+*/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -20,6 +30,7 @@ public class State : MonoBehaviour
     // Use this method for adding new Mq connections (aka connections to different Qmgrs)
     public void AddNewMqClient(MQ.Client newMqClient)
     {
+
         qmgrs.Add(newMqClient, null);
     }
 
@@ -162,7 +173,6 @@ public class State : MonoBehaviour
     // Return the detail of one queue
     public MQ.Queue GetQueueDetails(string selectedQMName, string selectedQueueName)
     {
-
         foreach (MQ.Client client in qmgrs.Keys)
         {
             if (client.GetQueueManagerName() == selectedQMName)
@@ -228,7 +238,6 @@ public class State : MonoBehaviour
 
     public MQ.Channel GetChannelDetails(string qmgr, string channel)
     {
-
         foreach (MQ.Client client in qmgrs.Keys)
         {
             if (client.GetQueueManagerName() == qmgr)
@@ -241,7 +250,6 @@ public class State : MonoBehaviour
 
     public MQ.Application GetApplicationDetails(string qmgr, string application)
     {
-
         foreach (MQ.Client client in qmgrs.Keys)
         {
             if (client.GetQueueManagerName() == qmgr)
@@ -252,7 +260,9 @@ public class State : MonoBehaviour
         return null;
     }
 
-
+    /*
+     * This helper method is used to determine the position of a (to be rendered) QM.
+     */
     public Vector3 GetQueueMangagerPosition()
     {
         QueueManager[] renderedQMs = FindObjectsOfType<QueueManager>();
