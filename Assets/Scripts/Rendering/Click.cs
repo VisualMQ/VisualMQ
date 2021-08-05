@@ -35,8 +35,12 @@ public class Click : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log("MISSSSSS");
+                    // Nothing to highlight so broadcast empty list
                     gameObject.BroadcastMessage("Highlight", new List<string>(), SendMessageOptions.DontRequireReceiver);
+
+                    // Close all sidebars
+                    GameObject canvas2D = GameObject.Find("Canvas2D");
+                    canvas2D.BroadcastMessage("Close", SendMessageOptions.DontRequireReceiver);
                 }
             }
         }
