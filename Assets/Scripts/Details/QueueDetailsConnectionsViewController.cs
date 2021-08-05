@@ -54,7 +54,7 @@ public class QueueDetailsConnectionsViewController : MonoBehaviour
         tab3Connections = tabButtonsGroups.Find("ButtonConnections").GetComponent<Button>();
 
         // Button Listener
-        closeButton.onClick.AddListener(closeWindowClicked);
+        closeButton.onClick.AddListener(Close);
         returnButton.onClick.AddListener(returnToQueueList);
         showIncome.onClick.AddListener(showIncomingPath);
         showOutcome.onClick.AddListener(showOutcomingPath);
@@ -215,7 +215,7 @@ public class QueueDetailsConnectionsViewController : MonoBehaviour
 
 
     // close current window
-    private void closeWindowClicked()
+    private void Close()
     {
         WindowConnections.SetActive(false);
     }

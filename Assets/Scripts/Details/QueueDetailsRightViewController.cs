@@ -48,7 +48,7 @@ public class QueueDetailsRightViewController : MonoBehaviour
         WindowMessageLists.SetActive(false);
 
         // Button Listener
-        closeButton.onClick.AddListener(closeWindowClicked);
+        closeButton.onClick.AddListener(Close);
         returnButton.onClick.AddListener(returnToQueueList);
 
         toQueueDetail.onClick.AddListener(ToQueueDetailsClicked);
@@ -123,7 +123,7 @@ public class QueueDetailsRightViewController : MonoBehaviour
 //
 
     // Close window
-    private void closeWindowClicked(){
+    private void Close(){
         WindowMessageLists.SetActive(false);
         WindowQueueDetails.SetActive(false);
     }
