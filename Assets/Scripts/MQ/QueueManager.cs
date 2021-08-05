@@ -8,7 +8,11 @@ namespace MQ
     {
         public string qmgrName;
         public string state;
+
+        //populated separatedly
         public List<Queue> queues;
+        public List<Channel> channels;
+        public List<Application> applications;
 
         //extended
         public string installationName;

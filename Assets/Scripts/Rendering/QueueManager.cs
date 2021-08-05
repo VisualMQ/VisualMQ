@@ -16,10 +16,8 @@ public class QueueManager : MonoBehaviour
     private const float sY = 0.1286252f;
     private const string QM_NAME_DELIMITER = ".";
 
-    public string qmName;
-    public List<MQ.Queue> queues;
-    public List<MQ.Channel> channels;
-    public List<MQ.Application> applications;
+    public MQ.QueueManager queueManager;
+
     public Vector3 baseLoc;
     public Dictionary<string, GameObject> renderedQueues = new Dictionary<string, GameObject>();
 
@@ -45,7 +43,10 @@ public class QueueManager : MonoBehaviour
 
     void Start()
     {
-
+        List<MQ.Queue> queues = queueManager.queues;
+        List<MQ.Channel> channels = queueManager.channels;
+        List<MQ.Application> applications = queueManager.applications;
+        string qmName = queueManager.qmgrName;
 
         
         Debug.Log("Rendering " + queues.Count + " queues.");
@@ -284,7 +285,7 @@ public class QueueManager : MonoBehaviour
                 string objectName = hit.transform.name;
                 string objectType = objectName.Substring(0, 5);
                 string qmName = objectName.Substring(6);
-                if (objectName == "Block." + this.qmName)
+                if (objectName == "Block." + queueManager.qmgrName)
                 {
                     
                     Debug.Log("QM Block is clicked: "+qmName);
@@ -302,7 +303,7 @@ public class QueueManager : MonoBehaviour
 
     void topView()
     {
-        GameObject targetObject = GameObject.Find(this.qmName);
+        GameObject targetObject = GameObject.Find(queueManager.qmgrName);
         GameObject mainCamera = GameObject.Find("Main Camera");
         mainCamera.transform.rotation = Quaternion.identity;
         mainCamera.transform.rotation = Quaternion.AngleAxis(90, new Vector3(1, 0, 0));
@@ -334,7 +335,7 @@ public class QueueManager : MonoBehaviour
                 string queueType = queue.GetTypeName();
                 int i = numberOfRenderedQueues[queueType]++;
 
-                string uniqueQueueName = qmName + QM_NAME_DELIMITER + queue.queueName;
+                string uniqueQueueName = queueManager.qmgrName + QM_NAME_DELIMITER + queue.queueName;
                 GameObject queueGameObject = new GameObject(uniqueQueueName, typeof(Queue));
                 Queue queueComponent = queueGameObject.GetComponent(typeof(Queue)) as Queue;
                 queueComponent.rank = i;
@@ -411,7 +412,7 @@ public class QueueManager : MonoBehaviour
             [MQ.TransmissionQueue.typeName] = 0,
             [MQ.LocalQueue.typeName] = 0
         };
-        foreach (MQ.Queue queue in queues)
+        foreach (MQ.Queue queue in queueManager.queues)
         {
             numberOfQueues[queue.GetTypeName()]++;
         }
@@ -469,7 +470,7 @@ public class QueueManager : MonoBehaviour
         List<int[]> areas = GetLargeSmallArea();
 
         // Length in x axe
-        int x = (int) sXZ * (areas[0][0] + areas[1][1] + (applications.Count / (2 * areas[0][1])) + 2);
+        int x = (int) sXZ * (areas[0][0] + areas[1][1] + (queueManager.applications.Count / (2 * areas[0][1])) + 2);
         // Length in z axe "+1" is for channel length
         int y = (int) sXZ * (areas[0][1] + areas[1][0] + 1);
 

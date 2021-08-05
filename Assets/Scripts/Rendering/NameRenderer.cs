@@ -56,7 +56,7 @@ public class NameRenderer : MonoBehaviour
         }
 
         QueueManager qmgr = GetComponentInParent(typeof(QueueManager)) as QueueManager;
-        textMesh.characterSize = (0.4f / qmgr.queues.Count) + 0.1f;
+        textMesh.characterSize = (0.4f / qmgr.queueManager.queues.Count) + 0.1f;
 
         // Obtain the middle Queue component and align all the text according to it.
         var firstIndex = qmgr.renderedQueues.GetEnumerator();

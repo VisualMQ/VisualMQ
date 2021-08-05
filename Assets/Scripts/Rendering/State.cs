@@ -17,6 +17,9 @@ public class State : MonoBehaviour
 
     public DependencyGraph dependencyGraph = new DependencyGraph();
 
+
+    public List<MQ.QueueManager> queueManagers = new List<MQ.QueueManager>();
+
     // Use this method for adding new Mq connections (aka connections to different Qmgrs)
     public void AddNewMqClient(MQ.Client newMqClient)
     {
@@ -47,20 +50,23 @@ public class State : MonoBehaviour
                 }
             }
             MQ.QueueManager newQmgr = newMqClient.GetQmgr();
-            List<MQ.Queue> newQueues = newMqClient.GetAllQueues();
-            List<MQ.Channel> newChannels = newMqClient.GetAllChannels();
-            List<MQ.Application> newApplications = newMqClient.GetAllApplications();
+           
+            newQmgr.queues = newMqClient.GetAllQueues();
+            newQmgr.channels = newMqClient.GetAllChannels();
+            newQmgr.applications = newMqClient.GetAllApplications();
+            queueManagers.Add(newQmgr);
+
 
             // Render queue manager. Note that data is stored in Component (ie Script) not in GameObject!
             // GameObject is just an Entity/Container for Components that perform the real functionality
 
             GameObject qmgrGameObject = new GameObject(newQmgr.qmgrName, typeof(QueueManager));
             QueueManager qmgrComponent = qmgrGameObject.GetComponent(typeof(QueueManager)) as QueueManager;
-            qmgrComponent.qmName = newQmgr.qmgrName;
-            qmgrComponent.queues = newQueues;
-            qmgrComponent.channels = newChannels;
-            qmgrComponent.applications = newApplications;
-            dependencyGraph.CreateDependencyGraph(newQueues, newChannels, newApplications, newQmgr.qmgrName); //Create Dependency Graph
+            qmgrComponent.queueManager = newQmgr;
+           
+
+
+            //dependencyGraph.CreateDependencyGraph(newQueues, newChannels, newApplications, newQmgr.qmgrName); //Create Dependency Graph
 
             ///DELETE: debug info
             foreach (KeyValuePair<string, List<string>> dependency in dependencyGraph.graph)
@@ -94,6 +100,9 @@ public class State : MonoBehaviour
                 GameObject renderedQmgr = entry.Value;
 
                 List<MQ.Queue> queues = mqClient.GetAllQueues();
+                List<MQ.Channel> channels = mqClient.GetAllChannels();
+                List<MQ.Application> applications = mqClient.GetAllApplications();
+
                 QueueManager qmgrComponent = renderedQmgr.GetComponent(typeof(QueueManager)) as QueueManager;
                 qmgrComponent.UpdateQueues(queues);
 
