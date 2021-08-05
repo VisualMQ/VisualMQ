@@ -1,4 +1,16 @@
-﻿using UnityEngine;
+﻿/*
+ * FileName: Queue.cs
+ * Authors : VisualMQ
+ * Description : This class represents a rendered Queue within a QMs.
+
+ * Dependent components (Unity):
+ *      - NameRenderer (Display the name of this Queue) 
+ *      - HighlightRenderer (Highlighting functionality upon Queue)
+ *      - MouseListener (OnClick/Hover functionality)
+                 
+*/
+
+using UnityEngine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -31,6 +43,12 @@ public class Queue : MonoBehaviour
     // Use for flickering the Queue Icon
     private float flickerTime;
 
+
+    /*
+     * Queue's are given a rank determining their ordering within the render.
+     * Upon the addition of a new queue, a broadcast message is sent such that all queues can determine
+     * if they must increase their rank and reposition themselves.
+     */
     void newQueueAdded(int rank)
     {
         if (rank < this.rank)
@@ -42,6 +60,11 @@ public class Queue : MonoBehaviour
         }
     }
 
+    /*
+    * Queue's are given a rank determining their ordering within the render.
+    * Upon the deletion of a new queue, a broadcast message is sent such that all queues can determine
+    * if they must decrease their rank and reposition themselves.
+    */
     void newQueueDeleted(int rank)
     {
  
@@ -56,12 +79,17 @@ public class Queue : MonoBehaviour
         }
     }
 
+    /**
+     * This method implements functionality for positioning a queue within the QM
+     * according to its rank. 
+     */
     public void repositionSelf(bool start = false)
     {
 
         this.position = this.parent.ComputePosition(this.queue.GetTypeName(), this.rank);
         this.instantiatedQueue.transform.parent = this.transform;
 
+        // If the parameter start is set, this queue has not been rendered before and thus the creation animation must be triggered.
         if (start)
         {
             this.instantiatedQueue.transform.parent.position = new Vector3(this.position.x, -10, this.position.z);
@@ -79,6 +107,11 @@ public class Queue : MonoBehaviour
 
     }
 
+
+    /*
+     * This method implements animation functionality for newly rendered Queues. 
+     * newly rendered Queues are given an animation that makes them appear out from the bottom of the platform.
+     */ 
     public void createPositionAnimation()
     {
 
@@ -88,9 +121,6 @@ public class Queue : MonoBehaviour
                 endPosition, Time.deltaTime * 22.0f // (Yes, Magic number) 
                 );
 
-
-
-
         if (Vector3.Distance(transform.position, endPosition) < 0.001f)
         {
             foreach (GameObject messageobj in this.messages)
@@ -99,10 +129,6 @@ public class Queue : MonoBehaviour
             }
             CancelInvoke();
         }
-
-
-
-
 
     }
 
