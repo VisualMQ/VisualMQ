@@ -35,8 +35,9 @@ public class Click : MonoBehaviour
                 }
                 else
                 {
+                    // Clicked on empty space
                     Debug.Log("MISSSSSS");
-                    gameObject.BroadcastMessage("Highlight", new List<string>(), SendMessageOptions.DontRequireReceiver);
+                    gameObject.BroadcastMessage("DisableHighlight", SendMessageOptions.DontRequireReceiver); 
                 }
             }
         }

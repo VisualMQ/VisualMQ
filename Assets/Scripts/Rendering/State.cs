@@ -7,6 +7,7 @@ using UnityEngine;
 public class State : MonoBehaviour
 {
     private const float UPDATE_INTERVAL = 10.0f;
+    private const string QM_NAME_DELIMITER = ".";
     // Distance between two QMs
     private const int DISTANCE_BETWEEN_QMS = 10;
 
@@ -66,12 +67,12 @@ public class State : MonoBehaviour
            
 
 
-            //dependencyGraph.CreateDependencyGraph(newQueues, newChannels, newApplications, newQmgr.qmgrName); //Create Dependency Graph
+            dependencyGraph.CreateDependencyGraph(newQmgr.queues, newQmgr.channels, newQmgr.applications, newQmgr.qmgrName); //Create Dependency Graphs
 
             ///DELETE: debug info
-            foreach (KeyValuePair<string, List<string>> dependency in dependencyGraph.graph)
+            foreach (KeyValuePair<string, List<string>> dependency in dependencyGraph.directDependencies)
             {
-                Debug.Log("Dependency for " + dependency.Key + " is: " + string.Join(" , ", dependency.Value.ToArray()));
+                Debug.Log("Direct Dependency for " + dependency.Key + " is: " + string.Join(" , ", dependency.Value.ToArray()));
             }
             ///
 

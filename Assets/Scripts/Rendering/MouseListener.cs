@@ -26,7 +26,7 @@ public class MouseListener : MonoBehaviour
     // Click functionality
     void OnMouseUp()
     {
-        // If user clicks on UI objects, Return: Avoid Click through
+        // If user clicks on UI objects, Return: Avoid Click through UI
         if (EventSystem.current.IsPointerOverGameObject())
         {
             return;
@@ -58,21 +58,28 @@ public class MouseListener : MonoBehaviour
        
         Debug.Log("I hit " + this.name + " !");
 
+        // Highlight Functionality
         State state = GameObject.Find("State").GetComponent<State>(); //Might be time consuming operation
-        if (!state.dependencyGraph.graph.ContainsKey(this.name))
+        List<string> directDependency;
+        List<string> indirectDenpendency;
+
+        state.dependencyGraph.directDependencies.TryGetValue(this.name, out directDependency);
+        state.dependencyGraph.indirectDependencies.TryGetValue(this.name, out indirectDenpendency);
+        // If no dependency found, initialize to empty list
+        // Because passing null value = zero argument to the function broadcasted
+        if (directDependency == null)
         {
-            List<string> noDependency = new List<string>();
-            noDependency.Add(this.name);
-            state.BroadcastMessage("Highlight", noDependency, SendMessageOptions.DontRequireReceiver);
-            return;
+            directDependency = new List<string>();
+        }
+        if (indirectDenpendency == null)
+        {
+            indirectDenpendency = new List<string>();
         }
 
-        Debug.Log("Dependency found.");
-        List<string> objectDependency = state.dependencyGraph.graph[this.name];
+        state.BroadcastMessage("DisableHighlight", SendMessageOptions.DontRequireReceiver); // disable any previous highlights
 
-        objectDependency.Add(this.name);
-        state.BroadcastMessage("Highlight", objectDependency, SendMessageOptions.DontRequireReceiver);
-
+        state.BroadcastMessage("HighlightSelf", this.name, SendMessageOptions.DontRequireReceiver); // highlight the clicked object
+        state.BroadcastMessage("HighlightDirect", directDependency, SendMessageOptions.DontRequireReceiver); // highlight direct dependency
+        state.BroadcastMessage("HighlightIndirect", indirectDenpendency, SendMessageOptions.DontRequireReceiver); // highlight indirect dependency
     }
-
 }
