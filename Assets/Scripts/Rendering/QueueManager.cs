@@ -377,8 +377,6 @@ public class QueueManager : MonoBehaviour
             renderedQueues.Remove(queueName);
         }
            
-        // TODO THIS DOES NOT WORK YET
-        return;
         // Third: for local queues and transmission queues, check if the utilization level has changed
         foreach (MQ.Queue queue in queues)
         {
