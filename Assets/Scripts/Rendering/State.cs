@@ -7,7 +7,6 @@ using UnityEngine.UI;
 
 public class State : MonoBehaviour
 {
-    // TODO: Change, right now dynamic updates do not work with Queue areas
     private const float UPDATE_INTERVAL = 10.0f;
     // Distance between two QMs
     private const int DISTANCE_BETWEEN_QMS = 10;
@@ -77,7 +76,7 @@ public class State : MonoBehaviour
             qmgrComponent.queues = newQueues;
             qmgrComponent.channels = newChannels;
             qmgrComponent.applications = newApplications;
-            dependencyGraph.CreateDependencyGraph(newQueues, newChannels, newQmgr.qmgrName); //Create Dependency Graph
+            dependencyGraph.CreateDependencyGraph(newQueues, newChannels, newApplications, newQmgr.qmgrName); //Create Dependency Graph
 
             ///DELETE: debug info
             foreach (KeyValuePair<string, List<string>> dependency in dependencyGraph.graph)
@@ -91,6 +90,7 @@ public class State : MonoBehaviour
             Debug.Log("New position" + position);
             qmgrComponent.baseLoc = position;
             qmgrs[newMqClient] = qmgrGameObject;
+
 
             qmgrGameObject.transform.parent = this.transform;
 
@@ -244,6 +244,32 @@ public class State : MonoBehaviour
                         }
                     }
                 }
+            }
+        }
+        return null;
+    }
+
+    public MQ.Channel GetChannelDetails(string qmgr, string channel)
+    {
+
+        foreach (MQ.Client client in qmgrs.Keys)
+        {
+            if (client.GetQueueManagerName() == qmgr)
+            {
+                return client.GetChannel(channel);
+            }
+        }
+        return null;
+    }
+
+    public MQ.Application GetApplicationDetails(string qmgr, string application)
+    {
+
+        foreach (MQ.Client client in qmgrs.Keys)
+        {
+            if (client.GetQueueManagerName() == qmgr)
+            {
+                return client.GetApplication(application);
             }
         }
         return null;

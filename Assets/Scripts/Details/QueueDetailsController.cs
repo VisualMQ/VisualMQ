@@ -53,7 +53,7 @@ public class QueueDetailsController : MonoBehaviour
 
         //Button Listeners
         returnButton.onClick.AddListener(ReturnClicked);
-        closeButton.onClick.AddListener(CloseClicked);
+        closeButton.onClick.AddListener(Close);
 
         toQueueDetail.onClick.AddListener(ToQueueDetailsClicked);
         toMessageList.onClick.AddListener(ToMessageListClicked);
@@ -83,8 +83,6 @@ public class QueueDetailsController : MonoBehaviour
 
         int starIdx = qmName.Length;
         string removeQMQueueName = queueName.Substring(starIdx+1);
-
-        Debug.Log("AAA"+ qmName + queueName);
 
 
         GameObject stateGameObject = GameObject.Find("State");
@@ -120,7 +118,7 @@ public class QueueDetailsController : MonoBehaviour
     }
 
     // Close current window
-    private void CloseClicked()
+    public void Close()
     {
         WindowQueueDetails.SetActive(false);
     }

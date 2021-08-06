@@ -8,6 +8,7 @@ using MQ;
 
 
 [RequireComponent(typeof(NameRenderer))]
+[RequireComponent(typeof(HighlightRenderer))]
 [RequireComponent(typeof(MouseListener))]
 public class Queue : MonoBehaviour
 {
@@ -133,14 +134,17 @@ public class Queue : MonoBehaviour
         }
         queuePrefab = Resources.Load(prefabName) as GameObject;
         instantiatedQueue = Instantiate(queuePrefab, new Vector3(0,0,0), Quaternion.identity) as GameObject;
-        
-        
+        instantiatedQueue.name = this.name + ".Prefab";
 
+        
         if (queue.holdsMessages)
         {
             int currentDepth = queue.currentDepth;
             // Assign Queue MeshRenderer here for rendering the color of Queue Icon
-            queuePrefabMeshRenderer = gameObject.GetComponentInChildren<MeshRenderer>();
+            queuePrefabMeshRenderer = GameObject.Find(this.name + ".Prefab").GetComponent<MeshRenderer>();
+
+            Material[] queueMaterials = queuePrefabMeshRenderer.materials;
+
             CreateMessages(currentDepth, queue.maxNumberOfMessages);
 
         }
@@ -150,49 +154,6 @@ public class Queue : MonoBehaviour
         // Add mesh Colider
         MeshCollider mc = gameObject.AddComponent<MeshCollider>();
         mc.sharedMesh = instantiatedQueue.GetComponent<MeshFilter>().sharedMesh;
-
-    }
-
-
-    // Update is called once per frame
-    void Update()
-    {
-        // The Queue Icon would flicker if the utilization is higher than 60%
-        int currentDepth = queue.currentDepth;
-        int MaximumDepth = queue.maxNumberOfMessages;
-        flickerTime += Time.deltaTime;
-        double utilization = (double)currentDepth / (double)MaximumDepth;
-        if (utilization > 0.6)
-        {
-            Material queueIconColor;
-            // The color of queue icon would switch every 0.5 seconds
-            if (flickerTime % 1 > 0.618f) // Golden ratio :)
-            {
-                // Here the icon use BlockWhite material to distinguish with the QueueWhite material
-                queueIconColor = Resources.Load("Materials/QueueWhite2") as Material;
-            }
-            else
-            {
-                queueIconColor = Resources.Load("Materials/QueueRed") as Material;
-            }
-            Material[] newQueueMaterials = new Material[queuePrefabMeshRenderer.materials.Length];
-            for (int i = 0; i < queuePrefabMeshRenderer.materials.Length; i++)
-            {
-                Material material = queuePrefabMeshRenderer.materials[i];
-                // Here there are three possible materials for the Queue Icon, use them to find and change its material
-                if (material.name.Contains("QueueBlue") || material.name.Contains("QueueRed") || material.name.Contains("QueueWhite2"))
-                {
-                    newQueueMaterials[i] = queueIconColor;
-                }
-                else
-                {
-                    newQueueMaterials[i] = material;
-                }
-
-            }
-            // Upate the Queue with new materials
-            queuePrefabMeshRenderer.materials = newQueueMaterials;
-        }
 
     }
 
@@ -212,7 +173,6 @@ public class Queue : MonoBehaviour
             Queue waypointQueue = GameObject.Find(testDependency[idx]).GetComponent(typeof(Queue)) as Queue;
             if (waypointQueue.queue is MQ.RemoteQueue)
             {
-                Debug.Log("Remote queue reached");
                 GameObject path = new GameObject("Path", typeof(PathCreation.AutoPathGenerator));
                 PathCreation.AutoPathGenerator pathGenerator = path.GetComponent(typeof(PathCreation.AutoPathGenerator)) as PathCreation.AutoPathGenerator;
                 List<Transform> testTransform = new List<Transform>();
@@ -238,9 +198,9 @@ public class Queue : MonoBehaviour
 
                 //increment idx
                 idx += 5;
-            } else if (waypointQueue.queue is MQ.AliasQueue)
+            }
+            else if (waypointQueue.queue is MQ.AliasQueue)
             {
-                Debug.Log("alias queue reached");
                 GameObject path = new GameObject("Path", typeof(PathCreation.AutoPathGenerator));
                 PathCreation.AutoPathGenerator pathGenerator = path.GetComponent(typeof(PathCreation.AutoPathGenerator)) as PathCreation.AutoPathGenerator;
                 List<Transform> testTransform = new List<Transform>();

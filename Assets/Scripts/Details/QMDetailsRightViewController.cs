@@ -39,7 +39,7 @@ public class QMDetailsRightViewController : MonoBehaviour
     void Start()
     {   
         // Buttons Listener
-        closeButton.onClick.AddListener(CloseButtonClicked);
+        closeButton.onClick.AddListener(Close);
         toDetails.onClick.AddListener(ToDetailsClicked);
         toQueueLists.onClick.AddListener(ToQueueListsClicked);
     }
@@ -114,7 +114,7 @@ public class QMDetailsRightViewController : MonoBehaviour
     }
 
 
-    void CloseButtonClicked()
+    void Close()
     {
         QMDetailQueueListWindow.SetActive(false);
         QMDetailsWindow.SetActive(false);
