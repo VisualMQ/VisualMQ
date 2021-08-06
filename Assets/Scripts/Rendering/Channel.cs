@@ -9,6 +9,7 @@ public class Channel : MonoBehaviour
 {
 
     public MQ.Channel channel;
+
     // Use this for initialization
     void Start()
     {
