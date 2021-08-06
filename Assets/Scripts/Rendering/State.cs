@@ -14,9 +14,7 @@ public class State : MonoBehaviour
 
     private float updateCountdown = UPDATE_INTERVAL;
 
-    private float lastTime = 0f;
-
-    private float nextTime = UPDATE_INTERVAL;
+    public GameObject updateText;
 
 
     // Main dictionary keeping all connection and their rendered counterparts
@@ -31,6 +29,12 @@ public class State : MonoBehaviour
     }
 
 
+    void Awake()
+    {
+        updateText = GameObject.Find("UpdateText");
+    }
+
+
     void Start()
     {
 
@@ -38,10 +42,7 @@ public class State : MonoBehaviour
 
 
     void Update()
-    {   
-        GameObject updateText = GameObject.Find("UpdateText");
-        Text updateTextComponent = updateText.GetComponent<Text>();
-
+    {
         // If there are no MQ client and no Qmgrs rendered, there is nothing to update
         if (qmgrs.Count == 0) return;
 
@@ -51,9 +52,6 @@ public class State : MonoBehaviour
         if (qmgrs.ContainsValue(null))
         {   
             Debug.Log("Rendering new Qmgr.");
-
-            // hide update information
-            updateTextComponent.text = " ";
 
             // Get data
             MQ.Client newMqClient = null;
@@ -107,12 +105,11 @@ public class State : MonoBehaviour
 
         if (updateCountdown <= 0)
         {
-            //Debug.Log("Updating state...");
-
-            // show update information
+            // Show update time information
+            Text updateTextComponent = updateText.GetComponent<Text>();
             String nowTime = DateTime.Now.ToString();
             nowTime = nowTime.Substring(9);
-            updateTextComponent.text = "Last update time: "+nowTime;
+            updateTextComponent.text = "Last update time: " + nowTime;
 
             foreach (KeyValuePair<MQ.Client, GameObject> entry in qmgrs)
             {
