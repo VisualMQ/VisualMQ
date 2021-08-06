@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 
 public class State : MonoBehaviour
@@ -11,6 +12,9 @@ public class State : MonoBehaviour
     private const int DISTANCE_BETWEEN_QMS = 10;
 
     private float updateCountdown = UPDATE_INTERVAL;
+
+    public GameObject updateTimeText;
+
 
     // Main dictionary keeping all connection and their rendered counterparts
     private Dictionary<MQ.Client, GameObject> qmgrs = new Dictionary<MQ.Client, GameObject>();
@@ -24,6 +28,18 @@ public class State : MonoBehaviour
     }
 
 
+    void Awake()
+    {
+        updateTimeText = GameObject.Find("UpdateText");
+    }
+
+
+    void Start()
+    {
+
+    }
+
+
     void Update()
     {
         // If there are no MQ client and no Qmgrs rendered, there is nothing to update
@@ -33,7 +49,7 @@ public class State : MonoBehaviour
         // This relies on the fact that adding new Qmgr for visualisation can be
         // achieved by adding (MQ.Client, null) via the AddNewMqClient method
         if (qmgrs.ContainsValue(null))
-        {
+        {   
             Debug.Log("Rendering new Qmgr.");
 
             // Get data
@@ -84,9 +100,16 @@ public class State : MonoBehaviour
 
         // Otherwise periodically update all Queue managers
         updateCountdown -= Time.deltaTime;
+
+        
+
         if (updateCountdown <= 0)
         {
-            //Debug.Log("Updating state...");
+            // Show update time information
+            Text updateTimeTextComponent = updateTimeText.GetComponent<Text>();
+            String nowTime = DateTime.Now.ToString();
+            nowTime = nowTime.Substring(9);
+            updateTimeTextComponent.text = "Last update time: " + nowTime;
 
             foreach (KeyValuePair<MQ.Client, GameObject> entry in qmgrs)
             {
