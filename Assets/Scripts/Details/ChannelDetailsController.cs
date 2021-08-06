@@ -33,7 +33,7 @@ public class ChannelDetailsController : MonoBehaviour
         
     }
 
-    void Close()
+    public void Close()
     {
         Reset();
         gameObject.SetActive(false);

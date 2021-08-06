@@ -37,7 +37,11 @@ public class Click : MonoBehaviour
                 {
                     // Clicked on empty space
                     Debug.Log("MISSSSSS");
-                    gameObject.BroadcastMessage("DisableHighlight", SendMessageOptions.DontRequireReceiver); 
+                    gameObject.BroadcastMessage("DisableHighlight", SendMessageOptions.DontRequireReceiver);
+
+                    // Close all sidebars
+                    GameObject canvas2D = GameObject.Find("Canvas2D");
+                    canvas2D.BroadcastMessage("Close", SendMessageOptions.DontRequireReceiver);
                 }
             }
         }

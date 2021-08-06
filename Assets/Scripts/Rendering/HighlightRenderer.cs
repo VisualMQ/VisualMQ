@@ -3,8 +3,11 @@ using System.Collections.Generic;
 
 public class HighlightRenderer : MonoBehaviour
 {
-    Color directColor = new Color32(255, 150, 0, 255);
-    Color indirectColor = new Color32(150, 255, 0, 255);
+    Color directColor = new Color32(56, 95, 231, 200);
+    Color indirectColor = new Color32(56, 160, 231, 200);
+    Color selectedColor = new Color32(56, 95, 231, 255);
+
+    private Outline outline;
 
     public void HighlightSelf(string objectName)
     {
@@ -12,21 +15,19 @@ public class HighlightRenderer : MonoBehaviour
         {
             return; // Not a clicked object
         }
-        else
+
+        // the clicked object to be highlighted
+        //var outline = GameObject.Find(gameObject.name + ".Prefab").GetComponent<Outline>();
+        
+        if (outline == null)
         {
-            // the clicked object to be highlighted
-            var outline = GameObject.Find(gameObject.name + ".Prefab").GetComponent<Outline>();
-            if (outline == null)
-            {
-                outline = GameObject.Find(gameObject.name + ".Prefab").AddComponent<Outline>();
-                outline.OutlineMode = Outline.Mode.OutlineVisible;
-                outline.OutlineColor = Color.yellow;
-                outline.OutlineWidth = 5f;
-                outline.enabled = false;
-            }
-            outline.OutlineColor = Color.yellow;
-            outline.enabled = true;
+            outline = GameObject.Find(gameObject.name + ".Prefab").AddComponent<Outline>();
+            outline.OutlineMode = Outline.Mode.OutlineVisible;
         }
+        outline.OutlineColor = selectedColor;
+        outline.OutlineWidth = 8f;
+        outline.enabled = true;
+        
     }
 
     public void HighlightDirect(List<string> dependency)
@@ -35,21 +36,19 @@ public class HighlightRenderer : MonoBehaviour
         {
             return; // Not a direct dependency object
         }
-        else
+
+        // a directly dependent object
+        //Outline outline = GetComponentInChildren<Outline>();
+        if (outline == null)
         {
-            // a directly dependent object
-            var outline = GameObject.Find(gameObject.name + ".Prefab").GetComponent<Outline>();
-            if (outline == null)
-            {
-                outline = GameObject.Find(gameObject.name + ".Prefab").AddComponent<Outline>();
-                outline.OutlineMode = Outline.Mode.OutlineVisible;
-                outline.OutlineColor = Color.yellow;
-                outline.OutlineWidth = 5f;
-                outline.enabled = false;
-            }
-            outline.OutlineColor = directColor;
-            outline.enabled = true;
+            outline = GameObject.Find(gameObject.name + ".Prefab").AddComponent<Outline>();
+            outline.OutlineMode = Outline.Mode.OutlineVisible;
         }
+        outline.OutlineColor = directColor;
+        outline.OutlineWidth = 4f;
+        outline.enabled = true;
+
+        ChangeApplicationOutline(outline);
     }
 
     public void HighlightIndirect(List<string> dependency)
@@ -58,32 +57,36 @@ public class HighlightRenderer : MonoBehaviour
         {
             return; // Not a direct dependency object
         }
-        else
+
+        // an indirectly dependent object
+        //Outline outline = GetComponentInChildren<Outline>();
+        if (outline == null)
         {
-            // an indirectly dependent object
-            var outline = GameObject.Find(gameObject.name + ".Prefab").GetComponent<Outline>();
-            if (outline == null)
-            {
-                outline = GameObject.Find(gameObject.name + ".Prefab").AddComponent<Outline>();
-                outline.OutlineMode = Outline.Mode.OutlineVisible;
-                outline.OutlineColor = Color.yellow;
-                outline.OutlineWidth = 5f;
-                outline.enabled = false;
-            }
-            outline.OutlineColor = indirectColor;
-            outline.enabled = true;
+            outline = GameObject.Find(gameObject.name + ".Prefab").AddComponent<Outline>();
+            outline.OutlineMode = Outline.Mode.OutlineVisible;
         }
+        outline.OutlineColor = indirectColor;
+        outline.OutlineWidth = 4f;
+        outline.enabled = true;
+
+        ChangeApplicationOutline(outline);
     }
 
     public void DisableHighlight()
     {
-        var outline = GameObject.Find(gameObject.name + ".Prefab").GetComponent<Outline>();
+        //Outline outline = GetComponentInChildren<Outline>();
         if (outline == null)
         {
             return; // no highlight yet
-        } else
+        }
+        outline.enabled = false;
+    }
+
+    public void ChangeApplicationOutline(Outline outline)
+    {
+        if (TryGetComponent(out Application app))
         {
-            outline.enabled = false;
+            outline.OutlineWidth = 8f;
         }
     }
 

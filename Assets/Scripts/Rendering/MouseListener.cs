@@ -32,28 +32,26 @@ public class MouseListener : MonoBehaviour
             return;
         }
 
-        //GameObject mainCamera = GameObject.Find("Main Camera");
-        //mainCamera.transform.rotation = Quaternion.AngleAxis(70, new Vector3(1, 0, 0));
-        //Vector3 targetPosition = this.transform.position;
-        //targetPosition.y += 18f;
-        //targetPosition.x += 5f;
-        //targetPosition.z -= 5f;
-        //mainCamera.transform.position = targetPosition;
-
         // If a queue is clicked on show Queue details window
         if (TryGetComponent(out Queue _))
         {
             List<string> temp = new List<string>() { transform.parent.name, name };
             QueueDetailWindow.GetQueueBasicInfo(temp);
+            channelDetailsWindow.Close();
+            applicationDetailsWindow.Close();
         } else if (TryGetComponent(out Channel _))
         {
             Channel channel = gameObject.GetComponent<Channel>();
             channelDetailsWindow.GetChannelDetails(transform.parent.name, channel.channel.channelName);
+            QueueDetailWindow.Close();
+            applicationDetailsWindow.Close();
         }
         else if (TryGetComponent(out Application _))
         {
             Application application = gameObject.GetComponent<Application>();
             applicationDetailsWindow.GetApplicationDetails(transform.parent.name, application.application.conn);
+            QueueDetailWindow.Close();
+            channelDetailsWindow.Close();
         }
        
         Debug.Log("I hit " + this.name + " !");
