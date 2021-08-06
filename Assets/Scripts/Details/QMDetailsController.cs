@@ -62,17 +62,19 @@ public class QMDetailsController : MonoBehaviour
 
         MQ.QueueManager queueManager = stateComponent.GetSelectedQmgr(selectedQMName);
 
+        // Basic
         text0Name.text = queueManager.qmgrName;
         text1State.text = queueManager.state;
-        // The following properties might or might not be used
-        //text2InstallationName.text = qmDetails[2];
-        //text3PermitStandBy.text = qmDetails[3];
-        //text4IsDefault.text = qmDetails[4];
-        //text5PublishState.text = qmDetails[5];
-        //text6ConnectionCount.text = qmDetails[6];
-        //text7ChannelState.text = qmDetails[7];
-        //text8Idap.text = qmDetails[8];
-        //text9StartedTime.text = qmDetails[9];
+        // Extended
+        text2InstallationName.text = queueManager.installationName;
+        text3PermitStandBy.text = queueManager.permitStandby.ToString();
+        text4IsDefault.text = queueManager.isDefaultQmgr.ToString();
+        // Status
+        text5PublishState.text = queueManager.publishSubscribeState;
+        text6ConnectionCount.text = queueManager.connectionCount.ToString();
+        text7ChannelState.text = queueManager.channelInitiatorState;
+        text8Idap.text = queueManager.ldapConnectionState;
+        text9StartedTime.text = queueManager.started;
     }
 
 
