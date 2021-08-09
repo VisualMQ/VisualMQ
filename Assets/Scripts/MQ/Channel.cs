@@ -13,11 +13,17 @@ namespace MQ
     public class SenderChannel : Channel
     {
         public string transmissionQueueName;
+        public string connectionName;
     }
 
     public class ReceiverChannel : Channel
     {
         
+    }
+
+    public class ApplicationChannel: Channel
+    {
+
     }
 }
 

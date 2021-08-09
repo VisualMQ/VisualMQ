@@ -200,7 +200,15 @@ public class QueueManager : MonoBehaviour
                 int j = numberOfReceiverChannels++;
                 position = new Vector3(sXZ * (largeArea[0] + smallArea[1] - j - 1), 0, -sXZ) + baseLoc;
             }
-
+            else if (channel is MQ.ApplicationChannel)
+            {
+                int i = numberOfSenderChannels++;
+                position = new Vector3(sXZ * i, 0, -sXZ) + baseLoc;
+            }
+            else
+            {
+                continue;
+            }
             string uniqueChannelName = qmName + QM_NAME_DELIMITER + channel.channelName;
             GameObject channelGameObject = new GameObject(uniqueChannelName, typeof(Channel)); //Globally unique channel name
             Channel channelComponent = channelGameObject.GetComponent(typeof(Channel)) as Channel;

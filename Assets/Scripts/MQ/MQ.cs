@@ -80,14 +80,6 @@ namespace MQ
             }
         }
 
-        public List<Channel> GetAllChannels()
-        {
-            string response = GetRequest("/ibmmq/rest/v1/admin/qmgr/" + qmgr + "/channel?attributes=*&status=*");
-            _ChannelResponseJson channelJson = JsonUtility.FromJson<_ChannelResponseJson>(response);
-            List<Channel> channels = Parser.Parse(channelJson);
-            return channels;
-        }
-
 
         public List<Message> GetAllMessages(string queue)
         {
@@ -133,7 +125,8 @@ namespace MQ
         // Get the channel under current QM
         public Channel GetChannel(string channel)
         {
-            string response = GetRequest("/ibmmq/rest/v1/admin/qmgr/" + qmgr + "/channel/" + channel + "?attributes=*&status=*");
+            string jsonRequest = "{\"type\":\"runCommandJSON\",\"command\":\"display\",\"qualifier\":\"channel\",\"name\":\"" + channel + "\",\"responseParameters\":[\"all\"],\"parameters\":{}}";
+            string response = PostRequest("/ibmmq/rest/v2/admin/action/qmgr/" + qmgr + "/mqsc", jsonRequest);
             _ChannelResponseJson channelJson = JsonUtility.FromJson<_ChannelResponseJson>(response);
             List<Channel> channels = Parser.Parse(channelJson);
             return channels[0];
@@ -165,6 +158,15 @@ namespace MQ
                 }
             }
             return filteredApplications;
+        }
+
+        public List<Channel> GetAllChannels()
+        {
+            string jsonRequest = "{\"type\":\"runCommandJSON\",\"command\":\"display\",\"qualifier\":\"channel\",\"name\":\"*\",\"responseParameters\":[\"all\"],\"parameters\":{}}";
+            string response = PostRequest("/ibmmq/rest/v2/admin/action/qmgr/" + qmgr + "/mqsc", jsonRequest);
+            _ChannelResponseJson channelJson = JsonUtility.FromJson<_ChannelResponseJson>(response);
+            List<Channel> channels = Parser.Parse(channelJson);
+            return channels;
         }
 
     }
@@ -273,25 +275,35 @@ namespace MQ
         public static List<Channel> Parse(_ChannelResponseJson channelResponseJson)
         {
             List<Channel> channels = new List<Channel>();
-            foreach (_ChannelJson channelJson in channelResponseJson.channel)
+            foreach (_ChannelJson channelJson in channelResponseJson.commandResponse)
             {
                 Channel channel = null;
-                switch (channelJson.type)
+                switch (channelJson.parameters.chltype)
                 {
-                    case "sender":
+                    case "SDR":
                         channel = new SenderChannel();
-                        ((SenderChannel)channel).transmissionQueueName = channelJson.sender.transmissionQueueName;
+                        ((SenderChannel)channel).transmissionQueueName = channelJson.parameters.xmitq;
+                        ((SenderChannel)channel).connectionName = channelJson.parameters.conname;
                         break;
 
-                    case "receiver":
+                    case "RCVR":
                         channel = new ReceiverChannel();
                         break;
 
+                    case "SVRCONN":
+                        if (channelJson.parameters.channel != "CLOUD.APP.SVRCONN")
+                        {
+                            continue;
+                        }
+                        channel = new ApplicationChannel();
+                        break;
+
+                    // Expand to other channel types
                     default:
                         continue;
                 }
-                channel.channelName = channelJson.name;
-                channel.channelType = channelJson.type;
+                channel.channelName = channelJson.parameters.channel;
+                channel.channelType = channelJson.parameters.chltype;
 
                 channels.Add(channel);
             }
@@ -453,22 +465,37 @@ namespace MQ
     [Serializable]
     public class _ChannelResponseJson
     {
-        public List<_ChannelJson> channel;
+        public List<_ChannelJson> commandResponse;
     }
 
     [Serializable]
     public class _ChannelJson
     {
-        public string type;
-        public string name;
-        public _ChannelSenderJson sender;
+        public _ChannelParametersJson parameters;
     }
 
     [Serializable]
-    public class _ChannelSenderJson
+    public class _ChannelParametersJson
     {
-        public string transmissionQueueName;
+        public string channel;
+        public string conname;
+        public string chltype;
+        public string xmitq;
     }
+
+    //[Serializable]
+    //public class _ChannelJson
+    //{
+    //    public string type;
+    //    public string name;
+    //    public _ChannelSenderJson sender;
+    //}
+
+    //[Serializable]
+    //public class _ChannelSenderJson
+    //{
+    //    public string transmissionQueueName;
+    //}
 
     [Serializable]
     public class _ApplicationResponseJson
