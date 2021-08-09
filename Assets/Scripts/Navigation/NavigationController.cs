@@ -11,7 +11,7 @@ public class NavigationController : MonoBehaviour
     public GameObject HelpWindow;
     
     // Buttons
-    private Button expandQMSelector, authenticateNewQM, applyFilter, activeHelpWindow;
+    private Button expandQMSelector, authenticateNewQM, buttonExit, buttonHelp;
 
     // Left Panel and Container
     public GameObject leftPanel;
@@ -27,25 +27,24 @@ public class NavigationController : MonoBehaviour
     {
         // Locate the Game Obejct: Button
         expandQMSelector = transform.Find("ButtonExpandSidePanel").GetComponent<Button>();
-        authenticateNewQM = transform.Find("ButtonConnectNewMQ").GetComponent<Button>();
-        applyFilter = transform.Find("ButtonAddFilter").GetComponent<Button>();
-        activeHelpWindow = transform.Find("ButtonHelp").GetComponent<Button>();
+        authenticateNewQM = transform.Find("ButtonConnect").GetComponent<Button>();
+        buttonExit = transform.Find("ButtonExit").GetComponent<Button>();
+        buttonHelp = transform.Find("ButtonHelp").GetComponent<Button>();
 
         // Button Listener
         expandQMSelector.onClick.AddListener(LeftPanelButtonClicked);
-        applyFilter.onClick.AddListener(AddFilterButtonClicked);
-        activeHelpWindow.onClick.AddListener(activeHelpWindowButtonClicked);
+
+        buttonExit.onClick.AddListener(ExitButtonClicked);
+        buttonHelp.onClick.AddListener(HelpButtonClicked);
 
         // Locate the Game Object: Left Panel
         leftPanelContainer = transform.Find("LeftPanel");
         checkboxItem = leftPanelContainer.Find("QMSelectorRowItem");
         checkboxItem.gameObject.SetActive(false);
-        
-
     }
 
 
-    void Start()
+    private void Start()
     {
         // Default: Hide Auth, Filter, Left Panel Windows
         Authentication.SetActive(false); 
@@ -55,9 +54,7 @@ public class NavigationController : MonoBehaviour
     }
 
 
-    /*
-    * Click to open the left panel; Click to hide the left panel
-    */
+    // Click to open the left panel; Click to hide the left panel
     void LeftPanelButtonClicked()
     {
         if (leftPanel.activeSelf == true)
@@ -71,17 +68,23 @@ public class NavigationController : MonoBehaviour
         }
     }
 
-    // Button Listener: Filter
-    void AddFilterButtonClicked()
+    // The exit button clicked: Delete all QM objects under "State"
+    private void ExitButtonClicked()
     {
-        FilterWindow.SetActive(true);
+        GameObject stateGameObject = GameObject.Find("State");
+
+        foreach (Transform child in stateGameObject.transform)
+        {
+            Destroy(child.gameObject);
+        }
     }
 
-    // Button Listener: Help Button
-    void activeHelpWindowButtonClicked()
+    // Go to Github Page
+    private void HelpButtonClicked()
     {
-        HelpWindow.SetActive(true);
+        UnityEngine.Application.OpenURL("https://github.com/VisualMQ/VisualMQ");
     }
+
 
     // Load QM Selector
     void GenerateCheckBox()
@@ -122,11 +125,6 @@ public class NavigationController : MonoBehaviour
 
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     // for the toggle to control the appear of the QM
     void showSelector(Toggle toggle, GameObject qm)
