@@ -32,8 +32,7 @@ public class QueueManager : MonoBehaviour
     public GameObject blockParent;
 
 
-    // TODO TEMP ROTATE:
-    public bool rotated = false;
+ 
 
 
     // Unity calls this method at the complete beginning, even before Start
@@ -241,37 +240,7 @@ public class QueueManager : MonoBehaviour
 
     void Update()
     {
-        if (!rotated)
-        {
-            // Give it the right position here:
-            QueueManager[] renderedQMs = FindObjectsOfType<QueueManager>();
-            int numberOfRenderedQMs = renderedQMs.Length;
-            if (numberOfRenderedQMs % 2 != 0)
-            {
-            
-              /*  Vector3 sumVector = baseLoc;
-                int[] sizeQueueManager = GetQueueManagerSize();
-                Vector3 sizeVector = new Vector3((float)sizeQueueManager[0] / 2, 0f, (float)sizeQueueManager[1] / 2);
-
-                Vector3 groupCenter = sizeVector + sumVector;*/
-
-                Vector3 sumVector = new Vector3(0f, 0f, 0f);
-                int count = 0;
-                foreach (Transform child in this.transform)
-                {
-                    if (child.gameObject.name.Contains("Block"))
-                    {
-                        sumVector += child.position;
-                        count++;
-                    }
-                }
-
-                Vector3 groupCenter = sumVector / count;
-
-                this.transform.RotateAround(groupCenter, Vector3.up, 180);
-            }
-            rotated = true;
-        }
+       
 
 
         // Check for RIGHT mouse input
