@@ -86,9 +86,9 @@ public class State : MonoBehaviour
             dependencyGraph.CreateDependencyGraph(newQmgr.queues, newQmgr.channels, newQmgr.applications, newQmgr.qmgrName); //Create Dependency Graphs
 
             ///DELETE: debug info
-            foreach (KeyValuePair<string, List<string>> dependency in dependencyGraph.directDependencies)
+            foreach (KeyValuePair<string, List<string>> dependency in dependencyGraph.indirectDependencies)
             {
-                Debug.Log("Direct Dependency for " + dependency.Key + " is: " + string.Join(" , ", dependency.Value.ToArray()));
+                Debug.Log("Indirect Dependency for " + dependency.Key + " is: " + string.Join(" , ", dependency.Value.ToArray()));
             }
             ///
 

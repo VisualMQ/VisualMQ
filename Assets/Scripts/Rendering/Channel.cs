@@ -24,7 +24,7 @@ public class Channel : MonoBehaviour
         }
         else if (channel is MQ.ApplicationChannel) // TODO: Applciation Prefab
         {
-            prefabName = "Prefabs/SenderChannel";
+            prefabName = "Prefabs/ApplicationChannel";
         }
         else
         {

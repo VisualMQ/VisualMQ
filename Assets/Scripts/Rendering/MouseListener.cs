@@ -79,5 +79,11 @@ public class MouseListener : MonoBehaviour
         state.BroadcastMessage("HighlightSelf", this.name, SendMessageOptions.DontRequireReceiver); // highlight the clicked object
         state.BroadcastMessage("HighlightDirect", directDependency, SendMessageOptions.DontRequireReceiver); // highlight direct dependency
         state.BroadcastMessage("HighlightIndirect", indirectDenpendency, SendMessageOptions.DontRequireReceiver); // highlight indirect dependency
+
+        //if (We are clicking on sender channel) {
+        //    foreach QM name 
+        //    highlightImplicit( implicit = this.name (QM1.QM2);
+
+        //}
     }
 }

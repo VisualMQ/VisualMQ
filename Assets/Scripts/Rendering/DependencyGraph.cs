@@ -66,9 +66,27 @@ public class DependencyGraph
                 AddDependency(directDependencies, qmgr, channel.channelName, directDependency);
 
                 // Indirect dependency for the transmission queue of the sender channel
-                List<string> indirectDependency = new List<string>();
-                indirectDependency.Add(qmgr + QM_NAME_DELIMITER + channel.channelName);
-                AddDependency(indirectDependencies, qmgr, ((MQ.SenderChannel)channel).transmissionQueueName, indirectDependency);
+                List<string> indirectDependency1 = new List<string>();
+                indirectDependency1.Add(qmgr + QM_NAME_DELIMITER + channel.channelName);
+                AddDependency(indirectDependencies, qmgr, ((MQ.SenderChannel)channel).transmissionQueueName, indirectDependency1);
+
+                if (channel.channelName == "QM1.QM2")
+                {
+                    List<string> indirectDependency2 = new List<string>();
+                    indirectDependency2.Add(qmgr + QM_NAME_DELIMITER + channel.channelName);
+                    AddDependency(indirectDependencies, "qm2", channel.channelName, indirectDependency2);
+                }
+
+
+            }
+            else if (channel is MQ.ReceiverChannel)
+            {
+                if (channel.channelName == "QM1.QM2")
+                {
+                    List<string> indirectDependency2 = new List<string>();
+                    indirectDependency2.Add("qm2" + QM_NAME_DELIMITER + channel.channelName);
+                    AddDependency(indirectDependencies, "QM1", channel.channelName, indirectDependency2);
+                }
             }
 
         }
