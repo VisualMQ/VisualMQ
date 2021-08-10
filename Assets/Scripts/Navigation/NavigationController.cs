@@ -7,8 +7,6 @@ public class NavigationController : MonoBehaviour
 {
     // Windows Gameobject
     public GameObject Authentication;
-    public GameObject FilterWindow;
-    public GameObject HelpWindow;
     
     // Buttons
     private Button expandQMSelector, authenticateNewQM, buttonExit, buttonHelp;
@@ -16,7 +14,6 @@ public class NavigationController : MonoBehaviour
     // Left Panel and Container
     public GameObject leftPanel;
     private Transform checkboxItem;
-    private Transform leftPanelContainer;
 
     // QM Selector
     private Dictionary<string, bool> QMVisibility = new Dictionary<string, bool>();
@@ -26,7 +23,7 @@ public class NavigationController : MonoBehaviour
     private void Awake() 
     {
         // Locate the Game Obejct: Button
-        expandQMSelector = transform.Find("ButtonExpandSidePanel").GetComponent<Button>();
+        expandQMSelector = transform.Find("ButtonView").GetComponent<Button>();
         authenticateNewQM = transform.Find("ButtonConnect").GetComponent<Button>();
         buttonExit = transform.Find("ButtonExit").GetComponent<Button>();
         buttonHelp = transform.Find("ButtonHelp").GetComponent<Button>();
@@ -37,9 +34,10 @@ public class NavigationController : MonoBehaviour
         buttonExit.onClick.AddListener(ExitButtonClicked);
         buttonHelp.onClick.AddListener(HelpButtonClicked);
 
+        authenticateNewQM.onClick.AddListener(ConnectButtonClicked);
+
         // Locate the Game Object: Left Panel
-        leftPanelContainer = transform.Find("LeftPanel");
-        checkboxItem = leftPanelContainer.Find("QMSelectorRowItem");
+        checkboxItem = leftPanel.transform.Find("QueueManagerRowItem");
         checkboxItem.gameObject.SetActive(false);
     }
 
@@ -49,8 +47,6 @@ public class NavigationController : MonoBehaviour
         // Default: Hide Auth, Filter, Left Panel Windows
         Authentication.SetActive(false); 
         leftPanel.SetActive(false);
-        FilterWindow.SetActive(false);
-        HelpWindow.SetActive(false);
     }
 
 
@@ -90,6 +86,13 @@ public class NavigationController : MonoBehaviour
     }
 
 
+    // Open up authentication window
+    private void ConnectButtonClicked()
+    {
+        Authentication.SetActive(true);
+    }
+
+
     // Load QM Selector
     void GenerateCheckBox()
     {
@@ -110,7 +113,7 @@ public class NavigationController : MonoBehaviour
 
         for (int i = 0; i < size; i ++)
         {
-            Transform item = Instantiate(checkboxItem, leftPanelContainer);
+            Transform item = Instantiate(checkboxItem, leftPanel.transform);
             RectTransform recTransform = item.GetComponent<RectTransform>();
             recTransform.anchoredPosition = new Vector2(0, -rowHeight * i + startY);
             item.gameObject.SetActive(true);
@@ -147,9 +150,9 @@ public class NavigationController : MonoBehaviour
     }
 
     void DestroyQMSelector() {
-        foreach (Transform child in leftPanelContainer) 
+        foreach (Transform child in leftPanel.transform) 
         {
-            if(child.gameObject.name == "QMSelectorRowItem(Clone)")
+            if(child.gameObject.name == "QueueManagerRowItem(Clone)")
             {
                 GameObject.Destroy(child.gameObject);
             }
