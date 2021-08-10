@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class DependencyGraph
 {
-    public Dictionary<string, List<string>> directDependencies; //TODO: change to private with getter method
+    public Dictionary<string, List<string>> directDependencies;
     public Dictionary<string, List<string>> indirectDependencies;
-    public Dictionary<string, List<string>> implicitDependencies;
+    public Dictionary<string, List<string>> implicitDependencies; // For future implementation
 
     private const string QM_NAME_DELIMITER = ".";
 
@@ -69,24 +69,6 @@ public class DependencyGraph
                 List<string> indirectDependency1 = new List<string>();
                 indirectDependency1.Add(qmgr + QM_NAME_DELIMITER + channel.channelName);
                 AddDependency(indirectDependencies, qmgr, ((MQ.SenderChannel)channel).transmissionQueueName, indirectDependency1);
-
-                if (channel.channelName == "QM1.QM2")
-                {
-                    List<string> indirectDependency2 = new List<string>();
-                    indirectDependency2.Add(qmgr + QM_NAME_DELIMITER + channel.channelName);
-                    AddDependency(indirectDependencies, "qm2", channel.channelName, indirectDependency2);
-                }
-
-
-            }
-            else if (channel is MQ.ReceiverChannel)
-            {
-                if (channel.channelName == "QM1.QM2")
-                {
-                    List<string> indirectDependency2 = new List<string>();
-                    indirectDependency2.Add("qm2" + QM_NAME_DELIMITER + channel.channelName);
-                    AddDependency(indirectDependencies, "QM1", channel.channelName, indirectDependency2);
-                }
             }
 
         }
@@ -126,15 +108,15 @@ public class DependencyGraph
     private void AddDependency (Dictionary<string, List<string>> dependencies, string qmName, string entityName, List<string> dependency)
     {
         
-        if (!dependencies.ContainsKey(qmName + "." + entityName))
+        if (!dependencies.ContainsKey(qmName + QM_NAME_DELIMITER + entityName))
         {
-            dependencies.Add(qmName + "." + entityName, dependency);
+            dependencies.Add(qmName + QM_NAME_DELIMITER + entityName, dependency);
         }
         else
         {
-            List<string> oldDependency = new List<string>(dependencies[qmName + "." + entityName]);
+            List<string> oldDependency = new List<string>(dependencies[qmName + QM_NAME_DELIMITER + entityName]);
             oldDependency.AddRange(dependency);
-            dependencies[qmName + "." + entityName] = oldDependency; //Append the new dependency at the end
+            dependencies[qmName + QM_NAME_DELIMITER + entityName] = oldDependency; //Append the new dependency at the end
         }
     }
 }

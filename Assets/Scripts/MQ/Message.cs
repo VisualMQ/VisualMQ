@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 
-
 namespace MQ
 {
     public class Message
@@ -9,5 +8,4 @@ namespace MQ
         public string format;
         public string messageId;
     }
-
 }

@@ -6,7 +6,6 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using MQ;
 
-
 [RequireComponent(typeof(NameRenderer))]
 [RequireComponent(typeof(HighlightRenderer))]
 [RequireComponent(typeof(MouseListener))]
@@ -81,15 +80,11 @@ public class Queue : MonoBehaviour
 
     public void createPositionAnimation()
     {
-
         Vector3 endPosition = this.parent.ComputePosition(this.queue.GetTypeName(), this.rank);
         this.instantiatedQueue.transform.parent.position =
                 Vector3.MoveTowards(this.instantiatedQueue.transform.parent.position,
                 endPosition, Time.deltaTime * 22.0f // (Yes, Magic number) 
                 );
-
-
-
 
         if (Vector3.Distance(transform.position, endPosition) < 0.001f)
         {
@@ -99,18 +94,12 @@ public class Queue : MonoBehaviour
             }
             CancelInvoke();
         }
-
-
-
-
-
     }
 
 
 
     void Start()
     {
-       
         string prefabName;
         if (queue is MQ.RemoteQueue)
         {
@@ -136,7 +125,6 @@ public class Queue : MonoBehaviour
         instantiatedQueue = Instantiate(queuePrefab, new Vector3(0,0,0), Quaternion.identity) as GameObject;
         instantiatedQueue.name = this.name + ".Prefab";
 
-        
         if (queue.holdsMessages)
         {
             int currentDepth = queue.currentDepth;
@@ -154,9 +142,7 @@ public class Queue : MonoBehaviour
         // Add mesh Colider
         MeshCollider mc = gameObject.AddComponent<MeshCollider>();
         mc.sharedMesh = instantiatedQueue.GetComponent<MeshFilter>().sharedMesh;
-
     }
-
 
     void Awake()
     {

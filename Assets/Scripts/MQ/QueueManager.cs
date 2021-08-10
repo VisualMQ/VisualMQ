@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 
-
 namespace MQ
 {
     public class QueueManager
@@ -9,7 +8,7 @@ namespace MQ
         public string qmgrName;
         public string state;
 
-        //populated separatedly
+        //populated by the State object
         public List<Queue> queues;
         public List<Channel> channels;
         public List<Application> applications;

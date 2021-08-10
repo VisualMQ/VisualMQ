@@ -58,28 +58,7 @@ public class NameRenderer : MonoBehaviour
         QueueManager qmgr = GetComponentInParent(typeof(QueueManager)) as QueueManager;
         textMesh.characterSize = (0.4f / qmgr.queueManager.queues.Count) + 0.1f;
 
-        // Obtain the middle Queue component and align all the text according to it.
-        var firstIndex = qmgr.renderedQueues.GetEnumerator();
-        Queue usedQueue = null;
-        float distance = int.MaxValue;
-        for (int i = 0; i < qmgr.renderedQueues.Count / 2; i++)
-        {
-            firstIndex.MoveNext();
-            Queue firstQueue = firstIndex.Current.Value.GetComponent(typeof(Queue)) as Queue;
-
-            if (Vector3.Distance(firstQueue.position, Camera.main.transform.position) < distance)
-            {
-                usedQueue = firstQueue;
-                distance = Vector3.Distance(firstQueue.position, Camera.main.transform.position);
-            }
-        }
-        TextMesh usedQueueTextMesh = usedQueue.GetComponentInChildren(typeof(TextMesh)) as TextMesh;
-
-        if (usedQueueTextMesh == null) //TODO: Not sure why this would be throwing NPE at certain viewpoint...
-        {
-            return;
-        }
-
-        textMesh.transform.rotation = Quaternion.LookRotation(usedQueueTextMesh.transform.position - Camera.main.transform.position);
+        // Rotate text to face main camera
+        textMesh.transform.rotation = Quaternion.LookRotation(Camera.main.transform.position - textMesh.transform.position) * Quaternion.Euler(0, 180, 0); ;
     }
 }

@@ -12,7 +12,6 @@ public class Click : MonoBehaviour
     void Update()
     {
         // Check for LEFT mouse input 
-
         if (Input.GetMouseButtonDown(0))
         {
             downClickTime = Time.time;
@@ -23,7 +22,7 @@ public class Click : MonoBehaviour
         {
             if (EventSystem.current.IsPointerOverGameObject())
             {
-                return;
+                return; // Avoid UI click thru
             }
             if (Time.time - downClickTime <= CLICK_DELTA_TIME)
             {
@@ -32,11 +31,11 @@ public class Click : MonoBehaviour
                 // Casts the ray and get the first game object hit
                 if (Physics.Raycast(ray, out hit, 100))
                 {
+                    // Hit a gameobject, let the gameobject itself handle the associated highlight + sidebar
                 }
                 else
                 {
-                    // Clicked on empty space
-                    Debug.Log("MISSSSSS");
+                    // Clicked on empty space, disable all highlights
                     gameObject.BroadcastMessage("DisableHighlight", SendMessageOptions.DontRequireReceiver);
 
                     // Close all sidebars

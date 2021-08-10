@@ -16,9 +16,7 @@ public class HighlightRenderer : MonoBehaviour
             return; // Not a clicked object
         }
 
-        // the clicked object to be highlighted
-        //var outline = GameObject.Find(gameObject.name + ".Prefab").GetComponent<Outline>();
-        
+        // the clicked object to be highlighted      
         if (outline == null)
         {
             outline = GameObject.Find(gameObject.name + ".Prefab").AddComponent<Outline>();
@@ -38,7 +36,6 @@ public class HighlightRenderer : MonoBehaviour
         }
 
         // a directly dependent object
-        //Outline outline = GetComponentInChildren<Outline>();
         if (outline == null)
         {
             outline = GameObject.Find(gameObject.name + ".Prefab").AddComponent<Outline>();
@@ -59,7 +56,6 @@ public class HighlightRenderer : MonoBehaviour
         }
 
         // an indirectly dependent object
-        //Outline outline = GetComponentInChildren<Outline>();
         if (outline == null)
         {
             outline = GameObject.Find(gameObject.name + ".Prefab").AddComponent<Outline>();
@@ -74,7 +70,6 @@ public class HighlightRenderer : MonoBehaviour
 
     public void DisableHighlight()
     {
-        //Outline outline = GetComponentInChildren<Outline>();
         if (outline == null)
         {
             return; // no highlight yet

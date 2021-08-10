@@ -32,11 +32,11 @@ public class MouseListener : MonoBehaviour
             return;
         }
 
-        // If a queue is clicked on show Queue details window
+        // Display side panels according to GameObject type
         if (TryGetComponent(out Queue _))
         {
-            List<string> temp = new List<string>() { transform.parent.name, name };
-            QueueDetailWindow.GetQueueBasicInfo(temp);
+            List<string> queue = new List<string>() {transform.parent.name, name};
+            QueueDetailWindow.GetQueueBasicInfo(queue);
             channelDetailsWindow.Close();
             applicationDetailsWindow.Close();
         } else if (TryGetComponent(out Channel _))
@@ -53,8 +53,6 @@ public class MouseListener : MonoBehaviour
             QueueDetailWindow.Close();
             channelDetailsWindow.Close();
         }
-       
-        Debug.Log("I hit " + this.name + " !");
 
         // Highlight Functionality
         State state = GameObject.Find("State").GetComponent<State>(); //Might be time consuming operation
@@ -63,6 +61,7 @@ public class MouseListener : MonoBehaviour
 
         state.dependencyGraph.directDependencies.TryGetValue(this.name, out directDependency);
         state.dependencyGraph.indirectDependencies.TryGetValue(this.name, out indirectDenpendency);
+
         // If no dependency found, initialize to empty list
         // Because passing null value = zero argument to the function broadcasted
         if (directDependency == null)
@@ -80,10 +79,5 @@ public class MouseListener : MonoBehaviour
         state.BroadcastMessage("HighlightDirect", directDependency, SendMessageOptions.DontRequireReceiver); // highlight direct dependency
         state.BroadcastMessage("HighlightIndirect", indirectDenpendency, SendMessageOptions.DontRequireReceiver); // highlight indirect dependency
 
-        //if (We are clicking on sender channel) {
-        //    foreach QM name 
-        //    highlightImplicit( implicit = this.name (QM1.QM2);
-
-        //}
     }
 }

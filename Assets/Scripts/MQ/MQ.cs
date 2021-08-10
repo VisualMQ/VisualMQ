@@ -80,7 +80,6 @@ namespace MQ
             }
         }
 
-
         public List<Message> GetAllMessages(string queue)
         {
             string response = GetRequest("/ibmmq/rest/v1/messaging/qmgr/" + qmgr + "/queue/" + queue + "/messagelist");
@@ -89,12 +88,10 @@ namespace MQ
             return messages;
         }
 
-
         public string GetMessageContent(string queue, string messageId)
         {
             return GetRequest("/ibmmq/rest/v1/messaging/qmgr/" + qmgr + "/queue/" + queue + "/message?messageId=" + messageId);
         }
-
 
         public QueueManager GetQmgr()
         {
@@ -103,7 +100,6 @@ namespace MQ
             List<QueueManager> qmgrs = Parser.Parse(qmgrJson);
             return qmgrs[0];
         }
-
 
         public List<Queue> GetAllQueues()
         {
@@ -130,6 +126,15 @@ namespace MQ
             _ChannelResponseJson channelJson = JsonUtility.FromJson<_ChannelResponseJson>(response);
             List<Channel> channels = Parser.Parse(channelJson);
             return channels[0];
+        }
+
+        public List<Channel> GetAllChannels()
+        {
+            string jsonRequest = "{\"type\":\"runCommandJSON\",\"command\":\"display\",\"qualifier\":\"channel\",\"name\":\"*\",\"responseParameters\":[\"all\"],\"parameters\":{}}";
+            string response = PostRequest("/ibmmq/rest/v2/admin/action/qmgr/" + qmgr + "/mqsc", jsonRequest);
+            _ChannelResponseJson channelJson = JsonUtility.FromJson<_ChannelResponseJson>(response);
+            List<Channel> channels = Parser.Parse(channelJson);
+            return channels;
         }
 
         public Application GetApplication(string application)
@@ -160,22 +165,10 @@ namespace MQ
             return filteredApplications;
         }
 
-        public List<Channel> GetAllChannels()
-        {
-            string jsonRequest = "{\"type\":\"runCommandJSON\",\"command\":\"display\",\"qualifier\":\"channel\",\"name\":\"*\",\"responseParameters\":[\"all\"],\"parameters\":{}}";
-            string response = PostRequest("/ibmmq/rest/v2/admin/action/qmgr/" + qmgr + "/mqsc", jsonRequest);
-            _ChannelResponseJson channelJson = JsonUtility.FromJson<_ChannelResponseJson>(response);
-            List<Channel> channels = Parser.Parse(channelJson);
-            return channels;
-        }
-
     }
 
-
-
-    /// 
-    /// Parses class for converting JSON representation to our internal data model
-    /// 
+    //Parses class for converting JSON representation to our internal data model
+    
     public class Parser
     {
         public static List<QueueManager> Parse(_QueueManagerResponseJson qmgrResponseJson)
@@ -344,12 +337,12 @@ namespace MQ
         }
     }
 
-    /// 
-    /// Below are JSON data representation objects
-    /// They are used just for serialising JSON API responses
-    /// and then Parser class parses them into our internal data
-    /// representation.
-    /// 
+    /* 
+    Below are JSON data representation objects
+    They are used just for serialising JSON API responses
+    and then Parser class parses them into our internal data
+    representation.
+    */
     [Serializable]
     public class _QueueManagerResponseJson
     {
@@ -482,20 +475,6 @@ namespace MQ
         public string chltype;
         public string xmitq;
     }
-
-    //[Serializable]
-    //public class _ChannelJson
-    //{
-    //    public string type;
-    //    public string name;
-    //    public _ChannelSenderJson sender;
-    //}
-
-    //[Serializable]
-    //public class _ChannelSenderJson
-    //{
-    //    public string transmissionQueueName;
-    //}
 
     [Serializable]
     public class _ApplicationResponseJson
