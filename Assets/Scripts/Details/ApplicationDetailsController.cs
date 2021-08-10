@@ -14,8 +14,6 @@ public class ApplicationDetailsController : MonoBehaviour
 
     private void Awake()
     {
-        MouseListener.applicationDetailsWindow = this;
-
         closeButton = transform.Find("ButtonClose").GetComponent<Button>();
         textName = transform.Find("TextGroup/Text1").GetComponent<Text>();
         textType = transform.Find("TextGroup/Text2").GetComponent<Text>();

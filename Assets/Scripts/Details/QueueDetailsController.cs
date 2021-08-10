@@ -6,144 +6,163 @@ using UnityEngine.UI;
 public class QueueDetailsController : MonoBehaviour
 {
     
-    // Public Window
-    public GameObject WindowQueueDetails, WindowMessageLists, WindowConnections;
-    public GameObject WindowQMQueueLists;
+    // Different sub-windows of Queue details sidebar
+    private GameObject subwindowDetails, subwindowMessages, subwindowConnections;
 
-    // Text Fields Basic Info
-    private Transform textGroup;
-    private Text text0_queueName, text1_maxNumberMessage, text2_maxMessageLength, 
-            text3_put, text4_get, text5_description, text6_created, text7_altered, 
-            text8_depth;
+    // Details text fields
+    private Text detailsQueueName, detailsMaxNumberMessage, detailsMaxMessageLength, 
+            detailsPut, detailsGet, detailsDescription, detailsCreated, detailsAltered, 
+            detailsDepth, detailsType;
+
+    // Connections text fields
+    private Text connectionsOpenInputCount, connectionsOpenOutputCount, connectionsTargetQueue,
+            connectionsTargetQueueManager, connectionsTransmissionQueue;
 
     // Buttons
-    private Button returnButton, closeButton;
     private Transform tabButtonsGroups;
-    private Button toQueueDetail, toMessageList, toConnection;
+    private Button toQueueDetail, toMessageList, toConnections;
 
-    public List<string> currentSelected;
+    private MQ.Queue currentQueue;
+
+    private State stateComponent;
 
 
-    private void Awake() {
-
-        // Locate the Button
-        returnButton = transform.Find("ButtonReturn").GetComponent<Button>();
-        closeButton = transform.Find("ButtonCloseQueue").GetComponent<Button>();
-
+    void Awake()
+    {
         // Tab Buttons
-        tabButtonsGroups = transform.Find("GameObjectTabButtons");
-        toQueueDetail = tabButtonsGroups.Find("ButtonQueueDetails").GetComponent<Button>();
-        toMessageList = tabButtonsGroups.Find("ButtonMessageList").GetComponent<Button>();
-        toConnection = tabButtonsGroups.Find("ButtonConnections").GetComponent<Button>();
+        tabButtonsGroups = transform.Find("Tabs");
+        toQueueDetail = tabButtonsGroups.Find("TabDetails").GetComponent<Button>();
+        toMessageList = tabButtonsGroups.Find("TabMessages").GetComponent<Button>();
+        toConnections = tabButtonsGroups.Find("TabConnections").GetComponent<Button>();
 
-        // Locate the Text
-        textGroup = transform.Find("TextFieldsGroup");
-        text0_queueName = textGroup.Find("Text").GetComponent<Text>();
-        text1_maxNumberMessage = textGroup.Find("Text1").GetComponent<Text>();
-        text2_maxMessageLength = textGroup.Find("Text2").GetComponent<Text>();
-        text3_put = textGroup.Find("Text3").GetComponent<Text>();
-        text4_get = textGroup.Find("Text4").GetComponent<Text>();
-        text5_description = textGroup.Find("Text5").GetComponent<Text>();
-        text6_created = textGroup.Find("Text6").GetComponent<Text>();
-        text7_altered = textGroup.Find("Text7").GetComponent<Text>();
-        text8_depth = textGroup.Find("Text8").GetComponent<Text>();
+        // Sub-windows
+        subwindowDetails = transform.Find("Details").gameObject;
+        subwindowMessages = transform.Find("Messages").gameObject;
+        subwindowConnections = transform.Find("Connections").gameObject;
 
-        // Link Queue Detail Window
-        MouseListener.QueueDetailWindow = this;
+        // Buttons
+        toQueueDetail.onClick.AddListener(ToQueueDetails);
+        toMessageList.onClick.AddListener(ToMessages);
+        toConnections.onClick.AddListener(ToConnections);
 
-        //Button Listeners
-        returnButton.onClick.AddListener(ReturnClicked);
-        closeButton.onClick.AddListener(Close);
+        // State object
+        GameObject stateGameObject = GameObject.Find("State");
+        stateComponent = stateGameObject.GetComponent(typeof(State)) as State;
 
-        toQueueDetail.onClick.AddListener(ToQueueDetailsClicked);
-        toMessageList.onClick.AddListener(ToMessageListClicked);
-        toConnection.onClick.AddListener(ToConnectionClicked);
-        
+        // Details sub-window
+        detailsQueueName = subwindowDetails.transform.Find("Name/TextName").GetComponent<Text>();
+        detailsMaxNumberMessage = subwindowDetails.transform.Find("MaxMessages/TextMaxMessages").GetComponent<Text>();
+        detailsMaxMessageLength = subwindowDetails.transform.Find("MaxLength/TextMaxLength").GetComponent<Text>();
+        detailsPut = subwindowDetails.transform.Find("InhibitPut/TextInhibitPut").GetComponent<Text>();
+        detailsGet = subwindowDetails.transform.Find("InhibitGet/TextInhibitGet").GetComponent<Text>();
+        detailsDescription = subwindowDetails.transform.Find("Description/TextDescription").GetComponent<Text>();
+        detailsCreated = subwindowDetails.transform.Find("TimeCreated/TextTimeCreated").GetComponent<Text>();
+        detailsAltered = subwindowDetails.transform.Find("TimeAltered/TextTimeAltered").GetComponent<Text>();
+        detailsDepth = subwindowDetails.transform.Find("Depth/TextDepth").GetComponent<Text>();
+        detailsType = subwindowDetails.transform.Find("Type/TextType").GetComponent<Text>();
+
+
+        // Connections sub-window
+        connectionsOpenInputCount = subwindowConnections.transform.Find("OpenInputCount/TextOpenInputCount").GetComponent<Text>();
+        connectionsOpenOutputCount = subwindowConnections.transform.Find("OpenOutputCount/TextOpenOutputCount").GetComponent<Text>();
+        connectionsTargetQueue = subwindowConnections.transform.Find("TargetQueue/TextTargetQueue").GetComponent<Text>();
+        connectionsTargetQueueManager = subwindowConnections.transform.Find("TargetQueueManager/TextTargetQueueManager").GetComponent<Text>();
+        connectionsTransmissionQueue = subwindowConnections.transform.Find("TransmissionQueue/TextTransmissionQueue").GetComponent<Text>();
+
+
     }
-
-
-    private void Start()
-    {
-
-    }
-
     
-    /*
-        Queue Content Generation
-        Parameters: QM name and Queue name in a list
-    */
-    public void GetQueueBasicInfo(List<string> temp)
+
+    public void GetQueueDetails(List<string> temp)
     {
-        WindowQueueDetails.SetActive(true);
-        currentSelected = temp;
-        
-        
         string qmName = temp[0];
         string queueName = temp[1];
+        string removeQMQueueName = queueName.Substring(qmName.Length + 1);
 
-        int starIdx = qmName.Length;
-        string removeQMQueueName = queueName.Substring(starIdx+1);
+        subwindowDetails.SetActive(true);        
+        
+        currentQueue = stateComponent.GetQueueDetails(qmName, removeQMQueueName);
 
-
-        GameObject stateGameObject = GameObject.Find("State");
-        State stateComponent = stateGameObject.GetComponent(typeof(State)) as State;
-        MQ.Queue queue = stateComponent.GetQueueDetails(qmName, removeQMQueueName);
-
-
-        text0_queueName.text = queue.queueName;
-        text1_maxNumberMessage.text = queue.maxNumberOfMessages.ToString();
-        text2_maxMessageLength.text = queue.maxMessageLength.ToString();
-        text3_put.text = queue.inhibitPut.ToString();
-        text4_get.text = queue.inhibitGet.ToString();
-        text5_description.text = queue.description;
-        text6_created.text = queue.timeCreated;
-        text7_altered.text = queue.timeAltered;
-        text8_depth.text = queue.currentDepth.ToString();
-
+        ToQueueDetails();
     }
 
 
-// Button Listeners: 
-// closeButton, returnButton, tabButtons(*3)
-//
-//
-
-
-    // Return to Queue Lists (in QM Window)
-    private void ReturnClicked()
+    // Display Queue details sub-window
+    private void ToQueueDetails()
     {
-        WindowQueueDetails.SetActive(false); // Close Current
-        WindowQMQueueLists.SetActive(true);  // To Queue List Window (QMDetailRight)
-        WindowQMQueueLists.SendMessage("GenerateQueueList", currentSelected[0]);
+        subwindowDetails.SetActive(true);
+        subwindowMessages.SetActive(false);
+        subwindowConnections.SetActive(false);
+
+        toQueueDetail.Select();
+
+        detailsQueueName.text = currentQueue.queueName;
+        detailsMaxNumberMessage.text = currentQueue.maxNumberOfMessages.ToString();
+        detailsMaxMessageLength.text = currentQueue.maxMessageLength.ToString();
+        detailsPut.text = currentQueue.inhibitPut.ToString();
+        detailsGet.text = currentQueue.inhibitGet.ToString();
+        detailsDescription.text = currentQueue.description;
+        detailsCreated.text = currentQueue.timeCreated;
+        detailsAltered.text = currentQueue.timeAltered;
+        detailsDepth.text = currentQueue.currentDepth.ToString();
+        detailsType.text = currentQueue.GetTypeName();
     }
 
-    // Close current window
-    public void Close()
-    {
-        WindowQueueDetails.SetActive(false);
-    }
-
-    // Stay in current window
-    private void ToQueueDetailsClicked()
-    {
-        return;
-    }
 
     // Switch to Message List Window
-    private void ToMessageListClicked()
+    private void ToMessages()
     {
-        WindowQueueDetails.SetActive(false); // Close current
+        subwindowDetails.SetActive(false);
+        subwindowMessages.SetActive(true);
+        subwindowConnections.SetActive(false);
 
-        WindowMessageLists.SetActive(true);
-        WindowMessageLists.SendMessage("GenerateMessageList", currentSelected);
+        toMessageList.Select();
     }
 
+
     // Switch to Connection Window
-    private void ToConnectionClicked()
+    private void ToConnections()
     {
-        WindowConnections.SetActive(true);
-        WindowConnections.SendMessage("generateQueueTypeDetail", currentSelected);
-        WindowQueueDetails.SetActive(false);
+        subwindowDetails.SetActive(false);
+        subwindowMessages.SetActive(false);
+        subwindowConnections.SetActive(true);
+
+        toConnections.Select();
+
+        // Display appropriate information based on what queue it is, because
+        // not all types of queues will have all information
+        if (currentQueue is MQ.LocalQueue)
+        {
+            connectionsOpenInputCount.text = ((MQ.LocalQueue)currentQueue).openInputCount.ToString();
+            connectionsOpenOutputCount.text = ((MQ.LocalQueue)currentQueue).openOutputCount.ToString();
+            connectionsTargetQueue.text = "N/A";
+            connectionsTargetQueueManager.text = "N/A";
+            connectionsTransmissionQueue.text = "N/A";
+        }
+        else if (currentQueue is MQ.TransmissionQueue)
+        {
+            connectionsOpenInputCount.text = ((MQ.TransmissionQueue)currentQueue).openInputCount.ToString();
+            connectionsOpenOutputCount.text = ((MQ.TransmissionQueue)currentQueue).openOutputCount.ToString();
+            connectionsTargetQueue.text = "N/A";
+            connectionsTargetQueueManager.text = "N/A";
+            connectionsTransmissionQueue.text = "N/A";
+        }
+        else if (currentQueue is MQ.AliasQueue)
+        {
+            connectionsOpenInputCount.text = "N/A";
+            connectionsOpenOutputCount.text = "N/A";
+            connectionsTargetQueue.text = ((MQ.AliasQueue)currentQueue).targetQueueName;
+            connectionsTargetQueueManager.text = "N/A";
+            connectionsTransmissionQueue.text = "N/A";
+        }
+        else if (currentQueue is MQ.RemoteQueue)
+        {
+            connectionsOpenInputCount.text = "N/A";
+            connectionsOpenOutputCount.text = "N/A";
+            connectionsTargetQueue.text = ((MQ.RemoteQueue)currentQueue).targetQueueName;
+            connectionsTargetQueueManager.text = ((MQ.RemoteQueue)currentQueue).targetQmgrName;
+            connectionsTransmissionQueue.text = ((MQ.RemoteQueue)currentQueue).transmissionQueueName;
+        }
     }
 
 }

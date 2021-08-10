@@ -12,8 +12,6 @@ public class ChannelDetailsController : MonoBehaviour
     
     private void Awake()
     {
-        MouseListener.channelDetailsWindow = this;
-
         closeButton = transform.Find("ButtonClose").GetComponent<Button>();
         textName = transform.Find("TextGroup/Text1").GetComponent<Text>();
         textType = transform.Find("TextGroup/Text2").GetComponent<Text>();
