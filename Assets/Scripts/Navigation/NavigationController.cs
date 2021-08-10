@@ -71,12 +71,16 @@ public class NavigationController : MonoBehaviour
     // The exit button clicked: Delete all QM objects under "State"
     private void ExitButtonClicked()
     {
+        UnityEngine.Application.Quit();
+
+        /* Destroy the QM Object
         GameObject stateGameObject = GameObject.Find("State");
 
         foreach (Transform child in stateGameObject.transform)
         {
             Destroy(child.gameObject);
         }
+        */ 
     }
 
     // Go to Github Page
