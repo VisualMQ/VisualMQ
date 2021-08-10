@@ -73,15 +73,13 @@ public class QueueDetailsController : MonoBehaviour
     }
     
 
-    public void GetQueueDetails(List<string> temp)
+    public void GetQueueDetails(string qmgrName, string queueFullName)
     {
-        string qmName = temp[0];
-        string queueName = temp[1];
-        string removeQMQueueName = queueName.Substring(qmName.Length + 1);
+        string queueName = queueFullName.Substring(qmgrName.Length + 1);
 
         subwindowDetails.SetActive(true);        
         
-        currentQueue = stateComponent.GetQueueDetails(qmName, removeQMQueueName);
+        currentQueue = stateComponent.GetQueueDetails(qmgrName, queueName);
 
         ToQueueDetails();
     }

@@ -7,7 +7,7 @@ public class SidebarController : MonoBehaviour
 {
 
     private Button closeButton;
-    private GameObject queueDetails;
+    private GameObject queueDetails, channelDetails, applicationDetails;
 
 
     void Awake()
@@ -16,25 +16,40 @@ public class SidebarController : MonoBehaviour
         closeButton.onClick.AddListener(CloseSidebar);
 
         queueDetails = transform.Find("QueueDetails").gameObject;
+        channelDetails = transform.Find("ChannelDetails").gameObject;
 
         MouseListener.sidebarController = this;
     }
+
 
     void Start()
     {
         gameObject.SetActive(false);
     }
 
+
     void CloseSidebar()
     {
         gameObject.SetActive(false);
     }
 
-    public void ShowQueueDetails(List<string> temp)
+
+    public void ShowQueueDetails(string qmgrName, string queueName)
     {
         gameObject.SetActive(true);
         queueDetails.SetActive(true);
+        channelDetails.SetActive(false);
         QueueDetailsController controller = queueDetails.GetComponent<QueueDetailsController>();
-        controller.GetQueueDetails(temp);
+        controller.GetQueueDetails(qmgrName, queueName);
+    }
+
+
+    public void ShowChannelDetails(string qmgrName, string channelName)
+    {
+        gameObject.SetActive(true);
+        queueDetails.SetActive(false);
+        channelDetails.SetActive(true);
+        ChannelDetailsController controller = channelDetails.GetComponent<ChannelDetailsController>();
+        controller.GetChannelDetails(qmgrName, channelName);
     }
 }

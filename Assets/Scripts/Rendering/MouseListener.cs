@@ -33,16 +33,13 @@ public class MouseListener : MonoBehaviour
         // If a queue is clicked on show Queue details window
         if (TryGetComponent(out Queue _))
         {
-            List<string> temp = new List<string>() { transform.parent.name, name };
-            sidebarController.ShowQueueDetails(temp);
+            sidebarController.ShowQueueDetails(transform.parent.name, name);
         }
-        //else if (TryGetComponent(out Channel _))
-        //{
-        //    Channel channel = gameObject.GetComponent<Channel>();
-        //    channelDetailsWindow.GetChannelDetails(transform.parent.name, channel.channel.channelName);
-        //    QueueDetailWindow.Close();
-        //    applicationDetailsWindow.Close();
-        //}
+        else if (TryGetComponent(out Channel _))
+        {
+            Channel channel = gameObject.GetComponent<Channel>();
+            sidebarController.ShowChannelDetails(transform.parent.name, channel.channel.channelName);
+        }
         //else if (TryGetComponent(out Application _))
         //{
         //    Application application = gameObject.GetComponent<Application>();
@@ -50,7 +47,7 @@ public class MouseListener : MonoBehaviour
         //    QueueDetailWindow.Close();
         //    channelDetailsWindow.Close();
         //}
-       
+
         Debug.Log("I hit " + this.name + " !");
 
         State state = GameObject.Find("State").GetComponent<State>(); //Might be time consuming operation
