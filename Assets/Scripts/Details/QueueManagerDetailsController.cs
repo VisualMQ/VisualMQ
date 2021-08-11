@@ -97,7 +97,6 @@ public class QueueManagerDetailsController : MonoBehaviour
 
             GameObject item = Instantiate(queueRowTemplate, transform.Find("Queues/QueuesList"));
 
-            item.SetActive(true);
             item.transform.Find("Text").GetComponent<Text>().text = queue.queueName;
 
             Button button = item.GetComponent<Button>();
