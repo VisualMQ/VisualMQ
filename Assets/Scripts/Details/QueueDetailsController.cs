@@ -82,7 +82,11 @@ public class QueueDetailsController : MonoBehaviour
         subwindowDetails.SetActive(true);        
         
         currentQueue = stateComponent.GetQueueDetails(qmgrName, queueName);
-        currentQueue.messages = stateComponent.GetAllMessages(qmgrName, queueName);
+        if (currentQueue.holdsMessages)
+        {
+            currentQueue.messages = stateComponent.GetAllMessages(qmgrName, queueName);
+        }
+        
 
         ToQueueDetails();
     }
