@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 
-
 namespace MQ
 {
     public abstract class Channel
@@ -13,11 +12,17 @@ namespace MQ
     public class SenderChannel : Channel
     {
         public string transmissionQueueName;
+        public string connectionName;
     }
 
     public class ReceiverChannel : Channel
     {
         
+    }
+
+    public class ApplicationChannel: Channel
+    {
+
     }
 }
 

@@ -5,7 +5,6 @@ namespace MQ
 {
     public class Application
     {
-
         public class ConnectedObject
         {
             public string objname;

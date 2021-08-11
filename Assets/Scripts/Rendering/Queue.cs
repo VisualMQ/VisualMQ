@@ -6,7 +6,6 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using MQ;
 
-
 [RequireComponent(typeof(NameRenderer))]
 [RequireComponent(typeof(HighlightRenderer))]
 [RequireComponent(typeof(MouseListener))]
@@ -81,15 +80,11 @@ public class Queue : MonoBehaviour
 
     public void createPositionAnimation()
     {
-
         Vector3 endPosition = this.parent.ComputePosition(this.queue.GetTypeName(), this.rank);
         this.instantiatedQueue.transform.parent.position =
                 Vector3.MoveTowards(this.instantiatedQueue.transform.parent.position,
                 endPosition, Time.deltaTime * 22.0f // (Yes, Magic number) 
                 );
-
-
-
 
         if (Vector3.Distance(transform.position, endPosition) < 0.001f)
         {
@@ -99,18 +94,12 @@ public class Queue : MonoBehaviour
             }
             CancelInvoke();
         }
-
-
-
-
-
     }
 
 
 
     void Start()
     {
-       
         string prefabName;
         if (queue is MQ.RemoteQueue)
         {
@@ -136,7 +125,6 @@ public class Queue : MonoBehaviour
         instantiatedQueue = Instantiate(queuePrefab, new Vector3(0,0,0), Quaternion.identity) as GameObject;
         instantiatedQueue.name = this.name + ".Prefab";
 
-        
         if (queue.holdsMessages)
         {
             int currentDepth = queue.currentDepth;
@@ -154,86 +142,7 @@ public class Queue : MonoBehaviour
         // Add mesh Colider
         MeshCollider mc = gameObject.AddComponent<MeshCollider>();
         mc.sharedMesh = instantiatedQueue.GetComponent<MeshFilter>().sharedMesh;
-
     }
-
-
-    void CreateMessagePaths()
-    {
-        State state = GameObject.Find("State").GetComponent(typeof(State)) as State;
-        if (!state.dependencyGraph.graph.ContainsKey(this.name))
-        {
-            return; //no dependency for this queue
-        }
-        List<string> testDependency = state.dependencyGraph.graph[this.name];
-
-        int idx = 0;
-        while (idx < testDependency.Count)
-        {
-            Queue waypointQueue = GameObject.Find(testDependency[idx]).GetComponent(typeof(Queue)) as Queue;
-            if (waypointQueue.queue is MQ.RemoteQueue)
-            {
-                GameObject path = new GameObject("Path", typeof(PathCreation.AutoPathGenerator));
-                PathCreation.AutoPathGenerator pathGenerator = path.GetComponent(typeof(PathCreation.AutoPathGenerator)) as PathCreation.AutoPathGenerator;
-                List<Transform> testTransform = new List<Transform>();
-                for (int i = idx; i < idx + 5; i++)
-                {
-                    GameObject waypointObject = GameObject.Find(testDependency[i]);
-                    if (waypointObject == null)
-                    {
-                        break;
-                    }
-                    testTransform.Add(waypointObject.transform);
-                }
-                pathGenerator.waypoints = testTransform.ToArray();
-
-                //create "message" object
-                GameObject follower = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                follower.AddComponent(typeof(PathCreation.PathFollower));
-                PathCreation.PathFollower followGenerator = follower.GetComponent(typeof(PathCreation.PathFollower)) as PathCreation.PathFollower;
-
-                //have this message object follow the path defined in path object
-                followGenerator.pathCreator = path.GetComponent(typeof(PathCreation.PathCreator)) as PathCreation.PathCreator;
-                followGenerator.endOfPathInstruction = PathCreation.EndOfPathInstruction.Loop;
-
-                //increment idx
-                idx += 5;
-            }
-            else if (waypointQueue.queue is MQ.AliasQueue)
-            {
-                GameObject path = new GameObject("Path", typeof(PathCreation.AutoPathGenerator));
-                PathCreation.AutoPathGenerator pathGenerator = path.GetComponent(typeof(PathCreation.AutoPathGenerator)) as PathCreation.AutoPathGenerator;
-                List<Transform> testTransform = new List<Transform>();
-                for (int i = idx; i < idx + 2; i++)
-                {
-                    GameObject waypointObject = GameObject.Find(testDependency[i]);
-                    Debug.Log("Current Waypoint Object is: " + waypointObject);
-                    if (waypointObject == null)
-                    {
-                        break;
-                    }
-                    testTransform.Add(waypointObject.transform);
-                }
-                pathGenerator.waypoints = testTransform.ToArray();
-
-                //create "message" object
-                GameObject follower = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                follower.AddComponent(typeof(PathCreation.PathFollower));
-                PathCreation.PathFollower followGenerator = follower.GetComponent(typeof(PathCreation.PathFollower)) as PathCreation.PathFollower;
-
-                //have this message object follow the path defined in path object
-                followGenerator.pathCreator = path.GetComponent(typeof(PathCreation.PathCreator)) as PathCreation.PathCreator;
-                followGenerator.endOfPathInstruction = PathCreation.EndOfPathInstruction.Loop;
-
-                //increment idx
-                idx += 2;
-            } else
-            {
-                throw new Exception();
-            }
-        }
-    }
-
 
     void Awake()
     {

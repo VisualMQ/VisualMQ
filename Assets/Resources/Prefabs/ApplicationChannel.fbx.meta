@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 5d0d8eae309f54d2e813179a3a0c4e34
+guid: 39d2e568ce04b47a89c1100bfb183300
 ModelImporter:
   serializedVersion: 20200
   internalIDToNameTable: []
@@ -12,13 +12,8 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Material.002
-    second: {fileID: 2100000, guid: 3062c18e586604031a7ca95ffa2c6de1, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: TransmissionQueueMaterial
-    second: {fileID: 2100000, guid: 6f11e8868c79c4a2ba9db5b304303f36, type: 2}
+      name: Material.018
+    second: {fileID: 2100000, guid: 9f7dd1f56d2184746aafedb3e0bbfb93, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -49,7 +44,7 @@ ModelImporter:
     isReadable: 1
   meshes:
     lODScreenPercentages: []
-    globalScale: 1
+    globalScale: 0.5
     meshCompression: 0
     addColliders: 0
     useSRGBMaterialColor: 1
@@ -100,14 +95,14 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    globalScale: 1
+    globalScale: 0.5
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
   autoGenerateAvatarMappingIfUnspecified: 1
-  animationType: 0
+  animationType: 2
   humanoidOversampling: 1
   avatarSetup: 0
   addHumanoidExtraRootOnlyWhenUsingAvatar: 1
