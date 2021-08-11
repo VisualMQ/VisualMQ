@@ -14,7 +14,6 @@ public class Click : MonoBehaviour
     void Update()
     {
         // Check for LEFT mouse input 
-
         if (Input.GetMouseButtonDown(0))
         {
             downClickTime = Time.time;
@@ -25,7 +24,7 @@ public class Click : MonoBehaviour
         {
             if (EventSystem.current.IsPointerOverGameObject())
             {
-                return;
+                return; // Avoid UI click thru
             }
             if (Time.time - downClickTime <= CLICK_DELTA_TIME)
             {
@@ -35,8 +34,9 @@ public class Click : MonoBehaviour
                 if (Physics.Raycast(ray, out hit, 100))
                 {
                     string objectName = hit.transform.name;
-                    Debug.Log("yiiha hitting " + objectName);
 
+                    // If we hit a gameobject, let the gameobject itself handle the associated highlight
+                    // Special case, look for situation when clicked on qmgr block
                     if (objectName.Substring(0, 5) == "Block")
                     {
                         string qmgrName = objectName.Substring(6);
@@ -47,8 +47,8 @@ public class Click : MonoBehaviour
                 }
                 else
                 {
-                    // Nothing to highlight so broadcast empty list
-                    gameObject.BroadcastMessage("Highlight", new List<string>(), SendMessageOptions.DontRequireReceiver);
+                    // Clicked on empty space, disable all highlights
+                    gameObject.BroadcastMessage("DisableHighlight", SendMessageOptions.DontRequireReceiver);
 
                     // Close all sidebars
                     GameObject canvas = GameObject.Find("Canvas");

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 
 namespace MQ
 {
-
     public abstract class Queue
     {
         public string queueName;
@@ -52,7 +51,6 @@ namespace MQ
         public int openInputCount;
         public int openOutputCount;
 
-        //TODO: Assign new message fields when message API is ready
         public TransmissionQueue()
         {
             holdsMessages = true;
@@ -63,7 +61,6 @@ namespace MQ
             return TransmissionQueue.typeName;
         }
     }
-
 
     public class AliasQueue : Queue
     {
@@ -90,7 +87,6 @@ namespace MQ
         public int openInputCount;
         public int openOutputCount;
 
-        //TODO: Assign new message fields when message API is ready
         public LocalQueue()
         {
             holdsMessages = true;

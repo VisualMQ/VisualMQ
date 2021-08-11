@@ -22,6 +22,10 @@ public class Channel : MonoBehaviour
         {
             prefabName = "Prefabs/ReceiverChannel";
         }
+        else if (channel is MQ.ApplicationChannel) // TODO: Applciation Prefab
+        {
+            prefabName = "Prefabs/ApplicationChannel";
+        }
         else
         {
             prefabName = "not defined"; //TODO: throw an exception

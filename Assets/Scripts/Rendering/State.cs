@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class State : MonoBehaviour
 {
     private const float UPDATE_INTERVAL = 10.0f;
+    private const string QM_NAME_DELIMITER = ".";
     // Distance between two QMs
     private const int DISTANCE_BETWEEN_QMS = 10;
 
@@ -21,6 +22,8 @@ public class State : MonoBehaviour
 
     public DependencyGraph dependencyGraph = new DependencyGraph();
 
+
+    public List<MQ.QueueManager> queueManagers = new List<MQ.QueueManager>();
 
     // Use this method for adding new Mq connections (aka connections to different Qmgrs)
     public void AddNewMqClient(MQ.Client newMqClient)
@@ -52,25 +55,28 @@ public class State : MonoBehaviour
                 }
             }
             MQ.QueueManager newQmgr = newMqClient.GetQmgr();
-            List<MQ.Queue> newQueues = newMqClient.GetAllQueues();
-            List<MQ.Channel> newChannels = newMqClient.GetAllChannels();
-            List<MQ.Application> newApplications = newMqClient.GetAllApplications();
+           
+            newQmgr.queues = newMqClient.GetAllQueues();
+            newQmgr.channels = newMqClient.GetAllChannels();
+            newQmgr.applications = newMqClient.GetAllApplications();
+            queueManagers.Add(newQmgr);
+
 
             // Render queue manager. Note that data is stored in Component (ie Script) not in GameObject!
             // GameObject is just an Entity/Container for Components that perform the real functionality
 
             GameObject qmgrGameObject = new GameObject(newQmgr.qmgrName, typeof(QueueManager));
             QueueManager qmgrComponent = qmgrGameObject.GetComponent(typeof(QueueManager)) as QueueManager;
-            qmgrComponent.qmName = newQmgr.qmgrName;
-            qmgrComponent.queues = newQueues;
-            qmgrComponent.channels = newChannels;
-            qmgrComponent.applications = newApplications;
-            dependencyGraph.CreateDependencyGraph(newQueues, newChannels, newApplications, newQmgr.qmgrName); //Create Dependency Graph
+            qmgrComponent.queueManager = newQmgr;
+           
+
+
+            dependencyGraph.CreateDependencyGraph(newQmgr.queues, newQmgr.channels, newQmgr.applications, newQmgr.qmgrName); //Create Dependency Graphs
 
             ///DELETE: debug info
-            foreach (KeyValuePair<string, List<string>> dependency in dependencyGraph.graph)
+            foreach (KeyValuePair<string, List<string>> dependency in dependencyGraph.indirectDependencies)
             {
-                Debug.Log("Dependency for " + dependency.Key + " is: " + string.Join(" , ", dependency.Value.ToArray()));
+                Debug.Log("Indirect Dependency for " + dependency.Key + " is: " + string.Join(" , ", dependency.Value.ToArray()));
             }
             ///
 
@@ -106,6 +112,9 @@ public class State : MonoBehaviour
                 GameObject renderedQmgr = entry.Value;
 
                 List<MQ.Queue> queues = mqClient.GetAllQueues();
+                List<MQ.Channel> channels = mqClient.GetAllChannels();
+                List<MQ.Application> applications = mqClient.GetAllApplications();
+
                 QueueManager qmgrComponent = renderedQmgr.GetComponent(typeof(QueueManager)) as QueueManager;
                 qmgrComponent.UpdateQueues(queues);
 
