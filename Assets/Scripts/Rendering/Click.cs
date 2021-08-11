@@ -39,8 +39,8 @@ public class Click : MonoBehaviour
                     gameObject.BroadcastMessage("Highlight", new List<string>(), SendMessageOptions.DontRequireReceiver);
 
                     // Close all sidebars
-                    GameObject canvas2D = GameObject.Find("Canvas2D");
-                    canvas2D.BroadcastMessage("Close", SendMessageOptions.DontRequireReceiver);
+                    GameObject canvas = GameObject.Find("Canvas");
+                    canvas.BroadcastMessage("Close", SendMessageOptions.DontRequireReceiver);
                 }
             }
         }

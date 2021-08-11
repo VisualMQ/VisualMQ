@@ -8222,7 +8222,7 @@ GameObject:
   - component: {fileID: 1232652468}
   - component: {fileID: 1232652467}
   m_Layer: 5
-  m_Name: Label
+  m_Name: TextQueueManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -14425,10 +14425,10 @@ RectTransform:
   m_Father: {fileID: 1650492178}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.7082, y: 170.3371}
-  m_SizeDelta: {x: 312.658, y: 29.3555}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -0.7082062, y: 170.3371}
+  m_SizeDelta: {x: -41.34201, y: -380.6445}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2116657229
 MonoBehaviour:

@@ -119,11 +119,10 @@ public class NavigationController : MonoBehaviour
             item.gameObject.SetActive(true);
             
             
-            item.Find("TextQMName").GetComponent<Text>().text = mqlist[i];
+            item.Find("TextQueueManager").GetComponent<Text>().text = mqlist[i];
 
             // connect the toggle to the corresponding QM
-            Transform toggleObject = item.Find("Toggle");
-            Toggle toggle = toggleObject.GetComponent<Toggle>();
+            Toggle toggle = item.GetComponent<Toggle>();
             GameObject qm = GameObject.Find(mqlist[i]);
             toggle.onValueChanged.AddListener(delegate{
                 showSelector(toggle,qm);
@@ -157,6 +156,12 @@ public class NavigationController : MonoBehaviour
                 GameObject.Destroy(child.gameObject);
             }
         }
+    }
+
+
+    void Close()
+    {
+        leftPanel.SetActive(false);
     }
 
 }
