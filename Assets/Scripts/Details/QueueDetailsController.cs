@@ -26,6 +26,8 @@ public class QueueDetailsController : MonoBehaviour
 
     private State stateComponent;
 
+    private GameObject messageRowTemplate;
+
 
     void Awake()
     {
@@ -68,6 +70,8 @@ public class QueueDetailsController : MonoBehaviour
         connectionsTargetQueue = subwindowConnections.transform.Find("TargetQueue/TextTargetQueue").GetComponent<Text>();
         connectionsTargetQueueManager = subwindowConnections.transform.Find("TargetQueueManager/TextTargetQueueManager").GetComponent<Text>();
         connectionsTransmissionQueue = subwindowConnections.transform.Find("TransmissionQueue/TextTransmissionQueue").GetComponent<Text>();
+
+        messageRowTemplate = Resources.Load("Prefabs/MessageRowItem") as GameObject;
     }
     
 
@@ -78,6 +82,7 @@ public class QueueDetailsController : MonoBehaviour
         subwindowDetails.SetActive(true);        
         
         currentQueue = stateComponent.GetQueueDetails(qmgrName, queueName);
+        currentQueue.messages = stateComponent.GetAllMessages(qmgrName, queueName);
 
         ToQueueDetails();
     }
@@ -113,6 +118,23 @@ public class QueueDetailsController : MonoBehaviour
         subwindowConnections.SetActive(false);
 
         toMessageList.Select();
+
+        // Delete all remaining messages that were already rendered
+        foreach (Transform message in transform.Find("Messages/MessagesList"))
+        {
+            GameObject.Destroy(message.gameObject);
+        }
+
+        // Render new messages
+        foreach (MQ.Message message in currentQueue.messages)
+        {
+            GameObject item = Instantiate(messageRowTemplate, transform.Find("Messages/MessagesList"));
+            item.transform.Find("Text").GetComponent<Text>().text = message.messageId;
+
+            Button button = item.GetComponent<Button>();
+            // TODO: pretty nasty solution when we have to change the queue name
+            button.onClick.AddListener(() => GUIUtility.systemCopyBuffer = message.messageId);
+        }
     }
 
 

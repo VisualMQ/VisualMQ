@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace MQ
 {
@@ -15,6 +16,8 @@ namespace MQ
         public string timeAltered;
         public int currentDepth;
         public bool holdsMessages{ get; protected set; }
+
+        public List<Message> messages;
 
         public static string typeName { get; protected set; }
         public abstract string GetTypeName();

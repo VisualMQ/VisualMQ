@@ -179,14 +179,7 @@ public class State : MonoBehaviour
         {
             if (client.GetQueueManagerName() == selectedQMName)
             {
-                foreach (MQ.Queue queue in client.GetAllQueues())
-                {
-
-                    if (queue.queueName == selectedQueueName)
-                    {
-                        return client.GetQueue(selectedQueueName);
-                    }
-                }
+                return client.GetQueue(selectedQueueName);
             }
         }
         return null;
@@ -201,13 +194,7 @@ public class State : MonoBehaviour
         {
             if (client.GetQueueManagerName() == selectedQMName)
             {
-                foreach (MQ.Queue queue in client.GetAllQueues())
-                {
-                    if (queue.queueName == selectedQueueName)
-                    {
-                        return client.GetAllMessages(selectedQueueName);
-                    }
-                }
+                return client.GetAllMessages(selectedQueueName);
             }
         }
         return null;
