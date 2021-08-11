@@ -17,6 +17,7 @@ public class SidebarController : MonoBehaviour
 
         queueDetails = transform.Find("QueueDetails").gameObject;
         channelDetails = transform.Find("ChannelDetails").gameObject;
+        applicationDetails = transform.Find("ApplicationDetails").gameObject;
 
         MouseListener.sidebarController = this;
     }
@@ -39,6 +40,7 @@ public class SidebarController : MonoBehaviour
         gameObject.SetActive(true);
         queueDetails.SetActive(true);
         channelDetails.SetActive(false);
+        applicationDetails.SetActive(false);
         QueueDetailsController controller = queueDetails.GetComponent<QueueDetailsController>();
         controller.GetQueueDetails(qmgrName, queueName);
     }
@@ -49,7 +51,19 @@ public class SidebarController : MonoBehaviour
         gameObject.SetActive(true);
         queueDetails.SetActive(false);
         channelDetails.SetActive(true);
+        applicationDetails.SetActive(false);
         ChannelDetailsController controller = channelDetails.GetComponent<ChannelDetailsController>();
         controller.GetChannelDetails(qmgrName, channelName);
+    }
+
+
+    public void ShowApplicationDetails(string qmgrName, string applicationName)
+    {
+        gameObject.SetActive(true);
+        queueDetails.SetActive(false);
+        channelDetails.SetActive(false);
+        applicationDetails.SetActive(true);
+        ApplicationDetailsController controller = applicationDetails.GetComponent<ApplicationDetailsController>();
+        controller.GetApplicationDetails(qmgrName, applicationName);
     }
 }

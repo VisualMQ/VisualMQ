@@ -40,13 +40,11 @@ public class MouseListener : MonoBehaviour
             Channel channel = gameObject.GetComponent<Channel>();
             sidebarController.ShowChannelDetails(transform.parent.name, channel.channel.channelName);
         }
-        //else if (TryGetComponent(out Application _))
-        //{
-        //    Application application = gameObject.GetComponent<Application>();
-        //    applicationDetailsWindow.GetApplicationDetails(transform.parent.name, application.application.conn);
-        //    QueueDetailWindow.Close();
-        //    channelDetailsWindow.Close();
-        //}
+        else if (TryGetComponent(out Application _))
+        {
+            Application application = gameObject.GetComponent<Application>();
+            sidebarController.ShowApplicationDetails(transform.parent.name, application.application.conn);
+        }
 
         Debug.Log("I hit " + this.name + " !");
 
