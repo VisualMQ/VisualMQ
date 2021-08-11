@@ -13,7 +13,7 @@ public class SidebarController : MonoBehaviour
     void Awake()
     {
         closeButton = transform.Find("ButtonClose").GetComponent<Button>();
-        closeButton.onClick.AddListener(CloseSidebar);
+        closeButton.onClick.AddListener(Close);
 
         queueDetails = transform.Find("QueueDetails").gameObject;
         channelDetails = transform.Find("ChannelDetails").gameObject;
@@ -29,7 +29,7 @@ public class SidebarController : MonoBehaviour
     }
 
 
-    void CloseSidebar()
+    void Close()
     {
         gameObject.SetActive(false);
     }

@@ -21,8 +21,8 @@ public class AuthenticationController : MonoBehaviour
     private Text successMainText, successTimeText, errorMainText, errorTimeText;
 
 
-    private string successMessage = "A New Queue Manager Added.";
-    private string errorMessage = "Fail to add this Queue Manager. Please try later.";
+    private string successMessage = "New queue manager added.";
+    private string errorMessage = "Failed to add this queue manager. Please try again.";
 
     private string userNameT, apiKeyT, MQURLT, QMNameT; // Authentication Info
 
@@ -218,17 +218,30 @@ public class AuthenticationController : MonoBehaviour
     // The Initial state of all warning labels
     void WarningLabelsInitStatus()
     {
-        warningAPI.text = "User's API Key";
+        //warningAPI.text = "Your API key";
+        //warningAPI.color = Color.gray;
+
+        //warningQueueName.text = "Name of your queue manager";
+        //warningQueueName.color = Color.gray;
+
+        //warningURL.text = "URL to your queue manager";
+        //warningURL.color = Color.gray;
+
+        //warningUserName.text = "Your IBM Cloud username";
+        //warningUserName.color = Color.gray;
+
+        warningAPI.text = "E.g. I69H42WwUy2fQBbsGvKwFdBBj3ZgtuHEr3vs2xyr0oJ";
         warningAPI.color = Color.gray;
 
-        warningQueueName.text = "The name of the Queue Manager";
+        warningQueueName.text = "E.g. QM1";
         warningQueueName.color = Color.gray;
 
-        warningURL.text = "The URL to your Queue Manager";
+        warningURL.text = "E.g. https://web-qm1-8543.qm.eu-gb.mq.appdomain.cloud";
         warningURL.color = Color.gray;
 
-        warningUserName.text = "Your user name of the IBM Cloud";
+        warningUserName.text = "E.g. lillyjohnson";
         warningUserName.color = Color.gray;
+
     }
 
 }
