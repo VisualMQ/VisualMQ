@@ -107,15 +107,16 @@ public class NavigationController : MonoBehaviour
 
         int size = mqlist.Count;
 
-        float rowHeight = 48f;
-        float startY = -24f;
+        float rowHeight = 43.1275f;
+        float startX = 176.3f;
+        float startY = -41.55f;
         
 
         for (int i = 0; i < size; i ++)
         {
             Transform item = Instantiate(checkboxItem, leftPanel.transform);
             RectTransform recTransform = item.GetComponent<RectTransform>();
-            recTransform.anchoredPosition = new Vector2(0, -rowHeight * i + startY);
+            recTransform.anchoredPosition = new Vector2(startX, -rowHeight * i + startY);
             item.gameObject.SetActive(true);
             
             
