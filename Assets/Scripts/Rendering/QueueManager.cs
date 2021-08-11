@@ -27,7 +27,7 @@ public class QueueManager : MonoBehaviour
     public Dictionary<string, int> numberOfRenderedQueues;
     public Dictionary<string, int[]> dimensions;
 
-    public static QMDetailsController QMDetailWindow;
+    public static QueueManagerDetailsController QMDetailWindow;
 
     public GameObject blockParent;
 
@@ -237,37 +237,6 @@ public class QueueManager : MonoBehaviour
         return (offset + position + queueManagerHeight + baseLoc);  
     }
 
-
-    void Update()
-    {
-       
-
-
-        // Check for RIGHT mouse input
-        if (Input.GetMouseButton(1))
-        {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-            // Casts the ray and get the first game object hit
-            if (Physics.Raycast(ray, out hit)) {
-                string objectName = hit.transform.name;
-                string objectType = objectName.Substring(0, 5);
-                string qmName = objectName.Substring(6);
-                if (objectName == "Block." + this.qmName)
-                {
-                    
-                    Debug.Log("QM Block is clicked: "+qmName);
-                    // change to the position to observe the clicked qm
-                    topView();
-                    // use the qmname trigger the qm detail window
-                    QMDetailWindow.QueueManagerInfoInit(qmName);
-                    
-
-                }
-            }
-        }
-
-    }
 
     void topView()
     {

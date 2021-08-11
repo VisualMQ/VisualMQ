@@ -8,6 +8,8 @@ public class Click : MonoBehaviour
     private const float CLICK_DELTA_TIME = 0.5f;
     private Vector3 clickpo;
 
+    public GameObject sidebar;
+
     // Update is called once per frame
     void Update()
     {
@@ -32,6 +34,16 @@ public class Click : MonoBehaviour
                 // Casts the ray and get the first game object hit
                 if (Physics.Raycast(ray, out hit, 100))
                 {
+                    string objectName = hit.transform.name;
+                    Debug.Log("yiiha hitting " + objectName);
+
+                    if (objectName.Substring(0, 5) == "Block")
+                    {
+                        string qmgrName = objectName.Substring(6);
+
+                        SidebarController sidebarController = sidebar.GetComponent<SidebarController>();
+                        sidebarController.ShowQueueManagerDetails(qmgrName);
+                    }
                 }
                 else
                 {

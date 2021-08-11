@@ -68,8 +68,6 @@ public class QueueDetailsController : MonoBehaviour
         connectionsTargetQueue = subwindowConnections.transform.Find("TargetQueue/TextTargetQueue").GetComponent<Text>();
         connectionsTargetQueueManager = subwindowConnections.transform.Find("TargetQueueManager/TextTargetQueueManager").GetComponent<Text>();
         connectionsTransmissionQueue = subwindowConnections.transform.Find("TransmissionQueue/TextTransmissionQueue").GetComponent<Text>();
-
-
     }
     
 

@@ -21,22 +21,11 @@ public class State : MonoBehaviour
 
     public DependencyGraph dependencyGraph = new DependencyGraph();
 
+
     // Use this method for adding new Mq connections (aka connections to different Qmgrs)
     public void AddNewMqClient(MQ.Client newMqClient)
     {
         qmgrs.Add(newMqClient, null);
-    }
-
-
-    void Awake()
-    {
-        updateTimeText = GameObject.Find("UpdateText");
-    }
-
-
-    void Start()
-    {
-
     }
 
 
