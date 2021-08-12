@@ -218,17 +218,6 @@ public class AuthenticationController : MonoBehaviour
     // The Initial state of all warning labels
     void WarningLabelsInitStatus()
     {
-        //warningAPI.text = "Your API key";
-        //warningAPI.color = Color.gray;
-
-        //warningQueueName.text = "Name of your queue manager";
-        //warningQueueName.color = Color.gray;
-
-        //warningURL.text = "URL to your queue manager";
-        //warningURL.color = Color.gray;
-
-        //warningUserName.text = "Your IBM Cloud username";
-        //warningUserName.color = Color.gray;
 
         warningAPI.text = "E.g. I69H42WwUy2fQBbsGvKwFdBBj3ZgtuHEr3vs2xyr0oJ";
         warningAPI.color = Color.gray;
