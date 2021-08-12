@@ -29,7 +29,7 @@ public class QueueDetailsController : MonoBehaviour
     private GameObject messageRowTemplate;
 
 
-    void Awake()
+    private void Awake()
     {
         // Tab Buttons
         tabButtonsGroups = transform.Find("Tabs");

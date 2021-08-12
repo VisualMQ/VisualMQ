@@ -30,10 +30,8 @@ public class NavigationController : MonoBehaviour
 
         // Button Listener
         expandQMSelector.onClick.AddListener(LeftPanelButtonClicked);
-
         buttonExit.onClick.AddListener(ExitButtonClicked);
         buttonHelp.onClick.AddListener(HelpButtonClicked);
-
         authenticateNewQM.onClick.AddListener(ConnectButtonClicked);
 
         // Locate the Game Object: Left Panel
@@ -51,7 +49,7 @@ public class NavigationController : MonoBehaviour
 
 
     // Click to open the left panel; Click to hide the left panel
-    void LeftPanelButtonClicked()
+    private void LeftPanelButtonClicked()
     {
         if (leftPanel.activeSelf == true)
         {
@@ -64,20 +62,13 @@ public class NavigationController : MonoBehaviour
         }
     }
 
+
     // The exit button clicked: Delete all QM objects under "State"
     private void ExitButtonClicked()
     {
         UnityEngine.Application.Quit();
-
-        /* Destroy the QM Object
-        GameObject stateGameObject = GameObject.Find("State");
-
-        foreach (Transform child in stateGameObject.transform)
-        {
-            Destroy(child.gameObject);
-        }
-        */ 
     }
+
 
     // Go to Github Page
     private void HelpButtonClicked()
@@ -94,7 +85,7 @@ public class NavigationController : MonoBehaviour
 
 
     // Load QM Selector
-    void GenerateCheckBox()
+    private void GenerateCheckBox()
     {
         // Destroy Previous Object
         DestroyQMSelector();
@@ -119,7 +110,6 @@ public class NavigationController : MonoBehaviour
             recTransform.anchoredPosition = new Vector2(startX, -rowHeight * i + startY);
             item.gameObject.SetActive(true);
             
-            
             item.Find("TextQueueManager").GetComponent<Text>().text = mqlist[i];
 
             // connect the toggle to the corresponding QM
@@ -134,7 +124,7 @@ public class NavigationController : MonoBehaviour
 
 
     // for the toggle to control the appear of the QM
-    void showSelector(Toggle toggle, GameObject qm)
+    private void showSelector(Toggle toggle, GameObject qm)
     {
         
         if(toggle.isOn)
@@ -149,7 +139,7 @@ public class NavigationController : MonoBehaviour
         }
     }
 
-    void DestroyQMSelector() {
+    private void DestroyQMSelector() {
         foreach (Transform child in leftPanel.transform) 
         {
             if(child.gameObject.name == "QueueManagerRowItem(Clone)")
