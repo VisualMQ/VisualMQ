@@ -87,8 +87,13 @@ There are a multitude of ways to use the product. The first is cloning this repo
 
 ### Prerequisites
 
-(IBM MQ CLOUD DETAILS USAGE)
+Usage of VisualMQ requires a valid set of queue manager details. For this valid IBM Cloud details are required. For this we recommend observing the [official tutorial](https://www.ibm.com/cloud/garage/dte/tutorial/tutorial-mq-ibm-cloud) the first two steps "Creating MQ Services On IBM Cloud" and "Creating A Queue Manager On IBM Cloud" to create one or more queue managers. For each of these queue managers the following credentials will be necessary:
+- API KEY
+- Username
+- Host URL
+- Queue Manager Name
 
+The tips under the tutorial's section "Administering MQ Using MQ Console" give partial instruction on how to retrieve these. 
 
 
 
