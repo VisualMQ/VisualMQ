@@ -136,12 +136,12 @@ Distributed under the TBA License. See `LICENSE` for more information.
 <!-- CONTACT -->
 ## VisualMQ Team
 
-Madiou Diallo - [@Linkedin](https://twitter.com/your_username) - email@example.com
-Your Name - [@Linkedin](https://twitter.com/your_username) - email@example.com
-Your Name - [@Linkedin](https://twitter.com/your_username) - email@example.com
-Your Name - [@Linkedin](https://twitter.com/your_username) - email@example.com
-Your Name - [@Linkedin](https://twitter.com/your_username) - email@example.com
-Your Name - [@Linkedin](https://twitter.com/your_username) - email@example.com
+- Madiou Diallo - [@Linkedin](https://twitter.com/your_username) - email@example.com  
+- Your Name - [@Linkedin](https://twitter.com/your_username) - email@example.com  
+- Your Name - [@Linkedin](https://twitter.com/your_username) - email@example.com  
+- Your Name - [@Linkedin](https://twitter.com/your_username) - email@example.com
+- Your Name - [@Linkedin](https://twitter.com/your_username) - email@example.com
+- Your Name - [@Linkedin](https://twitter.com/your_username) - email@example.com
 
 Project Link: [https://github.com/your_username/repo_name](https://github.com/your_username/repo_name)
 
@@ -149,19 +149,10 @@ Project Link: [https://github.com/your_username/repo_name](https://github.com/yo
 
 <!-- ACKNOWLEDGEMENTS -->
 ## Acknowledgements
-* [GitHub Emoji Cheat Sheet](https://www.webpagefx.com/tools/emoji-cheat-sheet)
-* [Img Shields](https://shields.io)
-* [Choose an Open Source License](https://choosealicense.com)
-* [GitHub Pages](https://pages.github.com)
-* [Animate.css](https://daneden.github.io/animate.css)
-* [Loaders.css](https://connoratherton.com/loaders)
-* [Slick Carousel](https://kenwheeler.github.io/slick)
-* [Smooth Scroll](https://github.com/cferdinandi/smooth-scroll)
-* [Sticky Kit](http://leafo.net/sticky-kit)
-* [JVectorMap](http://jvectormap.com)
-* [Font Awesome](https://fontawesome.com)
 
+We would like to express our gratitude towards the IBM supervisors: [John McNamara](https://www.linkedin.com/in/jonmcnamara/), [Adrian Osadcenco](https://www.linkedin.com/in/adrian-osadcenco-b028408a/) and [Richard Coppen](https://www.linkedin.com/in/richard-coppen-163800116/). The time, energy and support they have dedicated to this project have had a greatly positive impact on the end-result. Furthermore, we would also like to thank the MQ outreach team. The MQ workshop they provided us with was extremely informative and provided us with a significant amount of specific MQ knowledge.
 
+-VisualMQ Team
 
 
 
