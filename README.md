@@ -66,10 +66,7 @@
 
 [![Product Name Screen Shot][product-screenshot]](https://example.com)
 
-VisualMQ is a 3D visualisation tool for the IBM MQ platform. As opposed to the current available inspection tools, VisualMQ aims to make inspecting IBM MQ instances more intuitive.
-
-Feature list:
-* Your time should be focused on creating something amazing. A project that solves a problem and helps others
+VisualMQ is a supportive application for IBM MQ systems. Created in Unity, VisualMQ is designed to create 3D representations of MQ systems. For this purpose, we have created novel 3D models representing the different components of MQ. VisualMQ is aimed at being a novel tool that revolutionizes the way end-users obtain an understanding of the systems functioning.  As opposed to the current inspection methods for MQ systems,  the relationship between different components is emphasized and data is represented in such a way to make it as easy as possible to understand. 
 
 
 ### Built With
@@ -84,32 +81,14 @@ This section should list any major frameworks that you built your project using.
 <!-- GETTING STARTED -->
 ## Getting Started
 
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
+VisualMQ is available under the ... LICENSE. 
+
+There are a multitude of ways to use the product. The first is cloning this repository and importing it into Unity version ????. From there, it is possible to build the project manually and play around with it. Other options involve downloading available [binaries](https://github.com/VisualMQ/VisualMQ/releases) for popular systems or the available [web-demo](https://visualmq.diallom.com/demo/).
 
 ### Prerequisites
 
-This is an example of how to list things you need to use the software and how to install them.
-* npm
-  ```sh
-  npm install npm@latest -g
-  ```
+(IBM MQ CLOUD DETAILS USAGE)
 
-### Installation
-
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
-   ```sh
-   git clone https://github.com/your_username_/Project-Name.git
-   ```
-3. Install NPM packages
-   ```sh
-   npm install
-   ```
-4. Enter your API in `config.js`
-   ```JS
-   const API_KEY = 'ENTER YOUR API';
-   ```
 
 
 
@@ -145,14 +124,19 @@ Contributions are what make the open source community such an amazing place to b
 <!-- LICENSE -->
 ## License
 
-Distributed under the MIT License. See `LICENSE` for more information.
+Distributed under the TBA License. See `LICENSE` for more information.
 
 
 
 <!-- CONTACT -->
-## Contact
+## VisualMQ Team
 
-Your Name - [@your_twitter](https://twitter.com/your_username) - email@example.com
+Madiou Diallo - [@Linkedin](https://twitter.com/your_username) - email@example.com
+Your Name - [@Linkedin](https://twitter.com/your_username) - email@example.com
+Your Name - [@Linkedin](https://twitter.com/your_username) - email@example.com
+Your Name - [@Linkedin](https://twitter.com/your_username) - email@example.com
+Your Name - [@Linkedin](https://twitter.com/your_username) - email@example.com
+Your Name - [@Linkedin](https://twitter.com/your_username) - email@example.com
 
 Project Link: [https://github.com/your_username/repo_name](https://github.com/your_username/repo_name)
 
