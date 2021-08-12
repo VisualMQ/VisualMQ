@@ -32,18 +32,6 @@ public class State : MonoBehaviour
     }
 
 
-    void Awake()
-    {
-        updateTimeText = GameObject.Find("UpdateText");
-    }
-
-
-    void Start()
-    {
-
-    }
-
-
     void Update()
     {
         // If there are no MQ client and no Qmgrs rendered, there is nothing to update
@@ -200,14 +188,7 @@ public class State : MonoBehaviour
         {
             if (client.GetQueueManagerName() == selectedQMName)
             {
-                foreach (MQ.Queue queue in client.GetAllQueues())
-                {
-
-                    if (queue.queueName == selectedQueueName)
-                    {
-                        return client.GetQueue(selectedQueueName);
-                    }
-                }
+                return client.GetQueue(selectedQueueName);
             }
         }
         return null;
@@ -222,13 +203,7 @@ public class State : MonoBehaviour
         {
             if (client.GetQueueManagerName() == selectedQMName)
             {
-                foreach (MQ.Queue queue in client.GetAllQueues())
-                {
-                    if (queue.queueName == selectedQueueName)
-                    {
-                        return client.GetAllMessages(selectedQueueName);
-                    }
-                }
+                return client.GetAllMessages(selectedQueueName);
             }
         }
         return null;

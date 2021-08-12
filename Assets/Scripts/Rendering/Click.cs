@@ -8,6 +8,8 @@ public class Click : MonoBehaviour
     private const float CLICK_DELTA_TIME = 0.5f;
     private Vector3 clickpo;
 
+    public GameObject sidebar;
+
     // Update is called once per frame
     void Update()
     {
@@ -31,7 +33,17 @@ public class Click : MonoBehaviour
                 // Casts the ray and get the first game object hit
                 if (Physics.Raycast(ray, out hit, 100))
                 {
-                    // Hit a gameobject, let the gameobject itself handle the associated highlight + sidebar
+                    string objectName = hit.transform.name;
+
+                    // If we hit a gameobject, let the gameobject itself handle the associated highlight
+                    // Special case, look for situation when clicked on qmgr block
+                    if (objectName.Substring(0, 5) == "Block")
+                    {
+                        string qmgrName = objectName.Substring(6);
+
+                        SidebarController sidebarController = sidebar.GetComponent<SidebarController>();
+                        sidebarController.ShowQueueManagerDetails(qmgrName);
+                    }
                 }
                 else
                 {
@@ -39,8 +51,8 @@ public class Click : MonoBehaviour
                     gameObject.BroadcastMessage("DisableHighlight", SendMessageOptions.DontRequireReceiver);
 
                     // Close all sidebars
-                    GameObject canvas2D = GameObject.Find("Canvas2D");
-                    canvas2D.BroadcastMessage("Close", SendMessageOptions.DontRequireReceiver);
+                    GameObject canvas = GameObject.Find("Canvas");
+                    canvas.BroadcastMessage("Close", SendMessageOptions.DontRequireReceiver);
                 }
             }
         }
