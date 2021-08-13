@@ -274,13 +274,13 @@ public class State : MonoBehaviour
         {
             QueueManager lastQM = renderedQMs[numberOfRenderedQMs - 1];
             result = lastQM.baseLoc;
-            result.z = result.z + lastQM.GetQueueManagerSize()[1] + DISTANCE_BETWEEN_QMS;
+            result.z = result.z + lastQM.GetQueueManagerSize(true)[1] + DISTANCE_BETWEEN_QMS;
         }
         else
         {
             QueueManager lastQM = renderedQMs[numberOfRenderedQMs - 1];
             result = lastQM.baseLoc;
-            result.x = result.x + lastQM.GetQueueManagerSize()[0] + DISTANCE_BETWEEN_QMS;
+            result.x = result.x + lastQM.GetQueueManagerSize(true)[0] + DISTANCE_BETWEEN_QMS;
         }
         return result;
     }
