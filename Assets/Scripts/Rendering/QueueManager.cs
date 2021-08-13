@@ -73,7 +73,9 @@ public class QueueManager : MonoBehaviour
 
         // Create queue manager plane
         int[] planeSizes = GetQueueManagerSize(false);
-        Vector3 queueManagerCenter = baseLoc + (new Vector3(planeSizes[0], 0, planeSizes[1]) / 2);
+        Vector3 queueManagerCenter = baseLoc + new Vector3(planeSizes[0], 0, planeSizes[1]) / 2;
+        Debug.Log(planeSizes[0] + " " + planeSizes[1]);
+        Debug.Log(queueManagerCenter);
 
         GameObject queueManagerPlane = Instantiate(blockPrefab, queueManagerCenter, Quaternion.identity) as GameObject;
         queueManagerPlane.name = qmName + QM_NAME_DELIMITER + queueManagerPlane.name;
@@ -81,17 +83,15 @@ public class QueueManager : MonoBehaviour
         queueManagerPlane.transform.localScale = new Vector3(planeSizes[0] / sXZ, 1, planeSizes[1] / sXZ);
 
         // Create 3 line separating individual queue areas
-        GameObject line = Instantiate(linePrefab, new Vector3(queueManagerCenter.x, sY * 1.001f, (largeArea[1] + 1) * sXZ) + baseLoc, Quaternion.Euler(0f, 90f, 0f));
-        line.transform.parent = this.transform;
-        line.transform.localScale += new Vector3(0, 0, largeArea[0] + smallArea[1] - 1);
-
-        line = Instantiate(linePrefab, new Vector3(queueManagerCenter.x, sY * 1.001f, sXZ) + baseLoc, Quaternion.Euler(0f, 90f, 0f));
-        line.transform.parent = this.transform;
-        line.transform.localScale += new Vector3(0, 0, largeArea[0] + smallArea[1] - 1);
-
-        line = Instantiate(linePrefab, sXZ * new Vector3(largeArea[0], sY * 1.001f, largeArea[1] + 1) + baseLoc, Quaternion.identity);
-        line.transform.parent = this.transform;
-        line.transform.localScale += new Vector3(0, 0, 2 * largeArea[1] - 1);
+        GameObject lineX1 = Instantiate(linePrefab, new Vector3(queueManagerCenter.x - baseLoc.x, sY * 1.001f, (largeArea[1] + 1) * sXZ) + baseLoc, Quaternion.Euler(0f, 90f, 0f));
+        lineX1.transform.parent = this.transform;
+        lineX1.transform.localScale += new Vector3(0, 0, largeArea[0] + smallArea[1] - 1);
+        GameObject lineX2 = Instantiate(linePrefab, new Vector3(queueManagerCenter.x - baseLoc.x, sY * 1.001f, sXZ) + baseLoc, Quaternion.Euler(0f, 90f, 0f));
+        lineX2.transform.parent = this.transform;
+        lineX2.transform.localScale += new Vector3(0, 0, largeArea[0] + smallArea[1] - 1);
+        GameObject lineZ1 = Instantiate(linePrefab, sXZ * new Vector3(largeArea[0], sY * 1.001f, largeArea[1] + 1) + baseLoc, Quaternion.identity);
+        lineZ1.transform.parent = this.transform;
+        lineZ1.transform.localScale += new Vector3(0, 0, 2 * largeArea[1] - 1);
 
 
         // Render inidividual queues

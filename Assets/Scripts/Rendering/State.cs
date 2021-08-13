@@ -270,15 +270,15 @@ public class State : MonoBehaviour
         {
             return result;
         }
-        if (numberOfRenderedQMs % 2 == 0)
+        else if (numberOfRenderedQMs % 2 == 0)
         {
-            QueueManager lastQM = renderedQMs[numberOfRenderedQMs - 1];
+            QueueManager lastQM = renderedQMs[1];
             result = lastQM.baseLoc;
             result.z = result.z + lastQM.GetQueueManagerSize(true)[1] + DISTANCE_BETWEEN_QMS;
         }
         else
         {
-            QueueManager lastQM = renderedQMs[numberOfRenderedQMs - 1];
+            QueueManager lastQM = renderedQMs[2];
             result = lastQM.baseLoc;
             result.x = result.x + lastQM.GetQueueManagerSize(true)[0] + DISTANCE_BETWEEN_QMS;
         }
