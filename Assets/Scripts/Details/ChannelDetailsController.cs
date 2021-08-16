@@ -6,13 +6,11 @@ using UnityEngine.UI;
 public class ChannelDetailsController : MonoBehaviour
 {
     private Text textName, textType;
-
     private MQ.Channel currentChannel;
-
     private State stateComponent;
 
 
-    void Awake()
+    private void Awake()
     {
         textName = transform.Find("Details/Name/TextName").GetComponent<Text>();
         textType = transform.Find("Details/Type/TextType").GetComponent<Text>();

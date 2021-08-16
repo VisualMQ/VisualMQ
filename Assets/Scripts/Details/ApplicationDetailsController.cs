@@ -6,12 +6,9 @@ using UnityEngine.UI;
 
 public class ApplicationDetailsController : MonoBehaviour
 {
-
     private Text textName, textType, textAppTag, textAppDesc;
-
     State stateComponent;
-
-
+    
     private void Awake()
     {
         textName = transform.Find("Details/Name/TextName").GetComponent<Text>();

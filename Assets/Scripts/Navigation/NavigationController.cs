@@ -49,7 +49,7 @@ public class NavigationController : MonoBehaviour
 
 
     // Click to open the left panel; Click to hide the left panel
-    void LeftPanelButtonClicked()
+    private void LeftPanelButtonClicked()
     {
         if (queueManagersList.activeSelf == true)
         {
@@ -62,11 +62,13 @@ public class NavigationController : MonoBehaviour
         }
     }
 
+
     // The exit button clicked: Delete all QM objects under "State"
     private void ExitButtonClicked()
     {
         UnityEngine.Application.Quit();
     }
+
 
     // Go to Github Page
     private void HelpButtonClicked()
@@ -83,7 +85,7 @@ public class NavigationController : MonoBehaviour
 
 
     // Load QM Selector
-    void GenerateCheckBox()
+    private void GenerateCheckBox()
     {
         // Destroy Previous Object
         DestroyQMSelector();
