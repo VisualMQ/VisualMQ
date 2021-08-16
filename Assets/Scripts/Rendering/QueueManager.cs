@@ -127,8 +127,18 @@ public class QueueManager : MonoBehaviour
             GameObject channelGameObject = new GameObject(uniqueChannelName, typeof(Channel));
             Channel channelComponent = channelGameObject.GetComponent(typeof(Channel)) as Channel;
             channelComponent.channel = channel;
-            channelGameObject.transform.position = new Vector3(sXZ * (i + 0.5f), sY * 2, sXZ * 0.5f) + baseLoc;
             channelGameObject.transform.parent = this.transform;
+
+            // Position channels dynamically depending on how many channels there are
+            // If there are more channels, we need to scale down the spaces between them
+            if (channels.Count > largeArea[0] + smallArea[1])
+            {
+                channelGameObject.transform.position = new Vector3(((float)planeSizes[0] / (float)channels.Count) * (i + 0.5f), sY * 2, sXZ * 0.5f) + baseLoc;
+            }
+            else
+            {
+                channelGameObject.transform.position = new Vector3(sXZ * (i + 0.5f), sY * 2, sXZ * 0.5f) + baseLoc;
+            }
 
             NameRenderer nameRenderer = channelGameObject.GetComponent(typeof(NameRenderer)) as NameRenderer;
             nameRenderer.objectName = channel.channelName;
