@@ -78,9 +78,11 @@ public class QueueManager : MonoBehaviour
         Debug.Log(queueManagerCenter);
 
         GameObject queueManagerPlane = Instantiate(blockPrefab, queueManagerCenter, Quaternion.identity) as GameObject;
-        queueManagerPlane.name = qmName + QM_NAME_DELIMITER + queueManagerPlane.name;
+        queueManagerPlane.transform.name = "Block" + QM_NAME_DELIMITER + qmName;
         queueManagerPlane.transform.parent = this.transform;
         queueManagerPlane.transform.localScale = new Vector3(planeSizes[0] / sXZ, 1, planeSizes[1] / sXZ);
+        MeshCollider mc = queueManagerPlane.AddComponent<MeshCollider>();
+        mc.sharedMesh = queueManagerPlane.GetComponent<MeshFilter>().sharedMesh;
 
         // Create 3 line separating individual queue areas
         GameObject lineX1 = Instantiate(linePrefab, new Vector3(queueManagerCenter.x - baseLoc.x, sY * 1.001f, (largeArea[1] + 1) * sXZ) + baseLoc, Quaternion.Euler(0f, 90f, 0f));
