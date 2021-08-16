@@ -123,6 +123,9 @@ public class QueueDetailsController : MonoBehaviour
 
         toMessageList.Select();
 
+        // For remote/alias queues do not do anything, since they don't hold messages
+        if (!currentQueue.holdsMessages) return;
+
         // Delete all remaining messages that were already rendered
         foreach (Transform message in transform.Find("Messages/MessagesList"))
         {
