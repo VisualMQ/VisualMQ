@@ -89,7 +89,9 @@ public class AuthenticationController : MonoBehaviour
         // Connect to Queue Manager
         try
         {
-            MQ.Client qmClient = new MQ.Client(MQURLT, QMNameT, userNameT, apiKeyT);
+            MQ.Client qmClient = new MQ.Client(MQURLT, QMNameT, userNameT, apiKeyT); // Throws Exception if username/API key/MQ url dont match
+
+            qmClient.GetQmgr(); // Throws Exception if QM name is wrong
             
             GameObject stateGameObject = GameObject.Find("State");
             State stateComponent = stateGameObject.GetComponent(typeof(State)) as State;
@@ -118,6 +120,7 @@ public class AuthenticationController : MonoBehaviour
     {
         successTimeText.text = (DateTime.Now).ToString();
         successMainText.text = message;
+        errorNotification.SetActive(false); //remove previous notifications
         successNotification.SetActive(true);
     }
 
@@ -126,6 +129,7 @@ public class AuthenticationController : MonoBehaviour
     {
         errorTimeText.text = (DateTime.Now).ToString();
         errorMainText.text = message;
+        successNotification.SetActive(false); //remove previous notifications
         errorNotification.SetActive(true);
     }
 
