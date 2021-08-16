@@ -58,89 +58,43 @@ public class QueueManager : MonoBehaviour
         int[] largeArea = areas[0];
         int[] smallArea = areas[1];
         // By design, larger side of smallArea is equal to smaller side of largeArea
-        // See the diagram
         Debug.Assert(largeArea[1] == smallArea[0]);
         offsets = new Dictionary<string, Vector3>();
         dimensions = new Dictionary<string, int[]>();
-        offsets[numberOfQueuesList[3].Key] = new Vector3(0, 0, 0);
-        offsets[numberOfQueuesList[2].Key] = new Vector3(0, 0, sXZ * largeArea[1]);
-        offsets[numberOfQueuesList[1].Key] = new Vector3(sXZ * largeArea[0], 0, 0);
-        offsets[numberOfQueuesList[0].Key] = new Vector3(sXZ * largeArea[0], 0, sXZ * largeArea[1]);
+        offsets[numberOfQueuesList[3].Key] = sXZ * new Vector3(0.5f, 0, 1.5f);
+        offsets[numberOfQueuesList[2].Key] = sXZ * new Vector3(0.5f, 0, largeArea[1] + 1.5f);
+        offsets[numberOfQueuesList[1].Key] = sXZ * new Vector3(largeArea[0] + 0.5f, 0, 1.5f);
+        offsets[numberOfQueuesList[0].Key] = sXZ * new Vector3(largeArea[0] + 0.5f, 0, largeArea[1] + 1.5f);
         dimensions[numberOfQueuesList[3].Key] = largeArea;
         dimensions[numberOfQueuesList[2].Key] = largeArea;
         dimensions[numberOfQueuesList[1].Key] = smallArea;
         dimensions[numberOfQueuesList[0].Key] = smallArea;
 
 
-        // Render 2 large areas on top of each other
-        for (int x = 0; x < largeArea[0]; x++)
-        {
-            for (int z = 0; z < largeArea[1]; z++)
-            {
-                // Large area
-                GameObject lowerBlock = Instantiate(blockPrefab, new Vector3(sXZ * x, 0, sXZ * z) + baseLoc, Quaternion.identity) as GameObject;
-                lowerBlock.name = qmName + QM_NAME_DELIMITER + lowerBlock.name;
-                lowerBlock.transform.parent = this.transform;
+        // Create queue manager plane
+        int[] planeSizes = GetQueueManagerSize(false);
+        Vector3 queueManagerCenter = baseLoc + new Vector3(planeSizes[0], 0, planeSizes[1]) / 2;
+        Debug.Log(planeSizes[0] + " " + planeSizes[1]);
+        Debug.Log(queueManagerCenter);
 
-                lowerBlock.name = "Block."+qmName;
-                lowerBlock.AddComponent<MeshCollider>().convex = true;
+        GameObject queueManagerPlane = Instantiate(blockPrefab, queueManagerCenter, Quaternion.identity) as GameObject;
+        queueManagerPlane.transform.name = "Block" + QM_NAME_DELIMITER + qmName;
+        queueManagerPlane.transform.parent = this.transform;
+        queueManagerPlane.transform.localScale = new Vector3(planeSizes[0] / sXZ, 1, planeSizes[1] / sXZ);
+        MeshCollider mc = queueManagerPlane.AddComponent<MeshCollider>();
+        mc.sharedMesh = queueManagerPlane.GetComponent<MeshFilter>().sharedMesh;
 
-                /*
-                // Add mesh Colider
-                MeshCollider mc = lowerBlock.transform.parent.gameObject.AddComponent<MeshCollider>();
-                mc.sharedMesh = lowerBlock.GetComponent<MeshFilter>().sharedMesh; */
+        // Create 3 line separating individual queue areas
+        GameObject lineX1 = Instantiate(linePrefab, new Vector3(queueManagerCenter.x - baseLoc.x, sY * 1.001f, (largeArea[1] + 1) * sXZ) + baseLoc, Quaternion.Euler(0f, 90f, 0f));
+        lineX1.transform.parent = this.transform;
+        lineX1.transform.localScale += new Vector3(0, 0, largeArea[0] + smallArea[1] - 1);
+        GameObject lineX2 = Instantiate(linePrefab, new Vector3(queueManagerCenter.x - baseLoc.x, sY * 1.001f, sXZ) + baseLoc, Quaternion.Euler(0f, 90f, 0f));
+        lineX2.transform.parent = this.transform;
+        lineX2.transform.localScale += new Vector3(0, 0, largeArea[0] + smallArea[1] - 1);
+        GameObject lineZ1 = Instantiate(linePrefab, sXZ * new Vector3(largeArea[0], sY * 1.001f, largeArea[1] + 1) + baseLoc, Quaternion.identity);
+        lineZ1.transform.parent = this.transform;
+        lineZ1.transform.localScale += new Vector3(0, 0, 2 * largeArea[1] - 1);
 
-                // Large area
-                GameObject upperBlock = Instantiate(blockPrefab, new Vector3(sXZ * x, 0, sXZ * z) + baseLoc + offsets[numberOfQueuesList[2].Key], Quaternion.identity) as GameObject;
-                upperBlock.name = qmName + QM_NAME_DELIMITER + upperBlock.name;
-                upperBlock.transform.parent = this.transform;
-
-                upperBlock.name = "Block."+qmName;
-                upperBlock.AddComponent<MeshCollider>().convex = true;
-
-            }
-        }
-
-        // Render 2 small areas
-        for (int x = 0; x < smallArea[1]; x++)
-        {
-            for (int z = 0; z < smallArea[0]; z++)
-            {
-                // Small area
-                GameObject lowerBlock = Instantiate(blockPrefab, new Vector3(sXZ * x, 0, sXZ * z) + baseLoc + offsets[numberOfQueuesList[1].Key], Quaternion.identity) as GameObject;
-                lowerBlock.name = qmName + QM_NAME_DELIMITER + lowerBlock.name;
-                lowerBlock.transform.parent = this.transform;
-
-                lowerBlock.name = "Block."+qmName;
-                lowerBlock.AddComponent<MeshCollider>().convex = true;
-
-
-                // Small area
-                GameObject upperBlock = Instantiate(blockPrefab, new Vector3(sXZ * x, 0, sXZ * z) + baseLoc + offsets[numberOfQueuesList[0].Key], Quaternion.identity) as GameObject;
-                upperBlock.name = qmName + QM_NAME_DELIMITER + upperBlock.name;
-                upperBlock.transform.parent = this.transform;
-
-                upperBlock.name = "Block."+qmName;
-                upperBlock.AddComponent<MeshCollider>().convex = true;
-            }
-        }
-
-        // Render lines between areas among X-axis
-        for (int x = 0; x < largeArea[0] + smallArea[1]; x++)
-        {
-            GameObject line = Instantiate(linePrefab, new Vector3(sXZ * x, sY * 1.001f, -2) + baseLoc + offsets[numberOfQueuesList[2].Key], Quaternion.Euler(0f, 90f, 0f));
-            line.transform.parent = this.transform;
-
-            GameObject line2 = Instantiate(linePrefab, new Vector3(sXZ * x, sY * 1.001f, -2) + baseLoc, Quaternion.Euler(0f, 90f, 0f));
-            line2.transform.parent = this.transform;
-        }
-
-        // Render lines between areas among Z-axis
-        for (int z = 0; z < largeArea[1] + smallArea[0]; z++)
-        {
-            GameObject line = Instantiate(linePrefab, new Vector3(-2, sY * 1.001f, sXZ * z) + baseLoc + offsets[numberOfQueuesList[1].Key], Quaternion.identity);
-            line.transform.parent = this.transform;
-        }
 
         // Render inidividual queues
         numberOfRenderedQueues = new Dictionary<string, int>();
@@ -151,69 +105,42 @@ public class QueueManager : MonoBehaviour
         foreach (MQ.Queue queue in queues)
         {
             string queueType = queue.GetTypeName();
-            int i = numberOfRenderedQueues[queueType]++;
-
             string uniqueQueueName = qmName + QM_NAME_DELIMITER + queue.queueName;
+
             GameObject queueGameObject = new GameObject(uniqueQueueName, typeof(Queue)); //Globally unique queue name
             Queue queueComponent = queueGameObject.GetComponent(typeof(Queue)) as Queue;
-            queueComponent.rank = i;
-                
+            queueComponent.rank = numberOfRenderedQueues[queueType]++;
             queueComponent.queue = queue;
-
             queueComponent.parent = this;
             queueGameObject.transform.parent = this.transform;
-
 
             NameRenderer nameRenderer = queueGameObject.GetComponent(typeof(NameRenderer)) as NameRenderer;
             nameRenderer.objectName = queue.queueName;
 
-            // queueComponent.repositionSelf();
-            // TODO: REMOVE?
             renderedQueues.Add(queue.queueName, queueGameObject);
-
         }
 
-        // Render area for channels and channels on them
-        for (int x = 0; x < largeArea[0] + smallArea[1]; x++)
-        {
-            GameObject lowerBlock = Instantiate(blockPrefab, new Vector3(sXZ * x, 0, -sXZ) + baseLoc, Quaternion.identity);
-            lowerBlock.name = "Block."+qmName;
-            lowerBlock.transform.parent = this.transform;
-            lowerBlock.AddComponent<MeshCollider>().convex = true;
-        }
 
-        int numberOfSenderChannels = 0;
-        int numberOfReceiverChannels = 0;
-        foreach (MQ.Channel channel in channels)
+        // Render channels
+        for (int i = 0; i < channels.Count; i++)
         {
-            
-            Vector3 queueManagerHeight = new Vector3(0, sY * 2, 0);
-            Vector3 position = new Vector3();
-            if (channel is MQ.SenderChannel)
+            MQ.Channel channel = channels[i];
+            string uniqueChannelName = qmName + QM_NAME_DELIMITER + channel.channelName;
+            GameObject channelGameObject = new GameObject(uniqueChannelName, typeof(Channel));
+            Channel channelComponent = channelGameObject.GetComponent(typeof(Channel)) as Channel;
+            channelComponent.channel = channel;
+            channelGameObject.transform.parent = this.transform;
+
+            // Position channels dynamically depending on how many channels there are
+            // If there are more channels, we need to scale down the spaces between them
+            if (channels.Count > largeArea[0] + smallArea[1])
             {
-                int i = numberOfSenderChannels++;
-                position = new Vector3(sXZ * i, 0, -sXZ) + baseLoc;
-            }
-            else if (channel is MQ.ReceiverChannel)
-            {
-                int j = numberOfReceiverChannels++;
-                position = new Vector3(sXZ * (largeArea[0] + smallArea[1] - j - 1), 0, -sXZ) + baseLoc;
-            }
-            else if (channel is MQ.ApplicationChannel)
-            {
-                int i = numberOfSenderChannels++;
-                position = new Vector3(sXZ * i, 0, -sXZ) + baseLoc;
+                channelGameObject.transform.position = new Vector3(((float)planeSizes[0] / (float)channels.Count) * (i + 0.5f), sY * 2, sXZ * 0.5f) + baseLoc;
             }
             else
             {
-                continue;
+                channelGameObject.transform.position = new Vector3(sXZ * (i + 0.5f), sY * 2, sXZ * 0.5f) + baseLoc;
             }
-            string uniqueChannelName = qmName + QM_NAME_DELIMITER + channel.channelName;
-            GameObject channelGameObject = new GameObject(uniqueChannelName, typeof(Channel)); //Globally unique channel name
-            Channel channelComponent = channelGameObject.GetComponent(typeof(Channel)) as Channel;
-            channelComponent.channel = channel;
-            channelGameObject.transform.position = position + queueManagerHeight;
-            channelGameObject.transform.parent = this.transform;
 
             NameRenderer nameRenderer = channelGameObject.GetComponent(typeof(NameRenderer)) as NameRenderer;
             nameRenderer.objectName = channel.channelName;
@@ -221,19 +148,18 @@ public class QueueManager : MonoBehaviour
 
 
         // Render applications
-        int numberOfApplications = 0;
-        foreach (MQ.Application application in applications)
+        for (int i = 0; i < applications.Count; i++)
         {
+            MQ.Application application = applications[i];
             string uniqueConnectionName = qmName + QM_NAME_DELIMITER + application.conn;
             GameObject applicationGameObject = new GameObject(uniqueConnectionName, typeof(Application));
             Application applicationComponent = applicationGameObject.GetComponent((typeof(Application))) as Application;
             applicationComponent.application = application;
-            applicationGameObject.transform.position = new Vector3(-sXZ * (numberOfApplications / (2 * largeArea[1]) + 2), 0, sXZ * (numberOfApplications % (2 * largeArea[1]))) + baseLoc;
+            applicationGameObject.transform.position = sXZ * new Vector3(-(i / (2 * largeArea[1] + 1) + 1), 0, i % (2 * largeArea[1]) + 1.5f) + baseLoc;
             applicationGameObject.transform.parent = this.transform;
 
             NameRenderer nameComponent = applicationGameObject.GetComponent(typeof(NameRenderer)) as NameRenderer;
             nameComponent.objectName = application.conn;
-            numberOfApplications++;
         }
     }
 
@@ -244,21 +170,6 @@ public class QueueManager : MonoBehaviour
         Vector3 position = new Vector3(sXZ * (rank % dimensions[queueType][0]), 0, sXZ * (rank / dimensions[queueType][0]));
         Vector3 queueManagerHeight = new Vector3(0, sY * 2, 0);
         return (offset + position + queueManagerHeight + baseLoc);  
-    }
-
-
-    void topView()
-    {
-        GameObject targetObject = GameObject.Find(queueManager.qmgrName);
-        GameObject mainCamera = GameObject.Find("Main Camera");
-        mainCamera.transform.rotation = Quaternion.identity;
-        mainCamera.transform.rotation = Quaternion.AngleAxis(90, new Vector3(1, 0, 0));
-        Vector3 targetPosition = targetObject.transform.position;
-        targetPosition.y += 20f;
-        targetPosition.x += 15f;
-        targetPosition.z += 5f;
-        targetPosition += this.baseLoc;
-        mainCamera.transform.position = targetPosition;
     }
 
 
@@ -409,17 +320,25 @@ public class QueueManager : MonoBehaviour
     }
 
 
-    public int[] GetQueueManagerSize()
+    public int[] GetQueueManagerSize(bool includeApplication)
     {
         List<int[]> areas = GetLargeSmallArea();
 
         // Length in x axe
-        int x = (int) sXZ * (areas[0][0] + areas[1][1] + (queueManager.applications.Count / (2 * areas[0][1])) + 2);
-        // Length in z axe "+1" is for channel length
-        int y = (int) sXZ * (areas[0][1] + areas[1][0] + 1);
+        int x, z;
 
-        int[] size = new int[] { x, y };
-        return size;
+        if (includeApplication)
+        {
+            x = (int)sXZ * (areas[0][0] + areas[1][1] + (queueManager.applications.Count / (2 * areas[0][1])) + 2);
+        }
+        else
+        {
+            x = (int)sXZ * (areas[0][0] + areas[1][1]);
+        }
+        // Length in z axis "+1" is for channel length
+        z = (int) sXZ * (2 * areas[0][1] + 1);
+
+        return new int[] { x, z };
     }
 
 
