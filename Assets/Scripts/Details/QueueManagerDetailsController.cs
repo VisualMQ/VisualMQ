@@ -37,9 +37,6 @@ public class QueueManagerDetailsController : MonoBehaviour
         detailsConnectionCount = subwindowDetails.transform.Find("ConnectionCount/TextConnectionCount").GetComponent<Text>();
         detailsTimeStarted = subwindowDetails.transform.Find("TimeStarted/TextTimeStarted").GetComponent<Text>();
 
-
-        QueueManager.QMDetailWindow = this;
-
         toDetails.onClick.AddListener(ToQueueManagerDetails);
         toQueues.onClick.AddListener(ToQueueList);
 
