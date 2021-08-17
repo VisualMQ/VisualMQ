@@ -94,7 +94,7 @@ public class NavigationController : MonoBehaviour
         GameObject stateGameObject = GameObject.Find("State");
         State stateComponent = stateGameObject.GetComponent(typeof(State)) as State;
         
-        List<string> mqlist = stateComponent.RegisteredQMNameList();        
+        List<string> mqlist = stateComponent.GetRegisteredQueueManagers();        
 
         foreach (string qmgrName in mqlist)
         {
