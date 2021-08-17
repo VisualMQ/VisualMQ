@@ -1,5 +1,5 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System;
+using UnityEngine;
 
 
 [RequireComponent(typeof(NameRenderer))]
@@ -7,7 +7,6 @@ using System.Collections;
 [RequireComponent(typeof(MouseListener))]
 public class Channel : MonoBehaviour
 {
-
     public MQ.Channel channel;
 
     // Use this for initialization
@@ -22,13 +21,13 @@ public class Channel : MonoBehaviour
         {
             prefabName = "Prefabs/ReceiverChannel";
         }
-        else if (channel is MQ.ApplicationChannel) // TODO: Applciation Prefab
+        else if (channel is MQ.ApplicationChannel)
         {
             prefabName = "Prefabs/ApplicationChannel";
         }
         else
         {
-            prefabName = "not defined"; //TODO: throw an exception
+            throw new Exception("Unrecognized type of channel.");
         }
         GameObject channelPrefab = Resources.Load(prefabName) as GameObject;
         GameObject instantiatedChannel = Instantiate(channelPrefab) as GameObject;
