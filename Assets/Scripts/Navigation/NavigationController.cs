@@ -12,7 +12,7 @@ public class NavigationController : MonoBehaviour
     private Button expandQMSelector, authenticateNewQM, buttonExit, buttonHelp, buttonReset;
 
     // Camera position
-    private Vector3 startPosition;
+    // private Camera mainCamera;
 
     // Left Panel and Container
     private GameObject queueManagersList;
@@ -91,10 +91,13 @@ public class NavigationController : MonoBehaviour
         Authentication.SetActive(true);
     }
 
+
     // Reset the camera
     private void ResetButtonClicked()
     {
-        Debug.Log("HELLO RESET!");
+        Debug.Log("RESET Camera position!");
+        Camera.main.transform.position = new Vector3(0f, 0f, 0f);
+        Camera.main.transform.rotation = Quaternion.Euler(0, 0, 0);
     }
 
 
@@ -156,6 +159,7 @@ public class NavigationController : MonoBehaviour
     void Close()
     {
         queueManagersList.SetActive(false);
+        buttonReset.gameObject.SetActive(false);
     }
 
 }
