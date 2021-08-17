@@ -9,7 +9,10 @@ public class NavigationController : MonoBehaviour
     public GameObject Authentication;
     
     // Buttons
-    private Button expandQMSelector, authenticateNewQM, buttonExit, buttonHelp;
+    private Button expandQMSelector, authenticateNewQM, buttonExit, buttonHelp, buttonReset;
+
+    // Camera position
+    private Vector3 startPosition;
 
     // Left Panel and Container
     private GameObject queueManagersList;
@@ -27,13 +30,15 @@ public class NavigationController : MonoBehaviour
         authenticateNewQM = transform.Find("ButtonConnect").GetComponent<Button>();
         buttonExit = transform.Find("ButtonExit").GetComponent<Button>();
         buttonHelp = transform.Find("ButtonHelp").GetComponent<Button>();
+        buttonReset = transform.Find("ButtonReset").GetComponent<Button>();
 
         // Button Listener
         expandQMSelector.onClick.AddListener(LeftPanelButtonClicked);
+        authenticateNewQM.onClick.AddListener(ConnectButtonClicked);
         buttonExit.onClick.AddListener(ExitButtonClicked);
         buttonHelp.onClick.AddListener(HelpButtonClicked);
-        authenticateNewQM.onClick.AddListener(ConnectButtonClicked);
-
+        buttonReset.onClick.AddListener(ResetButtonClicked);
+        
         // Resources for queue manager list dropdown
         queueManagersList = transform.Find("ViewQueueManagers").gameObject;
         queueManagerRowItem = Resources.Load("Prefabs/QueueManagerRowItem") as GameObject;
@@ -45,6 +50,7 @@ public class NavigationController : MonoBehaviour
         // Default: Hide Auth, Filter, Left Panel Windows
         Authentication.SetActive(false); 
         queueManagersList.SetActive(false);
+        buttonReset.gameObject.SetActive(false);
     }
 
 
@@ -54,10 +60,12 @@ public class NavigationController : MonoBehaviour
         if (queueManagersList.activeSelf == true)
         {
             queueManagersList.SetActive(false);
+            buttonReset.gameObject.SetActive(false);
         }
         else
         {
             queueManagersList.SetActive(true);
+            buttonReset.gameObject.SetActive(true);
             GenerateCheckBox();
         }
     }
@@ -81,6 +89,12 @@ public class NavigationController : MonoBehaviour
     private void ConnectButtonClicked()
     {
         Authentication.SetActive(true);
+    }
+
+    // Reset the camera
+    private void ResetButtonClicked()
+    {
+        Debug.Log("HELLO RESET!");
     }
 
 
@@ -114,7 +128,7 @@ public class NavigationController : MonoBehaviour
 
 
     // for the toggle to control the appear of the QM
-    void ShowSelector(Toggle toggle, GameObject qm)
+    private void ShowSelector(Toggle toggle, GameObject qm)
     {
         if(toggle.isOn)
         {
@@ -126,7 +140,9 @@ public class NavigationController : MonoBehaviour
         }
     }
 
-    void DestroyQMSelector() {
+
+    // Destroy previous QM selector
+    private void DestroyQMSelector() {
         foreach (Transform child in queueManagersList.transform.Find("QueueManagersList")) 
         {
             if(child.gameObject.name == "QueueManagerRowItem(Clone)")
