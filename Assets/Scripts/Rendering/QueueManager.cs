@@ -15,6 +15,7 @@ public class QueueManager : MonoBehaviour
     private const float sXZ = 4f;
     private const float sY = 0.1286252f;
     private const string QM_NAME_DELIMITER = ".";
+    public const string QM_NAME_PREFIX = "Plane";
 
     public MQ.QueueManager queueManager;
 
@@ -24,13 +25,6 @@ public class QueueManager : MonoBehaviour
     public Dictionary<string, Vector3> offsets;
     public Dictionary<string, int> numberOfRenderedQueues;
     public Dictionary<string, int[]> dimensions;
-
-    public static QueueManagerDetailsController QMDetailWindow;
-
-    public GameObject blockParent;
-
-
- 
 
 
     // Unity calls this method at the complete beginning, even before Start
@@ -74,15 +68,18 @@ public class QueueManager : MonoBehaviour
         // Create queue manager plane
         int[] planeSizes = GetQueueManagerSize(false);
         Vector3 queueManagerCenter = baseLoc + new Vector3(planeSizes[0], 0, planeSizes[1]) / 2;
-        Debug.Log(planeSizes[0] + " " + planeSizes[1]);
-        Debug.Log(queueManagerCenter);
 
-        GameObject queueManagerPlane = Instantiate(blockPrefab, queueManagerCenter, Quaternion.identity) as GameObject;
-        queueManagerPlane.transform.name = "Block" + QM_NAME_DELIMITER + qmName;
-        queueManagerPlane.transform.parent = this.transform;
-        queueManagerPlane.transform.localScale = new Vector3(planeSizes[0] / sXZ, 1, planeSizes[1] / sXZ);
-        MeshCollider mc = queueManagerPlane.AddComponent<MeshCollider>();
-        mc.sharedMesh = queueManagerPlane.GetComponent<MeshFilter>().sharedMesh;
+        GameObject planeGameObject = new GameObject(QM_NAME_PREFIX + QM_NAME_DELIMITER + qmName, typeof(HighlightRenderer), typeof(MouseListener));
+        planeGameObject.transform.parent = this.transform;
+        planeGameObject.transform.position = queueManagerCenter;
+        planeGameObject.transform.localScale = new Vector3(planeSizes[0] / sXZ, 1, planeSizes[1] / sXZ);
+        GameObject planePrefab = Instantiate(blockPrefab, planeGameObject.transform) as GameObject;
+        planePrefab.transform.name = QM_NAME_PREFIX + QM_NAME_DELIMITER + qmName + ".Prefab";
+        planePrefab.transform.localScale = new Vector3(1, 1, 1);
+        planePrefab.transform.localPosition = Vector3.zero;
+        MeshCollider mc = planeGameObject.AddComponent<MeshCollider>();
+        mc.sharedMesh = planePrefab.GetComponent<MeshFilter>().sharedMesh;
+
 
         // Create 3 line separating individual queue areas
         GameObject lineX1 = Instantiate(linePrefab, new Vector3(queueManagerCenter.x - baseLoc.x, sY * 1.001f, (largeArea[1] + 1) * sXZ) + baseLoc, Quaternion.Euler(0f, 90f, 0f));

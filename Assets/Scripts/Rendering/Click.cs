@@ -33,17 +33,6 @@ public class Click : MonoBehaviour
                 // Casts the ray and get the first game object hit
                 if (Physics.Raycast(ray, out hit, 100))
                 {
-                    string objectName = hit.transform.name;
-
-                    // If we hit a gameobject, let the gameobject itself handle the associated highlight
-                    // Special case, look for situation when clicked on qmgr block
-                    if (objectName.Substring(0, 5) == "Block")
-                    {
-                        string qmgrName = objectName.Substring(6);
-
-                        SidebarController sidebarController = sidebar.GetComponent<SidebarController>();
-                        sidebarController.ShowQueueManagerDetails(qmgrName);
-                    }
                 }
                 else
                 {
