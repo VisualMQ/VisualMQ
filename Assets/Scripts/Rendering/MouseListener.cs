@@ -11,12 +11,24 @@ public class MouseListener : MonoBehaviour
     // Hover functionality
     void OnMouseEnter()
     {
+        // Do not zoom in/out the queue manager plane
+        if (gameObject.transform.name.StartsWith(QueueManager.QM_NAME_PREFIX))
+        {
+            return;
+        }
+
         gameObject.transform.localScale = new Vector3(1.05f, 1.05f, 1.05f);   
     }
 
     // Hover functionality
     void OnMouseExit()
     {
+        // Do not zoom in/out the queue manager plane
+        if (gameObject.transform.name.StartsWith(QueueManager.QM_NAME_PREFIX))
+        {
+            return;
+        }
+
         gameObject.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
     }
 
@@ -44,6 +56,14 @@ public class MouseListener : MonoBehaviour
         {
             Application application = gameObject.GetComponent<Application>();
             sidebarController.ShowApplicationDetails(transform.parent.name, application.application.conn);
+        }
+        else if (gameObject.transform.name.StartsWith(QueueManager.QM_NAME_PREFIX))
+        {
+            string qmgrName = gameObject.transform.name.Substring(QueueManager.QM_NAME_PREFIX.Length + 1);
+            sidebarController.ShowQueueManagerDetails(qmgrName);
+            gameObject.BroadcastMessage("HighlightSelf", gameObject.transform.name);
+            // Queue manager does not have any dependencies so just return
+            return;
         }
 
         // Highlight Functionality

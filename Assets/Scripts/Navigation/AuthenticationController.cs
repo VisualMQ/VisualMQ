@@ -20,7 +20,6 @@ public class AuthenticationController : MonoBehaviour
     public GameObject errorNotification, successNotification;
     private Text successMainText, successTimeText, errorMainText, errorTimeText;
 
-
     private string successMessage = "New queue manager added.";
     private string errorMessage = "Failed to add this queue manager. Please try again.";
 
@@ -61,7 +60,7 @@ public class AuthenticationController : MonoBehaviour
     }
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         Reset();
 
@@ -72,7 +71,7 @@ public class AuthenticationController : MonoBehaviour
     }
 
     // Confirm Button Clicked
-    void ConfirmButtonClicked()
+    private void ConfirmButtonClicked()
     {
         // Get Current Input Text and Form Checking
         userNameT = userNameInput.text;
@@ -116,7 +115,7 @@ public class AuthenticationController : MonoBehaviour
     /*  
     * Notification Window Generation as a whole
     */
-    void GenerateSuccessWindow(string message)
+    private void GenerateSuccessWindow(string message)
     {
         successTimeText.text = (DateTime.Now).ToString();
         successMainText.text = message;
@@ -125,7 +124,7 @@ public class AuthenticationController : MonoBehaviour
     }
 
 
-    void GenerateErrorWindow(string message)
+    private void GenerateErrorWindow(string message)
     {
         errorTimeText.text = (DateTime.Now).ToString();
         errorMainText.text = message;
@@ -140,7 +139,7 @@ public class AuthenticationController : MonoBehaviour
     * Return false: exist empty
     * Could Add more form check conditions in this method
     */
-    bool SubmitFormCheck(string username, string apikey, string url, string qm)
+    private bool SubmitFormCheck(string username, string apikey, string url, string qm)
     {
         bool passFormCheck = true;
         // Exist Empty
@@ -155,7 +154,7 @@ public class AuthenticationController : MonoBehaviour
     * Perform Empty Check & Update the warning labels
     * Return true: exist empty field
     */
-    bool EmptyCheck(string username, string apikey, string url, string qm)
+    private bool EmptyCheck(string username, string apikey, string url, string qm)
     {
         bool existEmpty = false;
         string warningText = "Please fill this out.";
@@ -194,7 +193,7 @@ public class AuthenticationController : MonoBehaviour
     * 2. Reset the labels to initial status
     * 3. Hide Window
     */
-    void CancelButtonClicked()
+    private void CancelButtonClicked()
     {
         Reset();
         gameObject.SetActive(false); // Hide the authentication window
@@ -202,7 +201,7 @@ public class AuthenticationController : MonoBehaviour
 
 
     // Reset: Includes below two functions
-    void Reset()
+    private void Reset()
     {
         CleanAllInputField();
         WarningLabelsInitStatus();
@@ -210,7 +209,7 @@ public class AuthenticationController : MonoBehaviour
 
 
     // Clean all input fields
-    void CleanAllInputField()
+    private void CleanAllInputField()
     {
         userNameInput.text = "";
         apiKey.text = "";
@@ -220,19 +219,8 @@ public class AuthenticationController : MonoBehaviour
 
 
     // The Initial state of all warning labels
-    void WarningLabelsInitStatus()
+    private void WarningLabelsInitStatus()
     {
-        //warningAPI.text = "Your API key";
-        //warningAPI.color = Color.gray;
-
-        //warningQueueName.text = "Name of your queue manager";
-        //warningQueueName.color = Color.gray;
-
-        //warningURL.text = "URL to your queue manager";
-        //warningURL.color = Color.gray;
-
-        //warningUserName.text = "Your IBM Cloud username";
-        //warningUserName.color = Color.gray;
 
         warningAPI.text = "E.g. I69H42WwUy2fQBbsGvKwFdBBj3ZgtuHEr3vs2xyr0oJ";
         warningAPI.color = Color.gray;

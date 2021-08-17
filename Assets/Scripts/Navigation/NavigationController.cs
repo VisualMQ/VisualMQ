@@ -12,8 +12,8 @@ public class NavigationController : MonoBehaviour
     private Button expandQMSelector, authenticateNewQM, buttonExit, buttonHelp;
 
     // Left Panel and Container
-    public GameObject leftPanel;
-    private Transform checkboxItem;
+    private GameObject queueManagersList;
+    private GameObject queueManagerRowItem;
 
     // QM Selector
     private Dictionary<string, bool> QMVisibility = new Dictionary<string, bool>();
@@ -30,15 +30,13 @@ public class NavigationController : MonoBehaviour
 
         // Button Listener
         expandQMSelector.onClick.AddListener(LeftPanelButtonClicked);
-
         buttonExit.onClick.AddListener(ExitButtonClicked);
         buttonHelp.onClick.AddListener(HelpButtonClicked);
-
         authenticateNewQM.onClick.AddListener(ConnectButtonClicked);
 
-        // Locate the Game Object: Left Panel
-        checkboxItem = leftPanel.transform.Find("QueueManagerRowItem");
-        checkboxItem.gameObject.SetActive(false);
+        // Resources for queue manager list dropdown
+        queueManagersList = transform.Find("ViewQueueManagers").gameObject;
+        queueManagerRowItem = Resources.Load("Prefabs/QueueManagerRowItem") as GameObject;
     }
 
 
@@ -46,38 +44,31 @@ public class NavigationController : MonoBehaviour
     {
         // Default: Hide Auth, Filter, Left Panel Windows
         Authentication.SetActive(false); 
-        leftPanel.SetActive(false);
+        queueManagersList.SetActive(false);
     }
 
 
     // Click to open the left panel; Click to hide the left panel
-    void LeftPanelButtonClicked()
+    private void LeftPanelButtonClicked()
     {
-        if (leftPanel.activeSelf == true)
+        if (queueManagersList.activeSelf == true)
         {
-            leftPanel.SetActive(false);
+            queueManagersList.SetActive(false);
         }
         else
         {
-            leftPanel.SetActive(true);
+            queueManagersList.SetActive(true);
             GenerateCheckBox();
         }
     }
+
 
     // The exit button clicked: Delete all QM objects under "State"
     private void ExitButtonClicked()
     {
         UnityEngine.Application.Quit();
-
-        /* Destroy the QM Object
-        GameObject stateGameObject = GameObject.Find("State");
-
-        foreach (Transform child in stateGameObject.transform)
-        {
-            Destroy(child.gameObject);
-        }
-        */ 
     }
+
 
     // Go to Github Page
     private void HelpButtonClicked()
@@ -94,7 +85,7 @@ public class NavigationController : MonoBehaviour
 
 
     // Load QM Selector
-    void GenerateCheckBox()
+    private void GenerateCheckBox()
     {
         // Destroy Previous Object
         DestroyQMSelector();
@@ -103,30 +94,19 @@ public class NavigationController : MonoBehaviour
         GameObject stateGameObject = GameObject.Find("State");
         State stateComponent = stateGameObject.GetComponent(typeof(State)) as State;
         
-        List<string> mqlist = stateComponent.RegisteredQMNameList();
+        List<string> mqlist = stateComponent.RegisteredQMNameList();        
 
-        int size = mqlist.Count;
-
-        float rowHeight = 43.1275f;
-        float startX = 176.3f;
-        float startY = -41.55f;
-        
-
-        for (int i = 0; i < size; i ++)
+        foreach (string qmgrName in mqlist)
         {
-            Transform item = Instantiate(checkboxItem, leftPanel.transform);
-            RectTransform recTransform = item.GetComponent<RectTransform>();
-            recTransform.anchoredPosition = new Vector2(startX, -rowHeight * i + startY);
-            item.gameObject.SetActive(true);
+            GameObject item = Instantiate(queueManagerRowItem, queueManagersList.transform.Find("QueueManagersList"));            
             
-            
-            item.Find("TextQueueManager").GetComponent<Text>().text = mqlist[i];
+            item.transform.Find("TextQueueManager").GetComponent<Text>().text = qmgrName;
 
             // connect the toggle to the corresponding QM
             Toggle toggle = item.GetComponent<Toggle>();
-            GameObject qm = GameObject.Find(mqlist[i]);
+            GameObject qm = GameObject.Find(qmgrName);
             toggle.onValueChanged.AddListener(delegate{
-                showSelector(toggle,qm);
+                ShowSelector(toggle, qm);
             });
         }
 
@@ -134,23 +114,20 @@ public class NavigationController : MonoBehaviour
 
 
     // for the toggle to control the appear of the QM
-    void showSelector(Toggle toggle, GameObject qm)
+    void ShowSelector(Toggle toggle, GameObject qm)
     {
-        
         if(toggle.isOn)
         {
             qm.SetActive(true);
-            Debug.Log("--- toggle is selected ---");
         }
         else
         {
             qm.SetActive(false);
-            Debug.Log("--- toggle is not selected ---");
         }
     }
 
     void DestroyQMSelector() {
-        foreach (Transform child in leftPanel.transform) 
+        foreach (Transform child in queueManagersList.transform.Find("QueueManagersList")) 
         {
             if(child.gameObject.name == "QueueManagerRowItem(Clone)")
             {
@@ -162,7 +139,7 @@ public class NavigationController : MonoBehaviour
 
     void Close()
     {
-        leftPanel.SetActive(false);
+        queueManagersList.SetActive(false);
     }
 
 }
