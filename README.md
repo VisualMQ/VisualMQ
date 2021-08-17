@@ -11,8 +11,8 @@
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
-  <a href="https://github.com/othneildrew/Best-README-Template">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+  <a href="https://github.com/VisualMQ/VisualMQ/">
+    <img src="visualmq-logo.png" alt="Logo">
   </a>
 
   <h3 align="center">VisualMQ</h3>
@@ -64,7 +64,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+[![Product Name Screen Shot][product-screenshot]](https://visualmq.diallom.com/demo)
 
 VisualMQ is a supportive application for IBM MQ systems. Created in Unity, VisualMQ is designed to create 3D representations of MQ systems. For this purpose, we have created novel 3D models representing the different components of MQ. VisualMQ is aimed at being a novel tool that revolutionizes the way end-users obtain an understanding of the systems functioning.  As opposed to the current inspection methods for MQ systems,  the relationship between different components is emphasized and data is represented in such a way to make it as easy as possible to understand. 
 
@@ -159,4 +159,4 @@ We would like to express our gratitude towards the IBM supervisors: [John McNama
 [license-url]: https://github.com/othneildrew/Best-README-Template/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/othneildrew
-[product-screenshot]: images/screenshot.png
+[product-screenshot]: visualmq-screenshot.png
