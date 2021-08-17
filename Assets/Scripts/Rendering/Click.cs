@@ -37,12 +37,14 @@ public class Click : MonoBehaviour
 
                     // If we hit a gameobject, let the gameobject itself handle the associated highlight
                     // Special case, look for situation when clicked on qmgr block
-                    if (objectName.Substring(0, 5) == "Block")
+                    if (objectName.Substring(0, 5) == "Plane")
                     {
                         string qmgrName = objectName.Substring(6);
 
                         SidebarController sidebarController = sidebar.GetComponent<SidebarController>();
                         sidebarController.ShowQueueManagerDetails(qmgrName);
+
+                        gameObject.BroadcastMessage("HighlightSelf", objectName);
                     }
                 }
                 else
