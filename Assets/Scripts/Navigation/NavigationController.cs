@@ -11,9 +11,6 @@ public class NavigationController : MonoBehaviour
     // Buttons
     private Button expandQMSelector, authenticateNewQM, buttonExit, buttonHelp, buttonReset;
 
-    // Camera position
-    // private Camera mainCamera;
-
     // Left Panel and Container
     private GameObject queueManagersList;
     private GameObject queueManagerRowItem;
@@ -52,6 +49,7 @@ public class NavigationController : MonoBehaviour
         queueManagersList.SetActive(false);
         buttonReset.gameObject.SetActive(false);
     }
+
 
 
     // Click to open the left panel; Click to hide the left panel
@@ -96,7 +94,7 @@ public class NavigationController : MonoBehaviour
     private void ResetButtonClicked()
     {
         Debug.Log("RESET Camera position!");
-        Camera.main.transform.position = new Vector3(0f, 0f, 0f);
+        Camera.main.transform.position = new Vector3(0f, 0f, -20f);
         Camera.main.transform.rotation = Quaternion.Euler(0, 0, 0);
     }
 
