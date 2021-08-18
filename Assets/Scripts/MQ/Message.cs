@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace MQ
+﻿namespace MQ
 {
     public class Message
     {

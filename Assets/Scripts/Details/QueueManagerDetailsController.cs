@@ -50,7 +50,7 @@ public class QueueManagerDetailsController : MonoBehaviour
     // Initialise the QM Info using the QM name
     public void GetQueueManagerDetails(string selectedQMName)
     {
-        currentQueueManager = stateComponent.GetSelectedQmgr(selectedQMName);
+        currentQueueManager = stateComponent.GetQueueManagerDetails(selectedQMName);
 
         ToQueueManagerDetails();
     }
@@ -87,7 +87,7 @@ public class QueueManagerDetailsController : MonoBehaviour
 
 
         // Get queues in the selected queue manager
-        List<MQ.Queue> queues = stateComponent.GetAllQueuesInQmgr(currentQueueManager.qmgrName);
+        List<MQ.Queue> queues = stateComponent.GetAllQueues(currentQueueManager.qmgrName);
         for (int i = 0; i < queues.Count; i++)
         {
             MQ.Queue queue = queues[i];

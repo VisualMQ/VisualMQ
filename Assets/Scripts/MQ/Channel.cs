@@ -1,6 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-
+﻿/**
+ * The Channel classes are used to parse the JSON reponse from 
+ * the MQSC command "DISPLAY CHANNEL"
+ * Reference: https://www.ibm.com/docs/en/ibm-mq/9.2?topic=reference-display-channel-display-channel-definition
+ */
 namespace MQ
 {
     public abstract class Channel
