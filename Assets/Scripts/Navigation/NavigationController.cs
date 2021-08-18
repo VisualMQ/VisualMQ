@@ -102,16 +102,33 @@ public class NavigationController : MonoBehaviour
             
             item.transform.Find("TextQueueManager").GetComponent<Text>().text = qmgrName;
 
+            GameObject qm = null;
+            foreach (MQ.Client client in stateComponent.qmgrs.Keys)
+            {
+                if (client.GetQueueManagerName() == qmgrName)
+                {
+                    qm = stateComponent.qmgrs[client];
+                }
+            }
+
+            if (qm == null)
+            {
+                continue; // QM Not rendered yet
+            }
+
             // connect the toggle to the corresponding QM
             Toggle toggle = item.GetComponent<Toggle>();
-            GameObject qm = GameObject.Find(qmgrName);
+
+            if (!qm.activeInHierarchy)
+            {
+                toggle.isOn = !toggle.isOn; // If QM is disabled, disable the toggle as wel
+            }
+
             toggle.onValueChanged.AddListener(delegate{
                 ShowSelector(toggle, qm);
             });
         }
-
     }
-
 
     // for the toggle to control the appear of the QM
     void ShowSelector(Toggle toggle, GameObject qm)

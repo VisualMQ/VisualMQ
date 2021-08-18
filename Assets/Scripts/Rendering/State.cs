@@ -12,7 +12,7 @@ public class State : MonoBehaviour
     public GameObject updateTimeText;
 
     // Main dictionary keeping all connection and their rendered counterparts
-    private Dictionary<MQ.Client, GameObject> qmgrs = new Dictionary<MQ.Client, GameObject>();
+    public Dictionary<MQ.Client, GameObject> qmgrs = new Dictionary<MQ.Client, GameObject>();
 
     // Data structure for pre-computing dependencies between different MQ components
     public DependencyGraph dependencyGraph = new DependencyGraph();
