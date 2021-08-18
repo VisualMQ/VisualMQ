@@ -81,9 +81,26 @@ This section should list any major frameworks that you built your project using.
 <!-- GETTING STARTED -->
 ## Getting Started
 
-VisualMQ is available under the ... LICENSE. 
+VisualMQ is available in a multitude of ways for usage purposes or development.
 
-There are a multitude of ways to use the product. The first is cloning this repository and importing it into Unity version ????. From there, it is possible to build the project manually and play around with it. Other options involve downloading available [binaries](https://github.com/VisualMQ/VisualMQ/releases) for popular systems or the available [web-demo](https://visualmq.diallom.com/demo/).
+##### Binaries
+
+MacOS and Windows binaries are available under [releases](https://github.com/VisualMQ/VisualMQ/releases)
+
+##### Web-Demo
+VisualMQ is available for quick-evaluation as a [web-demo](https://visualmq.diallom.com/demo/).
+
+
+##### (Development) in Unity
+1. Ensure Unity version ?? is installed.
+2. Clone this repository
+3. Open the root of this directory within Unity
+
+- For development: see the section on contributing.
+- For building / running:
+  - Building: https://docs.unity3d.com/Manual/BuildSettings.html
+  - Running: https://docs.unity3d.com/Manual/GameView.html
+
 
 ### Prerequisites
 
