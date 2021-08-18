@@ -81,7 +81,7 @@ VisualMQ is available in a multitude of ways for usage purposes or development.
 
 MacOS and Windows binaries are available under [releases](https://github.com/VisualMQ/VisualMQ/releases)
 
-#### Web-Demo
+#### Web-Demo (TBD)
 VisualMQ is available for quick-evaluation as a [web-demo](https://visualmq.diallom.com/demo/).
 
 
@@ -120,8 +120,18 @@ TBA Screenshots and video
 <!-- CONTRIBUTING -->
 ## Contributing (not done)
 
-Contributing is done by following the "Getting Started" instructions for development. With exceptions of the models made in Blender, VisualMQ is entirely made within Unity. Therefore (TBA)
-TBA
+Contributing is done by following the "Getting Started" instructions for development. With exceptions of the models made in Blender, VisualMQ is entirely made within Unity. 
+
+[Microsoft Guide](https://docs.microsoft.com/en-us/archive/msdn-magazine/2014/august/unity-developing-your-first-game-with-unity-and-csharp)
+[Unity Manual](https://docs.unity3d.com/Manual/index.html)
+
+To summarize:
+- C\# Application logic pertaining to gameobjects is found under `assets/scripts/`.
+  - `details` Contains files implementing logic for the information panels upon clicking on the correspondingly named entity.
+  - `MQ` Contains files implementing the logic for interacting with the rest-api and retrieving/parsing data.
+  - `Navigation` Contains files implementing the UI / Navigational control logic.
+  - `Rendering` Contains the core logic for visualisation. (TBD: This could be more elaborate but I would rather wait till we have a diagram or something final)
+- Application is contained into a single `MainScene`
 
 
 <!-- LICENSE -->
@@ -141,7 +151,7 @@ Distributed under the TBA License. See `LICENSE` for more information.
 - Your Name - [@Linkedin](https://twitter.com/your_username) - email@example.com
 - Your Name - [@Linkedin](https://twitter.com/your_username) - email@example.com
 
-Project Link: [https://github.com/your_username/repo_name](https://github.com/your_username/repo_name)
+VisualMQ: [https://github.com/VisualMQ/](https://github.com/VisualMQ/)
 
 
 
