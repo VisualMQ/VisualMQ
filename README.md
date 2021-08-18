@@ -67,11 +67,9 @@ VisualMQ is a supportive application for IBM MQ systems. Created in Unity, Visua
 
 
 ### Built With
-
-This section should list any major frameworks that you built your project using. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
+* [IBM MQ](https://www.ibm.com/docs/en/ibm-mq)
 * [Unity](https://unity.com/)
 * [Blender](https://www.blender.org/)
-* ...
 
 
 
@@ -99,7 +97,7 @@ VisualMQ is available for quick-evaluation as a [web-demo](https://visualmq.dial
   - Running: https://docs.unity3d.com/Manual/GameView.html
 
 
-### Prerequisites
+### Usage Prerequisites
 
 Usage of VisualMQ requires a valid set of queue manager details. For this valid IBM Cloud details are required. For this we recommend observing the [official tutorial](https://www.ibm.com/cloud/garage/dte/tutorial/tutorial-mq-ibm-cloud) the first two steps "Creating MQ Services On IBM Cloud" and "Creating A Queue Manager On IBM Cloud" to create one or more queue managers. For each of these queue managers the following credentials will be necessary:
 - API KEY
