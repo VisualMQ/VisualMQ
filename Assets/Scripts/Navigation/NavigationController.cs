@@ -6,12 +6,13 @@ using UnityEngine.UI;
 public class NavigationController : MonoBehaviour
 {
     // Windows Gameobject
-    public GameObject Authentication;
+    public GameObject authenticationWindow;
     
     // Buttons
-    private Button expandQMSelector, authenticateNewQM, buttonExit, buttonHelp;
+    private Button expandQMSelector, authenticateNewQM, buttonExit, buttonHelp, buttonReset;
 
     // Left Panel and Container
+    private GameObject viewDropdown;
     private GameObject queueManagersList;
     private GameObject queueManagerRowItem;
 
@@ -27,37 +28,40 @@ public class NavigationController : MonoBehaviour
         authenticateNewQM = transform.Find("ButtonConnect").GetComponent<Button>();
         buttonExit = transform.Find("ButtonExit").GetComponent<Button>();
         buttonHelp = transform.Find("ButtonHelp").GetComponent<Button>();
+        buttonReset = transform.Find("ViewDropdown/ButtonReset").GetComponent<Button>();
 
         // Button Listener
-        expandQMSelector.onClick.AddListener(LeftPanelButtonClicked);
+        expandQMSelector.onClick.AddListener(ViewButtonClicked);
+        authenticateNewQM.onClick.AddListener(ConnectButtonClicked);
         buttonExit.onClick.AddListener(ExitButtonClicked);
         buttonHelp.onClick.AddListener(HelpButtonClicked);
-        authenticateNewQM.onClick.AddListener(ConnectButtonClicked);
+        buttonReset.onClick.AddListener(ResetButtonClicked);
 
         // Resources for queue manager list dropdown
-        queueManagersList = transform.Find("ViewQueueManagers").gameObject;
+        viewDropdown = transform.Find("ViewDropdown").gameObject;
+        queueManagersList = transform.Find("ViewDropdown/QueueManagersList").gameObject;
         queueManagerRowItem = Resources.Load("Prefabs/QueueManagerRowItem") as GameObject;
     }
 
 
     private void Start()
     {
-        // Default: Hide Auth, Filter, Left Panel Windows
-        Authentication.SetActive(false); 
-        queueManagersList.SetActive(false);
+        authenticationWindow.SetActive(false); 
+        viewDropdown.SetActive(false);
     }
 
 
+
     // Click to open the left panel; Click to hide the left panel
-    private void LeftPanelButtonClicked()
+    private void ViewButtonClicked()
     {
-        if (queueManagersList.activeSelf == true)
+        if (viewDropdown.activeSelf == true)
         {
-            queueManagersList.SetActive(false);
+            viewDropdown.SetActive(false);
         }
         else
         {
-            queueManagersList.SetActive(true);
+            viewDropdown.SetActive(true);
             GenerateCheckBox();
         }
     }
@@ -80,7 +84,15 @@ public class NavigationController : MonoBehaviour
     // Open up authentication window
     private void ConnectButtonClicked()
     {
-        Authentication.SetActive(true);
+        authenticationWindow.SetActive(true);
+    }
+
+
+    // Reset the camera
+    private void ResetButtonClicked()
+    {
+        Camera.main.transform.position = new Vector3(0f, 0f, -20f);
+        Camera.main.transform.rotation = Quaternion.Euler(0, 0, 0);
     }
 
 
@@ -114,7 +126,7 @@ public class NavigationController : MonoBehaviour
 
 
     // for the toggle to control the appear of the QM
-    void ShowSelector(Toggle toggle, GameObject qm)
+    private void ShowSelector(Toggle toggle, GameObject qm)
     {
         if(toggle.isOn)
         {
@@ -126,7 +138,9 @@ public class NavigationController : MonoBehaviour
         }
     }
 
-    void DestroyQMSelector() {
+
+    // Destroy previous QM selector
+    private void DestroyQMSelector() {
         foreach (Transform child in queueManagersList.transform.Find("QueueManagersList")) 
         {
             if(child.gameObject.name == "QueueManagerRowItem(Clone)")
@@ -139,7 +153,7 @@ public class NavigationController : MonoBehaviour
 
     void Close()
     {
-        queueManagersList.SetActive(false);
+        viewDropdown.SetActive(false);
     }
 
 }
