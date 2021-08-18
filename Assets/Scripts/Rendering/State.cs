@@ -91,6 +91,7 @@ public class State : MonoBehaviour
                 QueueManager qmgrComponent = renderedQmgr.GetComponent(typeof(QueueManager)) as QueueManager;
                 qmgrComponent.UpdateQueues(queues);
                 qmgrComponent.UpdateChannels(channels);
+                qmgrComponent.UpdateApplications(applications);
             }
             updateCountdown = UPDATE_INTERVAL;
         }

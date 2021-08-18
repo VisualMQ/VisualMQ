@@ -22,6 +22,7 @@ public class QueueManager : MonoBehaviour
     public Vector3 baseLoc;
     public Dictionary<string, GameObject> renderedQueues = new Dictionary<string, GameObject>();
     public Dictionary<string, GameObject> renderedChannels = new Dictionary<string, GameObject>();
+    public Dictionary<string, GameObject> renderedApplications = new Dictionary<string, GameObject>();
 
     public Dictionary<string, Vector3> offsets;
     public Dictionary<string, int> numberOfRenderedQueues;
@@ -124,26 +125,13 @@ public class QueueManager : MonoBehaviour
             renderedQueues.Add(queue.queueName, queueGameObject);
         }
 
-
         // Render channels
         RenderChannels(channels);
 
-
         // Render applications
-        for (int i = 0; i < applications.Count; i++)
-        {
-            MQ.Application application = applications[i];
-            string uniqueConnectionName = qmName + QM_NAME_DELIMITER + application.conn;
-            GameObject applicationGameObject = new GameObject(uniqueConnectionName, typeof(Application));
-            Application applicationComponent = applicationGameObject.GetComponent((typeof(Application))) as Application;
-            applicationComponent.application = application;
-            applicationGameObject.transform.position = sXZ * new Vector3(-(i / (2 * largeArea[1] + 1) + 1), 0, i % (2 * largeArea[1]) + 1.5f) + baseLoc;
-            applicationGameObject.transform.parent = this.transform;
-
-            NameRenderer nameComponent = applicationGameObject.GetComponent(typeof(NameRenderer)) as NameRenderer;
-            nameComponent.objectName = application.conn;
-        }
+        RenderApplications(applications);
     }
+
 
     public UnityEngine.Vector3 ComputePosition(string queueType, int rank)
     {
@@ -300,6 +288,58 @@ public class QueueManager : MonoBehaviour
             nameRenderer.objectName = channel.channelName;
 
             renderedChannels.Add(channel.channelName, channelGameObject);
+        }
+    }
+
+
+
+    public void UpdateApplications(List<MQ.Application> applications)
+    {
+        bool flag = false;
+        // Check if the number of channels changed
+        if (applications.Count == renderedApplications.Count)
+        {
+            // If the number not changed, check whether all the channels are not changed
+            for (int i = 0; i < applications.Count; i++)
+            {
+                if (!renderedApplications.ContainsKey(applications[i].conname))
+                {
+                    flag = true;
+                }
+            }
+        }
+        else
+        {
+            flag = true;
+        }
+
+        // When the channels exist change, re-render
+        if (flag)
+        {
+            // Remove all the channels, in order to relocate and resize the channels
+            foreach (KeyValuePair<string, GameObject> entry in renderedApplications)
+            {
+                GameObject.DestroyImmediate(entry.Value);
+            }
+            RenderApplications(applications);
+        }
+    }
+
+
+    public void RenderApplications(List<MQ.Application> applications)
+    {
+        for (int i = 0; i < applications.Count; i++)
+        {
+            MQ.Application application = applications[i];
+            string uniqueConnectionName = queueManager.qmgrName + QM_NAME_DELIMITER + application.conn;
+            GameObject applicationGameObject = new GameObject(uniqueConnectionName, typeof(Application));
+            Application applicationComponent = applicationGameObject.GetComponent((typeof(Application))) as Application;
+            applicationComponent.application = application;
+            applicationGameObject.transform.position = sXZ * new Vector3(-(i / (2 * largeArea[1] + 1) + 1), 0, i % (2 * largeArea[1]) + 1.5f) + baseLoc;
+            applicationGameObject.transform.parent = this.transform;
+
+            NameRenderer nameComponent = applicationGameObject.GetComponent(typeof(NameRenderer)) as NameRenderer;
+            nameComponent.objectName = application.conn;
         }
     }
 
