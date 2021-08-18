@@ -22,8 +22,8 @@ public class QueueDetailsController : MonoBehaviour
     private Transform tabButtonsGroups;
     private Button toQueueDetail, toMessageList, toConnections;
 
+    // State & Queue
     private MQ.Queue currentQueue;
-
     private State stateComponent;
 
     private GameObject messageRowTemplate;
