@@ -20,7 +20,7 @@
   <p align="center">
     VisualMQ is a 3D visualisation tool for the IBM MQ Platform.
     <br />
-    <a href="https://github.com/othneildrew/Best-README-Template"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/othneildrew/Best-README-Template"><strong> Video of IBM MQ</strong></a>
     <br />
     <br />
     <a href="https://visualmq.diallom.com/demo/">Demo</a>
