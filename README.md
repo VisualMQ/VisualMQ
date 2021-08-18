@@ -121,10 +121,10 @@ TBA
 
 
 <!-- CONTRIBUTING -->
-## Contributing
+## Contributing (not done)
 
+Contributing is done by following the "Getting Started" instructions for development. With exceptions of the models made in Blender, VisualMQ is entirely made within Unity. Therefore (TBA)
 TBA
-
 
 
 <!-- LICENSE -->
