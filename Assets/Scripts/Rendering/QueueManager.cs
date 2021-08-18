@@ -47,20 +47,16 @@ public class QueueManager : MonoBehaviour
         List<MQ.Application> applications = queueManager.applications;
         string qmName = queueManager.qmgrName;
 
-        
-        Debug.Log("Rendering " + queues.Count + " queues.");
-
         Dictionary<string, int> numberOfQueues = GetNumberOfQueuesOfType();
         List<KeyValuePair<string, int>> numberOfQueuesList = numberOfQueues.ToList();
         numberOfQueuesList.Sort((x, y) => x.Value.CompareTo(y.Value));
 
         List<int[]> areas = GetLargeSmallArea();
-        // int[] largeArea = areas[0];
-        // int[] smallArea = areas[1];
         largeArea = areas[0];
         smallArea = areas[1];
         // By design, larger side of smallArea is equal to smaller side of largeArea
         Debug.Assert(largeArea[1] == smallArea[0]);
+
         offsets = new Dictionary<string, Vector3>();
         dimensions = new Dictionary<string, int[]>();
         offsets[numberOfQueuesList[3].Key] = sXZ * new Vector3(0.5f, 0, 1.5f);
@@ -132,23 +128,124 @@ public class QueueManager : MonoBehaviour
         RenderApplications(applications);
     }
 
-
-    public UnityEngine.Vector3 ComputePosition(string queueType, int rank)
+    public Dictionary<string, int> GetNumberOfQueuesOfType()
     {
-        // int i = numberOfRenderedQueues[queueType]++;
-        Vector3 offset = offsets[queueType];
-        Vector3 position = new Vector3(sXZ * (rank % dimensions[queueType][0]), 0, sXZ * (rank / dimensions[queueType][0]));
-        Vector3 queueManagerHeight = new Vector3(0, sY * 2, 0);
-        return (offset + position + queueManagerHeight + baseLoc);  
+        // Compute how many queues are of each type
+        Dictionary<string, int> numberOfQueues = new Dictionary<string, int>
+        {
+            [MQ.AliasQueue.typeName] = 0,
+            [MQ.RemoteQueue.typeName] = 0,
+            [MQ.TransmissionQueue.typeName] = 0,
+            [MQ.LocalQueue.typeName] = 0
+        };
+        foreach (MQ.Queue queue in queueManager.queues)
+        {
+            numberOfQueues[queue.GetTypeName()]++;
+        }
+        return numberOfQueues;
     }
 
+    /* We will have 2 large rectangle areas and 2 small rectangle areas
+   -----------
+   |2    |4  |
+   |     |   |
+   X-----X----
+   |1    |3  |
+   |     |   |
+   X-----X----
 
+    We sort types of queues (Alias/Remote..) based on the number of queues
+    of that type there are. Two highest have the 2 large areas, two smallest
+    have the 2 small areas.
+    The large area is formed based on the queue with the highest number of
+    queues, the small are based on the queue type with the second smallest number
+    of queues.
+    */
+
+    /*
+        Each area has associated offset vector and dimension.
+        Offset determines its position. See offsets variable later on.
+        On diagram the offset is represented by X.
+        Dimensions/areas are 2-element int array specifying the 2 rectangle axes sizes.
+        The first element of the int array is always the greater one.
+    */
+    public List<int[]> GetLargeSmallArea()
+    {
+        List<int[]> result = new List<int[]>();
+        Dictionary<string, int> numberOfQueues = GetNumberOfQueuesOfType();
+
+        List<KeyValuePair<string, int>> numberOfQueuesList = numberOfQueues.ToList();
+        numberOfQueuesList.Sort((x, y) => x.Value.CompareTo(y.Value));
+
+        KeyValuePair<string, int> highestQueueType = numberOfQueuesList[3];
+        KeyValuePair<string, int> secondSmallestQueueType = numberOfQueuesList[1];
+
+        int[] largeArea = QueueManager.ComputeRectangleArea(highestQueueType.Value);
+        int[] smallArea = QueueManager.ComputeRectangleArea(secondSmallestQueueType.Value, largeArea[1]);
+
+        result.Add(largeArea);
+        result.Add(smallArea);
+
+        return result;
+    }
+
+    // Our algorithm for creating a rectangle that can hold N queues
+    // This method returns dimensions of that rectangle
+    public static int[] ComputeRectangleArea(int N)
+    {
+        int a = 1;
+        int b = 0;
+        bool stopFlag = false;
+
+        while (!stopFlag)
+        {
+            b = N / a;
+            if (Math.Abs(b - a) <= 2)
+            {
+                stopFlag = true;
+            }
+            else a++;
+        }
+
+        // We need extra space for remainder queues and for dynamic updates
+        // Notice that it has to be the case that b >= a
+        int[] res = { b + 1, a };
+        return res;
+    }
+
+    // Returns dimensions of a rectangle that can hold N queues but
+    // one side of the rectangle is constrained to size a
+    public static int[] ComputeRectangleArea(int N, int a)
+    {
+        int b = N / a;
+        int[] res = { Math.Max(a, b + 1), Math.Min(a, b + 1) };
+        return res;
+    }
+
+    public int[] GetQueueManagerSize(bool includeApplication)
+    {
+        List<int[]> areas = GetLargeSmallArea();
+
+        // Length in x axe
+        int x, z;
+
+        if (includeApplication)
+        {
+            x = (int)sXZ * (areas[0][0] + areas[1][1] + (queueManager.applications.Count / (2 * areas[0][1])) + 2);
+        }
+        else
+        {
+            x = (int)sXZ * (areas[0][0] + areas[1][1]);
+        }
+        // Length in z axis "+1" is for channel length
+        z = (int)sXZ * (2 * areas[0][1] + 1);
+
+        return new int[] { x, z };
+    }
 
     // This method is called from State object on the periodical update
     public void UpdateQueues(List<MQ.Queue> queues)
     {
-
-        
         List<string> queuesToRender = new List<string>();
         List<string> queuesToDestroy = new List<string>();
 
@@ -214,9 +311,6 @@ public class QueueManager : MonoBehaviour
                 int oldDepth = queueComponent.queue.currentDepth;
                 int newDepth = queue.currentDepth;
 
-                //TODO: Assign new message fields when message API is ready
-                //TODO: Re-render might be necessary even if oldDepth = newDepth -- messages might have changed
-
                 if (oldDepth != newDepth)
                 {
                     queueComponent.UpdateMessages(newDepth);
@@ -229,7 +323,7 @@ public class QueueManager : MonoBehaviour
 
     public void UpdateChannels(List<MQ.Channel> channels)
     {   
-        bool flag = false;
+        bool modified = false;
         // Check if the number of channels changed
         if(channels.Count == renderedChannels.Count)
         {
@@ -238,19 +332,20 @@ public class QueueManager : MonoBehaviour
             {
                 if(!renderedChannels.ContainsKey(channels[i].channelName))
                 {
-                    flag = true;
+                    modified = true;
+                    break;
                 }
             }
         }
         else
         {
-            flag = true;
+            modified = true;
         }
 
-        // When the channels exist change, re-render
-        if(flag)
+        // Re-render with lastest channels if modified == true
+        if(modified)
         {   
-            // Remove all the channels, in order to relocate and resize the channels
+            // Destroy all the channels, in order to relocate and resize the channels
             foreach (KeyValuePair<string, GameObject> entry in renderedChannels)
             {
                 GameObject.DestroyImmediate(entry.Value);
@@ -291,11 +386,9 @@ public class QueueManager : MonoBehaviour
         }
     }
 
-
-
     public void UpdateApplications(List<MQ.Application> applications)
     {
-        bool flag = false;
+        bool modified = false;
         // Check if the number of channels changed
         if (applications.Count == renderedApplications.Count)
         {
@@ -304,19 +397,20 @@ public class QueueManager : MonoBehaviour
             {
                 if (!renderedApplications.ContainsKey(applications[i].conn))
                 {
-                    flag = true;
+                    modified = true;
+                    break;
                 }
             }
         }
         else
         {
-            flag = true;
+            modified = true;
         }
 
-        // When the channels exist change, re-render
-        if (flag)
+        // Re-render with lastest applications if modified == true
+        if (modified)
         {
-            // Remove all the channels, in order to relocate and resize the channels
+            // Destroy all old application gameobjects
             foreach (KeyValuePair<string, GameObject> entry in renderedApplications)
             {
                 GameObject.DestroyImmediate(entry.Value);
@@ -324,7 +418,6 @@ public class QueueManager : MonoBehaviour
             RenderApplications(applications);
         }
     }
-
 
     public void RenderApplications(List<MQ.Application> applications)
     {
@@ -347,120 +440,12 @@ public class QueueManager : MonoBehaviour
         }
     }
 
-
-    public Dictionary<string, int> GetNumberOfQueuesOfType()
+    public UnityEngine.Vector3 ComputePosition(string queueType, int rank)
     {
-        // Compute how many queues are of each type
-        Dictionary<string, int> numberOfQueues = new Dictionary<string, int>
-        {
-            [MQ.AliasQueue.typeName] = 0,
-            [MQ.RemoteQueue.typeName] = 0,
-            [MQ.TransmissionQueue.typeName] = 0,
-            [MQ.LocalQueue.typeName] = 0
-        };
-        foreach (MQ.Queue queue in queueManager.queues)
-        {
-            numberOfQueues[queue.GetTypeName()]++;
-        }
-        return numberOfQueues;
+        // int i = numberOfRenderedQueues[queueType]++;
+        Vector3 offset = offsets[queueType];
+        Vector3 position = new Vector3(sXZ * (rank % dimensions[queueType][0]), 0, sXZ * (rank / dimensions[queueType][0]));
+        Vector3 queueManagerHeight = new Vector3(0, sY * 2, 0);
+        return (offset + position + queueManagerHeight + baseLoc);
     }
-
-
-    /* We will have 2 large rectangle areas and 2 small rectangle areas
-       -----------
-       |2    |4  |
-       |     |   |
-       X-----X----
-       |1    |3  |
-       |     |   |
-       X-----X----
-
-        We sort types of queues (Alias/Remote..) based on the number of queues
-        of that type there are. Two highest have the 2 large areas, two smallest
-        have the 2 small areas.
-        The large area is formed based on the queue with the highest number of
-        queues, the small are based on the queue type with the second smallest number
-        of queues.
-    */
-
-    /*
-        Each area has associated offset vector and dimension.
-        Offset determines its position. See offsets variable later on.
-        On diagram the offset is represented by X.
-        Dimensions/areas are 2-element int array specifying the 2 rectangle axes sizes.
-        The first element of the int array is always the greater one.
-    */
-    public List<int[]> GetLargeSmallArea()
-    {
-        List<int[]> result = new List<int[]>();
-        Dictionary<string, int> numberOfQueues = GetNumberOfQueuesOfType();
-
-        List<KeyValuePair<string, int>> numberOfQueuesList = numberOfQueues.ToList();
-        numberOfQueuesList.Sort((x, y) => x.Value.CompareTo(y.Value));
-
-        KeyValuePair<string, int> highestQueueType = numberOfQueuesList[3];
-        KeyValuePair<string, int> secondSmallestQueueType = numberOfQueuesList[1];
-
-        int[] largeArea = QueueManager.ComputeRectangleArea(highestQueueType.Value);
-        int[] smallArea = QueueManager.ComputeRectangleArea(secondSmallestQueueType.Value, largeArea[1]);
-
-        result.Add(largeArea);
-        result.Add(smallArea);
-
-        return result;
-    }
-
-
-    public int[] GetQueueManagerSize(bool includeApplication)
-    {
-        List<int[]> areas = GetLargeSmallArea();
-
-        // Length in x axe
-        int x, z;
-
-        if (includeApplication)
-        {
-            x = (int)sXZ * (areas[0][0] + areas[1][1] + (queueManager.applications.Count / (2 * areas[0][1])) + 2);
-        }
-        else
-        {
-            x = (int)sXZ * (areas[0][0] + areas[1][1]);
-        }
-        // Length in z axis "+1" is for channel length
-        z = (int) sXZ * (2 * areas[0][1] + 1);
-
-        return new int[] { x, z };
-    }
-
-
-    // Our algorithm for creating a rectangle that can hold N queues
-    // This method returns dimensions of that rectangle
-    public static int[] ComputeRectangleArea(int N)
-    {
-        int a = 1;
-        int b = 0;
-        bool stopFlag = false;
-
-        while (!stopFlag)
-        {
-            b = N / a;
-            if (Math.Abs(b - a) <= 2) stopFlag = true;
-            else a++;
-        }
-
-        // We need extra space for remainder queues and for dynamic updates
-        // Notice that it has to be the case that b >= a
-        int[] res = { b + 1, a };
-        return res;
-    }
-
-    // Returns dimensions of a rectangle that can hold N queues but
-    // one size of the rectangle is constrained to size a
-    public static int[] ComputeRectangleArea(int N, int a)
-    {
-        int b = N / a;
-        int[] res = { Math.Max(a, b + 1), Math.Min(a, b + 1) };
-        return res;
-    }
-
 }
