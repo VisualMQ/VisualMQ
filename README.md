@@ -43,15 +43,15 @@
     <li>
       <a href="#getting-started">Getting Started</a>
       <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
+        <li><a href="#Usage-Prerequisites">Prerequisites</a></li>
         <li><a href="#installation">Installation</a></li>
       </ul>
     </li>
     <li><a href="#usage">Usage</a></li>
     <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgements">Acknowledgements</a></li>
+    <li><a href="#acknowledgements">Acknowledgements</a></li>'
+     <li><a href="#license">License</a></li>
   </ol>
 </details>
 
@@ -75,6 +75,20 @@ VisualMQ is a supportive application for IBM MQ systems. Created in Unity, Visua
 <!-- GETTING STARTED -->
 ## Getting Started
 
+
+### Usage Prerequisites
+
+Usage of VisualMQ requires a valid set of queue manager details. For this valid IBM Cloud details are required. For this we recommend observing the [official tutorial](https://www.ibm.com/cloud/garage/dte/tutorial/tutorial-mq-ibm-cloud) the first two steps "Creating MQ Services On IBM Cloud" and "Creating A Queue Manager On IBM Cloud" to create one or more queue managers. For each of these queue managers the following credentials will be necessary:
+- API KEY
+- Username
+- Host URL
+- Queue Manager Name
+
+The tips under the tutorial's section "Administering MQ Using MQ Console" give partial instruction on how to retrieve these. 
+
+
+### Installation
+
 VisualMQ is available in a multitude of ways for usage purposes or development.
 
 #### Binaries
@@ -96,15 +110,6 @@ VisualMQ is available for quick-evaluation as a [web-demo](https://visualmq.dial
   - Running: https://docs.unity3d.com/Manual/GameView.html
 
 
-### Usage Prerequisites
-
-Usage of VisualMQ requires a valid set of queue manager details. For this valid IBM Cloud details are required. For this we recommend observing the [official tutorial](https://www.ibm.com/cloud/garage/dte/tutorial/tutorial-mq-ibm-cloud) the first two steps "Creating MQ Services On IBM Cloud" and "Creating A Queue Manager On IBM Cloud" to create one or more queue managers. For each of these queue managers the following credentials will be necessary:
-- API KEY
-- Username
-- Host URL
-- Queue Manager Name
-
-The tips under the tutorial's section "Administering MQ Using MQ Console" give partial instruction on how to retrieve these. 
 
 
 
@@ -135,11 +140,6 @@ Application layout:
 - Application is contained into a single `MainScene`
 
 
-<!-- LICENSE -->
-## License
-
-Distributed under the TBA License. See `LICENSE` for more information.
-
 
 
 <!-- CONTACT -->
@@ -162,6 +162,13 @@ VisualMQ: [https://github.com/VisualMQ/](https://github.com/VisualMQ/)
 We would like to express our gratitude towards the IBM supervisors: [John McNamara](https://www.linkedin.com/in/jonmcnamara/), [Adrian Osadcenco](https://www.linkedin.com/in/adrian-osadcenco-b028408a/) and [Richard Coppen](https://www.linkedin.com/in/richard-coppen-163800116/). The time, energy and support they have dedicated to this project have had a greatly positive impact on the end-result. Furthermore, we would also like to thank the MQ outreach team. The MQ workshop they provided us with was extremely informative and provided us with a significant amount of specific MQ knowledge.
 
 -VisualMQ Team
+
+
+<!-- LICENSE -->
+## License
+
+Distributed under the TBA License. See `LICENSE` for more information.
+
 
 
 
