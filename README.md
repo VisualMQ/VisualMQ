@@ -122,10 +122,11 @@ TBA Screenshots and video
 
 Contributing is done by following the "Getting Started" instructions for development. With exceptions of the models made in Blender, VisualMQ is entirely made within Unity. 
 
-[Microsoft Guide](https://docs.microsoft.com/en-us/archive/msdn-magazine/2014/august/unity-developing-your-first-game-with-unity-and-csharp)
-[Unity Manual](https://docs.unity3d.com/Manual/index.html)
+[Microsoft Guide](https://docs.microsoft.com/en-us/archive/msdn-magazine/2014/august/unity-developing-your-first-game-with-unity-and-csharp)  
 
-To summarize:
+[Unity Manual](https://docs.unity3d.com/Manual/index.html) 
+
+Application layout:
 - C\# Application logic pertaining to gameobjects is found under `assets/scripts/`.
   - `details` Contains files implementing logic for the information panels upon clicking on the correspondingly named entity.
   - `MQ` Contains files implementing the logic for interacting with the rest-api and retrieving/parsing data.
