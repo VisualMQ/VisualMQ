@@ -302,7 +302,7 @@ public class QueueManager : MonoBehaviour
             // If the number not changed, check whether all the channels are not changed
             for (int i = 0; i < applications.Count; i++)
             {
-                if (!renderedApplications.ContainsKey(applications[i].conname))
+                if (!renderedApplications.ContainsKey(applications[i].conn))
                 {
                     flag = true;
                 }
@@ -328,6 +328,8 @@ public class QueueManager : MonoBehaviour
 
     public void RenderApplications(List<MQ.Application> applications)
     {
+        renderedApplications.Clear();
+
         for (int i = 0; i < applications.Count; i++)
         {
             MQ.Application application = applications[i];
@@ -340,6 +342,8 @@ public class QueueManager : MonoBehaviour
 
             NameRenderer nameComponent = applicationGameObject.GetComponent(typeof(NameRenderer)) as NameRenderer;
             nameComponent.objectName = application.conn;
+
+            renderedApplications.Add(application.conn, applicationGameObject);
         }
     }
 
