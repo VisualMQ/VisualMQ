@@ -177,4 +177,4 @@ We would like to express our gratitude towards the IBM supervisors: [John McNama
 [issues-url]: https://github.com/VisualMQ/VisualMQ/issues
 [license-shield]: https://img.shields.io/github/license/VisualMQ/visualmq.svg?style=for-the-badge
 [license-url]: https://github.com/VisualMQ/VisualMQ/blob/master/LICENSE.txt
-[product-screenshot]: visualmq-screenshot.png
+[product-screenshot]: visualmq-screenshots.png
