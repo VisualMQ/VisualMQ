@@ -126,30 +126,7 @@ public class QueueManager : MonoBehaviour
 
 
         // Render channels
-        for (int i = 0; i < channels.Count; i++)
-        {
-            MQ.Channel channel = channels[i];
-            string uniqueChannelName = qmName + QM_NAME_DELIMITER + channel.channelName;
-            GameObject channelGameObject = new GameObject(uniqueChannelName, typeof(Channel));
-            Channel channelComponent = channelGameObject.GetComponent(typeof(Channel)) as Channel;
-            channelComponent.channel = channel;
-            channelGameObject.transform.parent = this.transform;
-
-            // Position channels dynamically depending on how many channels there are
-            // If there are more channels, we need to scale down the spaces between them
-            if (channels.Count > largeArea[0] + smallArea[1])
-            {
-                channelGameObject.transform.position = new Vector3(((float)planeSizes[0] / (float)channels.Count) * (i + 0.5f), sY * 2, sXZ * 0.5f) + baseLoc;
-            }
-            else
-            {
-                channelGameObject.transform.position = new Vector3(sXZ * (i + 0.5f), sY * 2, sXZ * 0.5f) + baseLoc;
-            }
-
-            NameRenderer nameRenderer = channelGameObject.GetComponent(typeof(NameRenderer)) as NameRenderer;
-            nameRenderer.objectName = channel.channelName;
-            renderedChannels.Add(channel.channelName, channelGameObject);
-        }
+        RenderChannels(channels);
 
 
         // Render applications
@@ -265,11 +242,10 @@ public class QueueManager : MonoBehaviour
     public void UpdateChannels(List<MQ.Channel> channels)
     {   
         bool flag = false;
-
-        //check if the number of channels changed
+        // Check if the number of channels changed
         if(channels.Count == renderedChannels.Count)
         {
-            // if the number not changed, check whether all the channels are not changed
+            // If the number not changed, check whether all the channels are not changed
             for(int i=0; i<channels.Count; i++)
             {
                 if(!renderedChannels.ContainsKey(channels[i].channelName))
@@ -283,43 +259,47 @@ public class QueueManager : MonoBehaviour
             flag = true;
         }
 
-        // when the channels exist change, re-render
+        // When the channels exist change, re-render
         if(flag)
         {   
-            //remove all the channels, in order to relocate and resize the channels
+            // Remove all the channels, in order to relocate and resize the channels
             foreach (KeyValuePair<string, GameObject> entry in renderedChannels)
             {
                 GameObject.DestroyImmediate(entry.Value);
             }
-            renderedChannels.Clear();
+            RenderChannels(channels);
+        }
+    }
 
-            for (int i = 0; i < channels.Count; i++)
+
+    public void RenderChannels(List<MQ.Channel> channels)
+    {
+        renderedChannels.Clear();
+
+        for (int i = 0; i < channels.Count; i++)
+        {
+            MQ.Channel channel = channels[i];
+            string uniqueChannelName = queueManager.qmgrName + QM_NAME_DELIMITER + channel.channelName;
+            GameObject channelGameObject = new GameObject(uniqueChannelName, typeof(Channel));
+            Channel channelComponent = channelGameObject.GetComponent(typeof(Channel)) as Channel;
+            channelComponent.channel = channel;
+            channelGameObject.transform.parent = this.transform;
+
+            // Position channels dynamically depending on how many channels there are
+            // If there are more channels, we need to scale down the spaces between them
+            if (channels.Count > largeArea[0] + smallArea[1])
             {
-                MQ.Channel channel = channels[i];
-                string uniqueChannelName = queueManager.qmgrName + QM_NAME_DELIMITER + channel.channelName;
-                GameObject channelGameObject = new GameObject(uniqueChannelName, typeof(Channel));
-                Channel channelComponent = channelGameObject.GetComponent(typeof(Channel)) as Channel;
-                channelComponent.channel = channel;
-                channelGameObject.transform.parent = this.transform;
-
-                // Position channels dynamically depending on how many channels there are
-                // If there are more channels, we need to scale down the spaces between them
-                if (channels.Count > largeArea[0] + smallArea[1])
-                {
-                    channelGameObject.transform.position = new Vector3(((float)planeSizes[0] / (float)channels.Count) * (i + 0.5f), sY * 2, sXZ * 0.5f) + baseLoc;
-                }
-                else
-                {
-                    channelGameObject.transform.position = new Vector3(sXZ * (i + 0.5f), sY * 2, sXZ * 0.5f) + baseLoc;
-                }
-
-                NameRenderer nameRenderer = channelGameObject.GetComponent(typeof(NameRenderer)) as NameRenderer;
-                nameRenderer.objectName = channel.channelName;
-
-                renderedChannels.Add(channel.channelName, channelGameObject);
+                channelGameObject.transform.position = new Vector3(((float)planeSizes[0] / (float)channels.Count) * (i + 0.5f), sY * 2, sXZ * 0.5f) + baseLoc;
             }
-            Debug.Log("update channels");
-            flag = false;
+            else
+            {
+                channelGameObject.transform.position = new Vector3(sXZ * (i + 0.5f), sY * 2, sXZ * 0.5f) + baseLoc;
+            }
+
+            NameRenderer nameRenderer = channelGameObject.GetComponent(typeof(NameRenderer)) as NameRenderer;
+            nameRenderer.objectName = channel.channelName;
+
+            renderedChannels.Add(channel.channelName, channelGameObject);
         }
     }
 
