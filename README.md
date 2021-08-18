@@ -83,15 +83,15 @@ This section should list any major frameworks that you built your project using.
 
 VisualMQ is available in a multitude of ways for usage purposes or development.
 
-##### Binaries
+#### Binaries
 
 MacOS and Windows binaries are available under [releases](https://github.com/VisualMQ/VisualMQ/releases)
 
-##### Web-Demo
+#### Web-Demo
 VisualMQ is available for quick-evaluation as a [web-demo](https://visualmq.diallom.com/demo/).
 
 
-##### (Development) in Unity
+#### (Development) in Unity
 1. Ensure Unity version ?? is installed.
 2. Clone this repository
 3. Open the root of this directory within Unity
@@ -167,13 +167,11 @@ We would like to express our gratitude towards the IBM supervisors: [John McNama
 [contributors-shield]: https://img.shields.io/github/contributors/VisualMQ/visualmq.svg?style=for-the-badge
 [contributors-url]: https://github.com/VisualMQ/VisualMQ/graphs/contributors
 [forks-shield]: https://img.shields.io/github/forks/VisualMQ/visualmq.svg?style=for-the-badge
-[forks-url]: https://github.com/othneildrew/Best-README-Template/network/members
+[forks-url]: https://github.com/VisualMQ/VisualMQ/network/members
 [stars-shield]: https://img.shields.io/github/stars/VisualMQ/visualmq.svg?style=for-the-badge
-[stars-url]: https://github.com/othneildrew/Best-README-Template/stargazers
+[stars-url]: https://github.com/VisualMQ/VisualMQ/stargazers
 [issues-shield]: https://img.shields.io/github/issues/VisualMQ/visualmq.svg?style=for-the-badge
-[issues-url]: https://github.com/othneildrew/Best-README-Template/issues
+[issues-url]: https://github.com/VisualMQ/VisualMQ/issues
 [license-shield]: https://img.shields.io/github/license/VisualMQ/visualmq.svg?style=for-the-badge
-[license-url]: https://github.com/othneildrew/Best-README-Template/blob/master/LICENSE.txt
-[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
-[linkedin-url]: https://linkedin.com/in/othneildrew
+[license-url]: https://github.com/VisualMQ/VisualMQ/blob/master/LICENSE.txt
 [product-screenshot]: visualmq-screenshot.png
