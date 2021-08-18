@@ -21,10 +21,15 @@ public class QueueManager : MonoBehaviour
 
     public Vector3 baseLoc;
     public Dictionary<string, GameObject> renderedQueues = new Dictionary<string, GameObject>();
+    public Dictionary<string, GameObject> renderedChannels = new Dictionary<string, GameObject>();
 
     public Dictionary<string, Vector3> offsets;
     public Dictionary<string, int> numberOfRenderedQueues;
     public Dictionary<string, int[]> dimensions;
+
+    public int[] planeSizes;
+    public int[] largeArea;
+    public int[] smallArea;
 
 
     // Unity calls this method at the complete beginning, even before Start
@@ -49,8 +54,10 @@ public class QueueManager : MonoBehaviour
         numberOfQueuesList.Sort((x, y) => x.Value.CompareTo(y.Value));
 
         List<int[]> areas = GetLargeSmallArea();
-        int[] largeArea = areas[0];
-        int[] smallArea = areas[1];
+        // int[] largeArea = areas[0];
+        // int[] smallArea = areas[1];
+        largeArea = areas[0];
+        smallArea = areas[1];
         // By design, larger side of smallArea is equal to smaller side of largeArea
         Debug.Assert(largeArea[1] == smallArea[0]);
         offsets = new Dictionary<string, Vector3>();
@@ -66,7 +73,7 @@ public class QueueManager : MonoBehaviour
 
 
         // Create queue manager plane
-        int[] planeSizes = GetQueueManagerSize(false);
+        planeSizes = GetQueueManagerSize(false);
         Vector3 queueManagerCenter = baseLoc + new Vector3(planeSizes[0], 0, planeSizes[1]) / 2;
 
         GameObject planeGameObject = new GameObject(QM_NAME_PREFIX + QM_NAME_DELIMITER + qmName, typeof(HighlightRenderer), typeof(MouseListener));
@@ -141,6 +148,7 @@ public class QueueManager : MonoBehaviour
 
             NameRenderer nameRenderer = channelGameObject.GetComponent(typeof(NameRenderer)) as NameRenderer;
             nameRenderer.objectName = channel.channelName;
+            renderedChannels.Add(channel.channelName, channelGameObject);
         }
 
 
@@ -251,6 +259,68 @@ public class QueueManager : MonoBehaviour
             }
         }
 
+    }
+
+
+    public void UpdateChannels(List<MQ.Channel> channels)
+    {   
+        bool flag = false;
+
+        //check if the number of channels changed
+        if(channels.Count == renderedChannels.Count)
+        {
+            // if the number not changed, check whether all the channels are not changed
+            for(int i=0; i<channels.Count; i++)
+            {
+                if(!renderedChannels.ContainsKey(channels[i].channelName))
+                {
+                    flag = true;
+                }
+            }
+        }
+        else
+        {
+            flag = true;
+        }
+
+        // when the channels exist change, re-render
+        if(flag)
+        {   
+            //remove all the channels, in order to relocate and resize the channels
+            foreach (KeyValuePair<string, GameObject> entry in renderedChannels)
+            {
+                GameObject.DestroyImmediate(entry.Value);
+            }
+            renderedChannels.Clear();
+
+            for (int i = 0; i < channels.Count; i++)
+            {
+                MQ.Channel channel = channels[i];
+                string uniqueChannelName = queueManager.qmgrName + QM_NAME_DELIMITER + channel.channelName;
+                GameObject channelGameObject = new GameObject(uniqueChannelName, typeof(Channel));
+                Channel channelComponent = channelGameObject.GetComponent(typeof(Channel)) as Channel;
+                channelComponent.channel = channel;
+                channelGameObject.transform.parent = this.transform;
+
+                // Position channels dynamically depending on how many channels there are
+                // If there are more channels, we need to scale down the spaces between them
+                if (channels.Count > largeArea[0] + smallArea[1])
+                {
+                    channelGameObject.transform.position = new Vector3(((float)planeSizes[0] / (float)channels.Count) * (i + 0.5f), sY * 2, sXZ * 0.5f) + baseLoc;
+                }
+                else
+                {
+                    channelGameObject.transform.position = new Vector3(sXZ * (i + 0.5f), sY * 2, sXZ * 0.5f) + baseLoc;
+                }
+
+                NameRenderer nameRenderer = channelGameObject.GetComponent(typeof(NameRenderer)) as NameRenderer;
+                nameRenderer.objectName = channel.channelName;
+
+                renderedChannels.Add(channel.channelName, channelGameObject);
+            }
+            Debug.Log("update channels");
+            flag = false;
+        }
     }
 
 
