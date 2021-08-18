@@ -1,15 +1,13 @@
 ﻿using UnityEngine;
-using System.Collections;
-
 
 
 // This component is used for rendering names (texts) above objects
 // like queues, channels and applications
 public class NameRenderer : MonoBehaviour
 {
-
     public string objectName;
     private TextMesh textMesh;
+
 
     // Use this for initialization
     void Start()
@@ -19,9 +17,8 @@ public class NameRenderer : MonoBehaviour
         textObj.transform.parent = gameObject.transform;
 
         // This is quick and dirty hack: Since we have to rotate the Channel game object, so that
-        // mesh collider is aligned with mesh, the Channel game object
-        // is rotated and we need to position text with respect to different axis
-        // See Channel object
+        // mesh collider is aligned with mesh, the Channel game object is rotated and we
+        // need to position text with respect to different axis. See Channel object
         if (TryGetComponent(out Channel _))
         {
             textObj.transform.localPosition = new Vector3(0, 0, 5);
@@ -35,6 +32,7 @@ public class NameRenderer : MonoBehaviour
         textMesh.anchor = TextAnchor.MiddleCenter;
         textMesh.alignment = TextAlignment.Center;
     }
+
 
     // Update is called once per frame
     void Update()
@@ -61,4 +59,5 @@ public class NameRenderer : MonoBehaviour
         // Rotate text to face main camera
         textMesh.transform.rotation = Quaternion.LookRotation(Camera.main.transform.position - textMesh.transform.position) * Quaternion.Euler(0, 180, 0); ;
     }
+
 }

@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.EventSystems;
 
 public class MoveCamera : MonoBehaviour
 {
@@ -29,7 +30,10 @@ public class MoveCamera : MonoBehaviour
     void Update()
     {
         if (Input.GetMouseButton(0))
+        {
             DoCalculation();
+        }
+            
         lastMouse = Input.mousePosition;
 
     }
@@ -67,6 +71,12 @@ public class MoveCamera : MonoBehaviour
 
     public void DoCalculation()
     {
+        // Avoid click/drag through UI windows
+        if (EventSystem.current.IsPointerOverGameObject()) 
+        {
+            return;
+        }
+
         lastMouse = Input.mousePosition - lastMouse;
         lastMouse = new Vector3(-lastMouse.y * camSens, lastMouse.x * camSens, 0);
         lastMouse = new Vector3(transform.eulerAngles.x + lastMouse.x, transform.eulerAngles.y + lastMouse.y, 0);

@@ -1,12 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+
 
 public class MouseListener : MonoBehaviour
 {
     // Sidebars for different entities
     public static SidebarController sidebarController;
+
 
     // Hover functionality
     void OnMouseEnter()
@@ -19,6 +20,7 @@ public class MouseListener : MonoBehaviour
 
         gameObject.transform.localScale = new Vector3(1.05f, 1.05f, 1.05f);   
     }
+
 
     // Hover functionality
     void OnMouseExit()
@@ -42,7 +44,9 @@ public class MouseListener : MonoBehaviour
             return;
         }
 
-        // Display side panels according to GameObject type
+        /*
+         *  Sidebar with details functionality
+         */
         if (TryGetComponent(out Queue _))
         {
             sidebarController.ShowQueueDetails(transform.parent.name, name);
@@ -66,7 +70,10 @@ public class MouseListener : MonoBehaviour
             return;
         }
 
-        // Highlight Functionality
+
+        /*
+         *  Highlight functionality
+         */
         State state = GameObject.Find("State").GetComponent<State>(); //Might be time consuming operation
         List<string> directDependency;
         List<string> indirectDenpendency;
@@ -85,11 +92,12 @@ public class MouseListener : MonoBehaviour
             indirectDenpendency = new List<string>();
         }
 
-        state.BroadcastMessage("DisableHighlight", SendMessageOptions.DontRequireReceiver); // disable any previous highlights
-
-        state.BroadcastMessage("HighlightSelf", this.name, SendMessageOptions.DontRequireReceiver); // highlight the clicked object
-        state.BroadcastMessage("HighlightDirect", directDependency, SendMessageOptions.DontRequireReceiver); // highlight direct dependency
-        state.BroadcastMessage("HighlightIndirect", indirectDenpendency, SendMessageOptions.DontRequireReceiver); // highlight indirect dependency
-
+        // HighlightRendered components that each rendered entity has associated
+        // will responds appropriately to these broadcasted messages
+        state.BroadcastMessage("DisableHighlight", SendMessageOptions.DontRequireReceiver);
+        state.BroadcastMessage("HighlightSelf", this.name, SendMessageOptions.DontRequireReceiver);
+        state.BroadcastMessage("HighlightDirect", directDependency, SendMessageOptions.DontRequireReceiver);
+        state.BroadcastMessage("HighlightIndirect", indirectDenpendency, SendMessageOptions.DontRequireReceiver);
     }
+
 }

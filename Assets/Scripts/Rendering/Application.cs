@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 
 [RequireComponent(typeof(NameRenderer))]
@@ -18,7 +17,6 @@ public class Application : MonoBehaviour
         instantiatedConn.transform.localPosition = Vector3.zero;
         instantiatedConn.name = this.name + ".Prefab";
         instantiatedConn.transform.name = instantiatedConn.name;
-
 
         // Add mesh Colider
         MeshCollider mc = gameObject.AddComponent<MeshCollider>();
