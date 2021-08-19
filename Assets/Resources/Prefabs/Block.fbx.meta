@@ -7,8 +7,8 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: BlockWhite
-    second: {fileID: 2100000, guid: 936b0333ee26a4c82b98810416050b32, type: 2}
+      name: BlockWithRoughness
+    second: {fileID: 2100000, guid: fdf1eecf7ea494d0f9dd3ea95b40f297, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -97,7 +97,7 @@ ModelImporter:
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
   autoGenerateAvatarMappingIfUnspecified: 1
-  animationType: 0
+  animationType: 2
   humanoidOversampling: 1
   avatarSetup: 0
   addHumanoidExtraRootOnlyWhenUsingAvatar: 1
