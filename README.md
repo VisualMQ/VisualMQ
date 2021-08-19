@@ -9,7 +9,7 @@
 <br />
 <p align="center">
   <a href="https://github.com/VisualMQ/VisualMQ/">
-    <img src="logo.png" alt="Logo">
+    <img src="visualmq-logo.png" alt="Logo" width="300">
   </a>
 
   <h3 align="center">VisualMQ</h3>
@@ -17,10 +17,10 @@
   <p align="center">
     VisualMQ is a 3D visualisation tool for the IBM MQ Platform.
     <br />
-    <a href="https://github.com/othneildrew/Best-README-Template"><strong> Video of Visual MQ</strong></a>
+    <a href="https://github.com/othneildrew/Best-README-Template"><strong>Video of VisualMQ</strong></a>
     <br />
     <br />
-    <a href="https://visualmq.diallom.com/demo/">Demo</a>
+    <a href="https://visualmq.diallom.com/demo/">Demo Version</a>
     ·
     <a href="https://github.com/VisualMQ/VisualMQ/issues">Bug Report</a>
     ·
@@ -93,14 +93,14 @@ VisualMQ is available in a multitude of ways for usage purposes or development.
 
 #### Binaries
 
-MacOS and Windows binaries are available under [releases](https://github.com/VisualMQ/VisualMQ/releases)
+MacOS and Windows binaries are available under [releases](https://github.com/VisualMQ/VisualMQ/releases).
 
-#### Web-Demo (TBD)
-VisualMQ is available for quick-evaluation as a [web-demo](https://visualmq.diallom.com/demo/).
+#### Web demo (TBD)
+VisualMQ is available for quick evaluation as a [web demo](https://visualmq.diallom.com/demo/).
 
 
-#### (Development) in Unity
-1. Ensure Unity version 2020.3.11f1 is installed.
+#### Development in Unity
+1. Ensure Unity version `2020.3.11f1` is installed.
 2. Clone this repository
 3. Open the root of this directory within Unity
 
@@ -123,7 +123,7 @@ TBA Screenshots and video
 
 
 <!-- CONTRIBUTING -->
-## Contributing (not done)
+## Contributing
 
 Contributing is done by following the "Getting Started" instructions for development. With exceptions of the models made in Blender, VisualMQ is entirely made within Unity. 
 
@@ -132,8 +132,8 @@ Contributing is done by following the "Getting Started" instructions for develop
 [Unity Manual](https://docs.unity3d.com/Manual/index.html) 
 
 Application layout:
-- C\# Application logic pertaining to gameobjects is found under `assets/scripts/`.
-  - `details` Contains files implementing logic for the information panels upon clicking on the correspondingly named entity.
+- C\# Application logic pertaining to gameobjects is found under `Assets/Scripts/`.
+  - `Details` Contains files implementing logic for the information panels upon clicking on the correspondingly named entity.
   - `MQ` Contains files implementing the logic for interacting with the rest-api and retrieving/parsing data.
   - `Navigation` Contains files implementing the UI / Navigational control logic.
   - `Rendering` Contains the core logic for visualisation. (TBD: This could be more elaborate but I would rather wait till we have a diagram or something final)
@@ -145,23 +145,23 @@ Application layout:
 <!-- CONTACT -->
 ## VisualMQ Team
 
-- Madiou Diallo - https://github.com/Diallo             - https://linkedin.com/in/mdiallos 
-- Lukas Cerny   - https://github.com/lukasotocerny 
-- Yue Xu        - https://github.com/yuexu-98  
-- Shucheng Tian - https://github.com/phillip-tian       - https://www.linkedin.com/in/shucheng-tian/
-- Yifan Hu      - https://github.com/huyifanx           - https://www.linkedin.com/in/yifanhuleo/ 
-- Xu Zhang      - https://github.com/Orange0719 
+- [Madiou Diallo](https://github.com/Diallo) - [LinkedIn](https://linkedin.com/in/mdiallos)
+- [Lukas Cerny](https://github.com/lukasotocerny)
+- [Yue Xu](https://github.com/yuexu-98)  
+- [Shucheng Tian](https://github.com/phillip-tian) - [LinkedIn](https://www.linkedin.com/in/shucheng-tian/)
+- [Yifan Hu](https://github.com/huyifanx) - [LinkedIn](https://www.linkedin.com/in/yifanhuleo/)
+- [Xu Zhang](https://github.com/Orange0719)
 
-VisualMQ: [https://github.com/VisualMQ/](https://github.com/VisualMQ/)
+VisualMQ project link: [https://github.com/VisualMQ/](https://github.com/VisualMQ/)
 
 
 
 <!-- ACKNOWLEDGEMENTS -->
 ## Acknowledgements
 
-We would like to express our gratitude towards the IBM supervisors: [John McNamara](https://github.com/IBMIXN), [Adrian Osadcenco](#) and [Richard Coppen](https://github.com/rcoppen). The time, energy and support they have dedicated to this project have had a greatly positive impact on the end-result. Furthermore, we would also like to thank the MQ outreach team. The MQ workshop they provided us with was extremely informative and provided us with a significant amount of specific MQ knowledge.
+We would like to express our gratitude towards the IBM supervisors: [John McNamara](https://github.com/IBMIXN), [Adrian Osadcenco](#) and [Richard Coppen](https://github.com/rcoppen). The time, energy and support they have dedicated to this project have had a greatly positive impact on the end-result. Furthermore, we would also like to thank the MQ outreach team. The [MQ workshop](https://developer.ibm.com/series/badge-ibm-mq-developer-essentials/) they provided us with was extremely informative and provided us with a significant amount of specific MQ knowledge.
 
--VisualMQ Team
+\- VisualMQ Team
 
 
 <!-- LICENSE -->
@@ -184,4 +184,4 @@ Distributed under the TBA License. See `LICENSE` for more information.
 [issues-url]: https://github.com/VisualMQ/VisualMQ/issues
 [license-shield]: https://img.shields.io/github/license/VisualMQ/visualmq.svg?style=for-the-badge
 [license-url]: https://github.com/VisualMQ/VisualMQ/blob/master/LICENSE.txt
-[product-screenshot]: visualmq-screenshots.png
+[product-screenshot]: visualmq-screenshot.png
