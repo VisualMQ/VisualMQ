@@ -244,10 +244,11 @@ public class QueueManager : MonoBehaviour
     }
 
     // This method is called from State object on the periodical update
-    public void UpdateQueues(List<MQ.Queue> queues)
+    public bool UpdateQueues(List<MQ.Queue> queues)
     {
         List<string> queuesToRender = new List<string>();
         List<string> queuesToDestroy = new List<string>();
+        bool modified = false;
 
         // First: check which queues are not rendered yet
         foreach (MQ.Queue queue in queues)
@@ -256,6 +257,7 @@ public class QueueManager : MonoBehaviour
 
             if (!renderedQueues.ContainsKey(queue.queueName))
             {
+                modified = true;
                 string queueType = queue.GetTypeName();
                 int i = numberOfRenderedQueues[queueType]++;
 
@@ -318,10 +320,12 @@ public class QueueManager : MonoBehaviour
             }
         }
 
+        return modified;
+
     }
 
 
-    public void UpdateChannels(List<MQ.Channel> channels)
+    public bool UpdateChannels(List<MQ.Channel> channels)
     {   
         bool modified = false;
         // Check if the number of channels changed
@@ -352,6 +356,8 @@ public class QueueManager : MonoBehaviour
             }
             RenderChannels(channels);
         }
+
+        return modified;
     }
 
 
@@ -386,7 +392,7 @@ public class QueueManager : MonoBehaviour
         }
     }
 
-    public void UpdateApplications(List<MQ.Application> applications)
+    public bool UpdateApplications(List<MQ.Application> applications)
     {
         bool modified = false;
         // Check if the number of channels changed
@@ -417,6 +423,8 @@ public class QueueManager : MonoBehaviour
             }
             RenderApplications(applications);
         }
+
+        return modified;
     }
 
     public void RenderApplications(List<MQ.Application> applications)

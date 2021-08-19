@@ -74,10 +74,7 @@ public class State : MonoBehaviour
 
         if (updateCountdown <= 0)
         {
-            // Show update time information
-            Text updateTimeTextComponent = updateTimeText.GetComponent<Text>();
-            string nowTime = DateTime.Now.ToString().Substring(9);
-            updateTimeTextComponent.text = "Last update time: " + nowTime;
+            bool qmModified = false;
 
             foreach (KeyValuePair<MQ.Client, GameObject> entry in qmgrs)
             {
@@ -89,15 +86,40 @@ public class State : MonoBehaviour
                 List<MQ.Application> applications = mqClient.GetAllApplications();
 
                 QueueManager qmgrComponent = renderedQmgr.GetComponent(typeof(QueueManager)) as QueueManager;
-                qmgrComponent.UpdateQueues(queues);
-                qmgrComponent.UpdateChannels(channels);
-                qmgrComponent.UpdateApplications(applications);
+                bool queueModified = qmgrComponent.UpdateQueues(queues);
+                bool channelModified = qmgrComponent.UpdateChannels(channels);
+                bool applicationModified = qmgrComponent.UpdateApplications(applications);
+
+                MQ.QueueManager qm = qmgrComponent.queueManager;
+                qm.queues = queues;
+                qm.channels = channels;
+                qm.applications = applications;
+
+                if (queueModified || channelModified || false)
+                {
+                    qmModified = true;
+                }
             }
+
+            if (qmModified)
+            {
+                dependencyGraph.clearDependency();
+                foreach (KeyValuePair<MQ.Client, GameObject> entry in qmgrs)
+                {
+                    QueueManager qmgrComponent = entry.Value.GetComponent(typeof(QueueManager)) as QueueManager;
+                    MQ.QueueManager qm = qmgrComponent.queueManager;
+                    dependencyGraph.CreateDependencyGraph(qm.queues, qm.channels, qm.applications, qm.qmgrName);
+                }
+            }
+
+            // Show update time information
+            Text updateTimeTextComponent = updateTimeText.GetComponent<Text>();
+            string nowTime = DateTime.Now.ToString().Substring(9);
+            updateTimeTextComponent.text = "Last update time: " + nowTime;
+
             updateCountdown = UPDATE_INTERVAL;
         }
-
     }
-
 
     // Get names of all connected queue managers
     public List<string> GetRegisteredQueueManagers()
