@@ -1,4 +1,9 @@
-﻿using System;
+﻿/**
+ * The QM classes are used to parse the JSON reponse from 
+ * the REST API GET https://host:port/ibmmq/rest/v1/admin/qmgr/{qmgrName}
+ * Reference: https://www.ibm.com/docs/en/ibm-mq/9.0?topic=adminqmgr-get
+ * It also holds the queue/channel/application objects that lives on the QM
+ */
 using System.Collections.Generic;
 
 namespace MQ
