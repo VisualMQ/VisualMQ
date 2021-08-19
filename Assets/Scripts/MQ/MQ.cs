@@ -284,7 +284,9 @@ namespace MQ
                         break;
 
                     case "SVRCONN":
-                        if (channelJson.parameters.channel != "CLOUD.APP.SVRCONN")
+                        // TODO: stop filtering out only 2 wanted channels
+                        if (channelJson.parameters.channel != "CLOUD.APP.SVRCONN"
+                            && channelJson.parameters.channel != "CLOUD.ADMIN.SVRCONN")
                         {
                             continue;
                         }

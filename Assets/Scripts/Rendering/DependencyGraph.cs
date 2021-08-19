@@ -102,7 +102,14 @@ public class DependencyGraph
             connectedQueues.Add(qmgr + QM_NAME_DELIMITER + application.channel); // To save space, append the applciaiotn channel to the end of connectedQueues.
             AddDependency(directDependencies, qmgr, application.conn, connectedQueues);
         }
+        　　　　
+    }
 
+    public void clearDependency()
+    {
+        directDependencies.Clear();
+        indirectDependencies.Clear();
+        implicitDependencies.Clear();
     }
 
     private void AddDependency (Dictionary<string, List<string>> dependencies, string qmName, string entityName, List<string> dependency)
