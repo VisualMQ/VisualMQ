@@ -438,7 +438,7 @@ public class QueueManager : MonoBehaviour
             GameObject applicationGameObject = new GameObject(uniqueConnectionName, typeof(Application));
             Application applicationComponent = applicationGameObject.GetComponent((typeof(Application))) as Application;
             applicationComponent.application = application;
-            applicationGameObject.transform.position = sXZ * new Vector3(-(i / (2 * largeArea[1] + 1) + 1), 0, i % (2 * largeArea[1]) + 1.5f) + baseLoc;
+            applicationGameObject.transform.position = sXZ * new Vector3(-(i / (2 * largeArea[1]) + 1), 0, i % (2 * largeArea[1]) + 1.5f) + baseLoc;
             applicationGameObject.transform.parent = this.transform;
 
             NameRenderer nameComponent = applicationGameObject.GetComponent(typeof(NameRenderer)) as NameRenderer;
