@@ -1,8 +1,14 @@
-﻿using System;
+﻿/*
+ * This is the master GameObject inside VisualMQ
+ * At each Update(), aka each new frame, State Object checks whether
+ * there is a new QueueManager added (from AuthenticationController.cs)
+ * and if so, begins the heavy lifting of rendering the QueueManager and
+ * all the entities that lives on the QueueManager (The ones that we retrieve)
+ */
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
 
 public class State : MonoBehaviour
 {
@@ -23,7 +29,6 @@ public class State : MonoBehaviour
     {
         qmgrs.Add(newMqClient, null);
     }
-
 
     void Update()
     {
@@ -74,10 +79,7 @@ public class State : MonoBehaviour
 
         if (updateCountdown <= 0)
         {
-            // Show update time information
-            Text updateTimeTextComponent = updateTimeText.GetComponent<Text>();
-            string nowTime = DateTime.Now.ToString().Substring(9);
-            updateTimeTextComponent.text = "Last update time: " + nowTime;
+            bool qmModified = false;
 
             foreach (KeyValuePair<MQ.Client, GameObject> entry in qmgrs)
             {
@@ -89,13 +91,40 @@ public class State : MonoBehaviour
                 List<MQ.Application> applications = mqClient.GetAllApplications();
 
                 QueueManager qmgrComponent = renderedQmgr.GetComponent(typeof(QueueManager)) as QueueManager;
-                qmgrComponent.UpdateQueues(queues);
+                bool queueModified = qmgrComponent.UpdateQueues(queues);
+                bool channelModified = qmgrComponent.UpdateChannels(channels);
+                bool applicationModified = qmgrComponent.UpdateApplications(applications);
+
+                MQ.QueueManager qm = qmgrComponent.queueManager;
+                qm.queues = queues;
+                qm.channels = channels;
+                qm.applications = applications;
+
+                if (queueModified || channelModified || applicationModified)
+                {
+                    qmModified = true;
+                }
             }
+
+            if (qmModified)
+            {
+                dependencyGraph.clearDependency();
+                foreach (KeyValuePair<MQ.Client, GameObject> entry in qmgrs)
+                {
+                    QueueManager qmgrComponent = entry.Value.GetComponent(typeof(QueueManager)) as QueueManager;
+                    MQ.QueueManager qm = qmgrComponent.queueManager;
+                    dependencyGraph.CreateDependencyGraph(qm.queues, qm.channels, qm.applications, qm.qmgrName);
+                }
+            }
+
+            // Show update time information
+            Text updateTimeTextComponent = updateTimeText.GetComponent<Text>();
+            string nowTime = DateTime.Now.ToString().Substring(9);
+            updateTimeTextComponent.text = "Last update time: " + nowTime;
+
             updateCountdown = UPDATE_INTERVAL;
         }
-
     }
-
 
     // Get names of all connected queue managers
     public List<string> GetRegisteredQueueManagers()

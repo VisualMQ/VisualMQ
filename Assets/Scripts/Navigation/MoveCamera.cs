@@ -15,7 +15,7 @@ public class MoveCamera : MonoBehaviour
 
     // Docboy add vertical move and mouse button dependant 2020
 
-    public float mainSpeed = 100.0f; //regular speed
+    public float mainSpeed = 80.0f; //regular speed
     public float shiftAdd = 250.0f; //multiplied by how long shift is held.  Basically running
     public float maxShift = 1000.0f; //Maximum speed when holdin gshift
     public float camSens = 0.25f; //How sensitive it with mouse
@@ -29,13 +29,14 @@ public class MoveCamera : MonoBehaviour
 
     void Update()
     {
+        move();
+
         if (Input.GetMouseButton(0))
         {
-            DoCalculation();
+            rotateCamera();
         }
             
         lastMouse = Input.mousePosition;
-
     }
 
     private Vector3 GetBaseInput()
@@ -68,11 +69,10 @@ public class MoveCamera : MonoBehaviour
         return p_Velocity;
     }
 
-
-    public void DoCalculation()
+    public void rotateCamera()
     {
         // Avoid click/drag through UI windows
-        if (EventSystem.current.IsPointerOverGameObject()) 
+        if (EventSystem.current.IsPointerOverGameObject())
         {
             return;
         }
@@ -83,7 +83,10 @@ public class MoveCamera : MonoBehaviour
         transform.eulerAngles = lastMouse;
         lastMouse = Input.mousePosition;
         //Mouse  camera angle done.  
+    }
 
+    public void move()
+    {
         //Keyboard commands
         Vector3 p = GetBaseInput();
         if (Input.GetKey(KeyCode.LeftShift))

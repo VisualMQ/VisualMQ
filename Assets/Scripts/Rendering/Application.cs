@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 
-
 [RequireComponent(typeof(NameRenderer))]
 [RequireComponent(typeof(HighlightRenderer))]
 [RequireComponent(typeof(MouseListener))]
@@ -11,6 +10,7 @@ public class Application : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        // Load Application Prefab and instantiate it
         GameObject applicationPrefab = Resources.Load("Prefabs/Application") as GameObject;
         GameObject instantiatedConn = Instantiate(applicationPrefab);
         instantiatedConn.transform.parent = gameObject.transform;

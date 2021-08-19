@@ -1,13 +1,17 @@
-﻿using System.Collections.Generic;
+﻿/* 
+ * MouseListener is a component attached to every rendered MQ entities
+ * It enables the zoom in/out effect when mouse is hovering over the
+ * entity, and displays the sidebar information + highlight the appropriate
+ * entities when entity is clicked on. See HighlighRenderer.cs for more info
+ */
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
-
 
 public class MouseListener : MonoBehaviour
 {
     // Sidebars for different entities
     public static SidebarController sidebarController;
-
 
     // Hover functionality
     void OnMouseEnter()
@@ -21,7 +25,6 @@ public class MouseListener : MonoBehaviour
         gameObject.transform.localScale = new Vector3(1.05f, 1.05f, 1.05f);   
     }
 
-
     // Hover functionality
     void OnMouseExit()
     {
@@ -34,7 +37,6 @@ public class MouseListener : MonoBehaviour
         gameObject.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
     }
 
-
     // Click functionality
     void OnMouseUp()
     {
@@ -44,9 +46,7 @@ public class MouseListener : MonoBehaviour
             return;
         }
 
-        /*
-         *  Sidebar with details functionality
-         */
+        // Sidebar with details functionality
         if (TryGetComponent(out Queue _))
         {
             sidebarController.ShowQueueDetails(transform.parent.name, name);
@@ -70,10 +70,7 @@ public class MouseListener : MonoBehaviour
             return;
         }
 
-
-        /*
-         *  Highlight functionality
-         */
+        //  Highlight functionality
         State state = GameObject.Find("State").GetComponent<State>(); //Might be time consuming operation
         List<string> directDependency;
         List<string> indirectDenpendency;

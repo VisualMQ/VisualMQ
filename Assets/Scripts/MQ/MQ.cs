@@ -1,4 +1,5 @@
-﻿/* The Client class provides connection to IBM Cloud MQ instances
+﻿/* 
+ * The Client class provides connection to IBM Cloud MQ instances
  * Each Client object connects to one Queue Manager, and provides several useful
  * methods for retrieving useful information about the Queue Manager and the entities
  * that live on the QM. All communications are handled through REST API
@@ -297,7 +298,9 @@ namespace MQ
                         break;
 
                     case "SVRCONN":
-                        if (channelJson.parameters.channel != "CLOUD.APP.SVRCONN")
+                        // TODO: stop filtering out only 2 wanted channels
+                        if (channelJson.parameters.channel != "CLOUD.APP.SVRCONN"
+                            && channelJson.parameters.channel != "CLOUD.ADMIN.SVRCONN")
                         {
                             continue;
                         }
