@@ -9,7 +9,7 @@
 <br />
 <p align="center">
   <a href="https://github.com/VisualMQ/VisualMQ/">
-    <img src="visualmq-logo.png" alt="Logo">
+    <img src="logo.png" alt="Logo">
   </a>
 
   <h3 align="center">VisualMQ</h3>
@@ -145,12 +145,12 @@ Application layout:
 <!-- CONTACT -->
 ## VisualMQ Team
 
-- Madiou Diallo - [@Linkedin](https://twitter.com/your_username) - email@example.com  
-- Your Name - [@Linkedin](https://twitter.com/your_username) - email@example.com  
-- Your Name - [@Linkedin](https://twitter.com/your_username) - email@example.com  
-- Your Name - [@Linkedin](https://twitter.com/your_username) - email@example.com
-- Your Name - [@Linkedin](https://twitter.com/your_username) - email@example.com
-- Your Name - [@Linkedin](https://twitter.com/your_username) - email@example.com
+- Madiou Diallo - https://github.com/Diallo             - https://linkedin.com/in/mdiallos 
+- Lukas Cerny   - https://github.com/lukasotocerny 
+- Yue Xu        - https://github.com/yuexu-98  
+- Shucheng Tian - https://github.com/phillip-tian       - https://www.linkedin.com/in/shucheng-tian/
+- Yifan Hu      - https://github.com/huyifanx           - https://www.linkedin.com/in/yifanhuleo/ 
+- Xu Zhang      - https://github.com/Orange0719 
 
 VisualMQ: [https://github.com/VisualMQ/](https://github.com/VisualMQ/)
 
@@ -159,7 +159,7 @@ VisualMQ: [https://github.com/VisualMQ/](https://github.com/VisualMQ/)
 <!-- ACKNOWLEDGEMENTS -->
 ## Acknowledgements
 
-We would like to express our gratitude towards the IBM supervisors: [John McNamara](https://www.linkedin.com/in/jonmcnamara/), [Adrian Osadcenco](https://www.linkedin.com/in/adrian-osadcenco-b028408a/) and [Richard Coppen](https://www.linkedin.com/in/richard-coppen-163800116/). The time, energy and support they have dedicated to this project have had a greatly positive impact on the end-result. Furthermore, we would also like to thank the MQ outreach team. The MQ workshop they provided us with was extremely informative and provided us with a significant amount of specific MQ knowledge.
+We would like to express our gratitude towards the IBM supervisors: [John McNamara](https://github.com/IBMIXN), [Adrian Osadcenco](#) and [Richard Coppen](https://github.com/rcoppen). The time, energy and support they have dedicated to this project have had a greatly positive impact on the end-result. Furthermore, we would also like to thank the MQ outreach team. The MQ workshop they provided us with was extremely informative and provided us with a significant amount of specific MQ knowledge.
 
 -VisualMQ Team
 
