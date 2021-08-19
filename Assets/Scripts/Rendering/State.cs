@@ -95,7 +95,7 @@ public class State : MonoBehaviour
                 qm.channels = channels;
                 qm.applications = applications;
 
-                if (queueModified || channelModified || false)
+                if (queueModified || channelModified || applicationModified)
                 {
                     qmModified = true;
                 }
