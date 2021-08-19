@@ -1,10 +1,8 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-/* If the user selects the QM, show this info panle for Queue manager
-*/
+
 public class QueueManagerDetailsController : MonoBehaviour
 {
     private GameObject subwindowDetails, subwindowQueues;
@@ -23,7 +21,7 @@ public class QueueManagerDetailsController : MonoBehaviour
     private State stateComponent;
 
 
-    void Awake()
+    private void Awake()
     {
         toDetails = transform.Find("Tabs/TabDetails").GetComponent<Button>();
         toQueues = transform.Find("Tabs/TabQueues").GetComponent<Button>();
@@ -69,6 +67,7 @@ public class QueueManagerDetailsController : MonoBehaviour
         detailsTimeStarted.text = currentQueueManager.started;
     }
 
+
     public void ToQueueList()
     {
         subwindowDetails.SetActive(false);
@@ -76,7 +75,7 @@ public class QueueManagerDetailsController : MonoBehaviour
 
         toQueues.Select();
 
-        // Clear previous generate list
+        // Clear previously generated list
         foreach (Transform child in transform.Find("Queues/QueuesList"))
         {
             if (child.gameObject.name == "QueueRowItem(Clone)")
@@ -84,7 +83,6 @@ public class QueueManagerDetailsController : MonoBehaviour
                 GameObject.Destroy(child.gameObject);
             }
         }
-
 
         // Get queues in the selected queue manager
         List<MQ.Queue> queues = stateComponent.GetAllQueues(currentQueueManager.qmgrName);
@@ -97,11 +95,10 @@ public class QueueManagerDetailsController : MonoBehaviour
             item.transform.Find("Text").GetComponent<Text>().text = queue.queueName;
 
             Button button = item.GetComponent<Button>();
-            // TODO: pretty nasty solution when we have to change the queue name
+            // TODO: pretty nasty solution given that we have to change the queue name
             string queueFullName = currentQueueManager.qmgrName + "." + queue.queueName;
             button.onClick.AddListener(() => sidebarController.ShowQueueDetails(currentQueueManager.qmgrName, queueFullName));
         }
-
     }
 
 }

@@ -1,7 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+
 
 public class ChannelDetailsController : MonoBehaviour
 {
@@ -15,7 +14,6 @@ public class ChannelDetailsController : MonoBehaviour
         textName = transform.Find("Details/Name/TextName").GetComponent<Text>();
         textType = transform.Find("Details/Type/TextType").GetComponent<Text>();
 
-        // State object
         GameObject stateGameObject = GameObject.Find("State");
         stateComponent = stateGameObject.GetComponent(typeof(State)) as State;
     }
