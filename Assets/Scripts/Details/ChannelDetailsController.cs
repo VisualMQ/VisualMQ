@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class ChannelDetailsController : MonoBehaviour
 {
-    private Text textName, textType;
+    private Text textName, textType, textConName;
     private MQ.Channel currentChannel;
     private State stateComponent;
 
@@ -14,6 +14,7 @@ public class ChannelDetailsController : MonoBehaviour
     {
         textName = transform.Find("Details/Name/TextName").GetComponent<Text>();
         textType = transform.Find("Details/Type/TextType").GetComponent<Text>();
+        textConName = transform.Find("Details/ConName/TextConName").GetComponent<Text>();
 
         // State object
         GameObject stateGameObject = GameObject.Find("State");
@@ -23,9 +24,16 @@ public class ChannelDetailsController : MonoBehaviour
 
     public void GetChannelDetails(string qmgrName, string channelName)
     {
-        currentChannel = stateComponent.GetChannelDetails(qmgrName, channelName);
+        currentChannel= stateComponent.GetChannelDetails(qmgrName, channelName);
         
         textName.text = currentChannel.channelName;
         textType.text = currentChannel.channelType;
+
+        // If current channel is sender channel ->  show connection name
+        if (currentChannel is MQ.SenderChannel){
+            textConName.text = ((MQ.SenderChannel)currentChannel).connectionName;
+        }else{
+            textConName.text = "N/A";
+        }
     }
 }
