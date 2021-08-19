@@ -100,7 +100,7 @@ VisualMQ is available for quick-evaluation as a [web-demo](https://visualmq.dial
 
 
 #### (Development) in Unity
-1. Ensure Unity version ?? is installed.
+1. Ensure Unity version 2020.3.11f1 is installed.
 2. Clone this repository
 3. Open the root of this directory within Unity
 
