@@ -1,7 +1,6 @@
 ﻿using System;
 using UnityEngine;
 
-
 [RequireComponent(typeof(NameRenderer))]
 [RequireComponent(typeof(HighlightRenderer))]
 [RequireComponent(typeof(MouseListener))]
@@ -46,5 +45,4 @@ public class Channel : MonoBehaviour
         MeshCollider mc = gameObject.AddComponent<MeshCollider>();
         mc.sharedMesh = instantiatedChannel.GetComponent<MeshFilter>().sharedMesh;
     }
-
 }

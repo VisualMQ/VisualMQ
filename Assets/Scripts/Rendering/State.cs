@@ -1,8 +1,14 @@
-﻿using System;
+﻿/*
+ * This is the master GameObject inside VisualMQ
+ * At each Update(), aka each new frame, State Object checks whether
+ * there is a new QueueManager added (from AuthenticationController.cs)
+ * and if so, begins the heavy lifting of rendering the QueueManager and
+ * all the entities that lives on the QueueManager (The ones that we retrieve)
+ */
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
 
 public class State : MonoBehaviour
 {
@@ -23,7 +29,6 @@ public class State : MonoBehaviour
     {
         qmgrs.Add(newMqClient, null);
     }
-
 
     void Update()
     {
@@ -103,7 +108,7 @@ public class State : MonoBehaviour
 
             if (qmModified)
             {
-                dependencyGraph.clearDependency();
+                dependencyGraph.ClearDependency();
                 foreach (KeyValuePair<MQ.Client, GameObject> entry in qmgrs)
                 {
                     QueueManager qmgrComponent = entry.Value.GetComponent(typeof(QueueManager)) as QueueManager;

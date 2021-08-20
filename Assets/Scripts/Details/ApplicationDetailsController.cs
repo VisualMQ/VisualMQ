@@ -1,14 +1,13 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+
 
 public class ApplicationDetailsController : MonoBehaviour
 {
     private Text textName, textType, textAppTag, textAppDesc;
     State stateComponent;
-    
+
+
     private void Awake()
     {
         textName = transform.Find("Details/Name/TextName").GetComponent<Text>();
@@ -16,7 +15,6 @@ public class ApplicationDetailsController : MonoBehaviour
         textAppTag = transform.Find("Details/Description/TextDescription").GetComponent<Text>();
         textAppDesc = transform.Find("Details/Tag/TextTag").GetComponent<Text>();
 
-        // State component
         GameObject stateGameObject = GameObject.Find("State");
         stateComponent = stateGameObject.GetComponent(typeof(State)) as State;
     }

@@ -1,7 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+
 
 public class NavigationController : MonoBehaviour
 {
@@ -15,9 +15,6 @@ public class NavigationController : MonoBehaviour
     private GameObject viewDropdown;
     private GameObject queueManagersList;
     private GameObject queueManagerRowItem;
-
-    // QM Selector
-    private Dictionary<string, bool> QMVisibility = new Dictionary<string, bool>();
 
 
     // Locate the Objects
@@ -51,7 +48,6 @@ public class NavigationController : MonoBehaviour
     }
 
 
-
     // Click to open the left panel; Click to hide the left panel
     private void ViewButtonClicked()
     {
@@ -62,7 +58,7 @@ public class NavigationController : MonoBehaviour
         else
         {
             viewDropdown.SetActive(true);
-            GenerateCheckBox();
+            GenerateQmgrCheckboxes();
         }
     }
 
@@ -97,67 +93,68 @@ public class NavigationController : MonoBehaviour
 
 
     // Load QM Selector
-    private void GenerateCheckBox()
+    private void GenerateQmgrCheckboxes()
     {
         // Destroy Previous Object
-        DestroyQMSelector();
+        DestroyQmgrCheckboxes();
 
         // Get Current Number of Check Box
         GameObject stateGameObject = GameObject.Find("State");
         State stateComponent = stateGameObject.GetComponent(typeof(State)) as State;
         
-        List<string> mqlist = stateComponent.GetRegisteredQueueManagers();        
+        List<string> qmgrList = stateComponent.GetRegisteredQueueManagers();        
 
-        foreach (string qmgrName in mqlist)
+        foreach (string qmgrName in qmgrList)
         {
             GameObject item = Instantiate(queueManagerRowItem, queueManagersList.transform.Find("QueueManagersList"));            
             
             item.transform.Find("TextQueueManager").GetComponent<Text>().text = qmgrName;
 
-            GameObject qm = null;
+            GameObject qmgr = null;
             foreach (MQ.Client client in stateComponent.qmgrs.Keys)
             {
                 if (client.GetQueueManagerName() == qmgrName)
                 {
-                    qm = stateComponent.qmgrs[client];
+                    qmgr = stateComponent.qmgrs[client];
                 }
             }
 
-            if (qm == null)
+            if (qmgr == null)
             {
-                continue; // QM Not rendered yet
+                continue; // Queue manager not rendered yet
             }
 
-            // connect the toggle to the corresponding QM
+            // Connect the toggle to the corresponding queue manager
             Toggle toggle = item.GetComponent<Toggle>();
 
-            if (!qm.activeInHierarchy)
+            if (!qmgr.activeInHierarchy)
             {
-                toggle.isOn = !toggle.isOn; // If QM is disabled, disable the toggle as wel
+                toggle.isOn = !toggle.isOn; // If QM is not displayed, disable the toggle as well
             }
 
             toggle.onValueChanged.AddListener(delegate{
-                ShowSelector(toggle, qm);
+                ShowSelector(toggle, qmgr);
             });
         }
     }
 
-    // for the toggle to control the appear of the QM
-    private void ShowSelector(Toggle toggle, GameObject qm)
+
+    // For the toggle to control the display of the queue manager
+    private void ShowSelector(Toggle toggle, GameObject qmgr)
     {
         if(toggle.isOn)
         {
-            qm.SetActive(true);
+            qmgr.SetActive(true);
         }
         else
         {
-            qm.SetActive(false);
+            qmgr.SetActive(false);
         }
     }
 
 
-    // Destroy previous QM selector
-    private void DestroyQMSelector() {
+    // Destroy previous QM selectors
+    private void DestroyQmgrCheckboxes() {
         foreach (Transform child in queueManagersList.transform.Find("QueueManagersList")) 
         {
             if(child.gameObject.name == "QueueManagerRowItem(Clone)")

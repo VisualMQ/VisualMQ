@@ -1,10 +1,16 @@
-﻿using System;
+﻿/* 
+ * The Client class provides connection to IBM Cloud MQ instances
+ * Each Client object connects to one Queue Manager, and provides several useful
+ * methods for retrieving useful information about the Queue Manager and the entities
+ * that live on the QM. All communications are handled through REST API
+ * Reference: https://www.ibm.com/docs/en/ibm-mq/9.0?topic=api-rest-discovery
+ */
+using System;
 using System.Text;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using UnityEngine;
-
 
 namespace MQ
 {
@@ -33,10 +39,6 @@ namespace MQ
 
         }
 
-        public string GetQueueManagerName() {
-            return this.qmgr;
-        }
-
         // Post request to the Login endpoint, which create cookies for authentication
         public void Authenticate()
         {
@@ -49,6 +51,11 @@ namespace MQ
             { //Invalid credentials or API endpoints
                 throw new Exception();
             }
+        }
+
+        public string GetQueueManagerName()
+        {
+            return this.qmgr;
         }
 
         private string GetRequest(string endpoint)
@@ -80,6 +87,7 @@ namespace MQ
             }
         }
 
+        // Get all messages currently in the queue
         public List<Message> GetAllMessages(string queue)
         {
             string response = GetRequest("/ibmmq/rest/v1/messaging/qmgr/" + qmgr + "/queue/" + queue + "/messagelist");
@@ -88,11 +96,13 @@ namespace MQ
             return messages;
         }
 
+        // Get the (text) content of the message
         public string GetMessageContent(string queue, string messageId)
         {
             return GetRequest("/ibmmq/rest/v1/messaging/qmgr/" + qmgr + "/queue/" + queue + "/message?messageId=" + messageId);
         }
 
+        // Get the Queue Manager
         public QueueManager GetQmgr()
         {
             string response = GetRequest("/ibmmq/rest/v1/admin/qmgr/" + qmgr + "?attributes=*");
@@ -101,6 +111,8 @@ namespace MQ
             return qmgrs[0];
         }
 
+        // Currently, we are only retriving queues whose name starts with "DEV"
+        // This was a hack to leave out all the system queues, consider improving this for future releases
         public List<Queue> GetAllQueues()
         {
             string response = GetRequest("/ibmmq/rest/v1/admin/qmgr/" + qmgr + "/queue?name=DEV*&attributes=*&status=*");
@@ -128,6 +140,7 @@ namespace MQ
             return channels[0];
         }
 
+        // Get all channels on the current QM
         public List<Channel> GetAllChannels()
         {
             string jsonRequest = "{\"type\":\"runCommandJSON\",\"command\":\"display\",\"qualifier\":\"channel\",\"name\":\"*\",\"responseParameters\":[\"all\"],\"parameters\":{}}";
@@ -137,6 +150,7 @@ namespace MQ
             return channels;
         }
 
+        // Get connected application by name
         public Application GetApplication(string application)
         {
             string jsonRequest = "{\"type\":\"runCommandJSON\",\"command\":\"display\",\"qualifier\":\"conn\",\"name\":\"" + application + "\",\"responseParameters\":[\"all\"],\"parameters\":{\"type\":\"*\"}}";
@@ -146,6 +160,7 @@ namespace MQ
             return applications[0];
         }
 
+        // Get all applications connected to the current QM
         public List<Application> GetAllApplications()
         {
             string jsonRequest = "{\"type\":\"runCommandJSON\",\"command\":\"display\",\"qualifier\":\"conn\",\"name\":\"*\",\"responseParameters\":[\"all\"],\"parameters\":{\"type\":\"*\"}}";
@@ -167,8 +182,7 @@ namespace MQ
 
     }
 
-    //Parses class for converting JSON representation to our internal data model
-    
+    //Parses class for converting JSON representation to our internal data model  
     public class Parser
     {
         public static List<QueueManager> Parse(_QueueManagerResponseJson qmgrResponseJson)
