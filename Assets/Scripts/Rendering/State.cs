@@ -108,7 +108,7 @@ public class State : MonoBehaviour
 
             if (qmModified)
             {
-                dependencyGraph.clearDependency();
+                dependencyGraph.ClearDependency();
                 foreach (KeyValuePair<MQ.Client, GameObject> entry in qmgrs)
                 {
                     QueueManager qmgrComponent = entry.Value.GetComponent(typeof(QueueManager)) as QueueManager;

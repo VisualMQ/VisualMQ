@@ -30,7 +30,7 @@ public class DependencyGraph
     {
         directDependencies = new Dictionary<string, List<string>>();
         indirectDependencies = new Dictionary<string, List<string>>();
-        // Implicit Dependencies (i.e., the connectedness betweeen a sender and receiver channnel pair)
+        // TODO: Implicit Dependencies (i.e., the connectedness betweeen a sender and receiver channnel pair)
         // is beyond the scope of the initial release. Consider for future implementation.
         implicitDependencies = new Dictionary<string, List<string>>(); 
     }
@@ -118,7 +118,7 @@ public class DependencyGraph
         }　　
     }
 
-    public void clearDependency()
+    public void ClearDependency()
     {
         directDependencies.Clear();
         indirectDependencies.Clear();
