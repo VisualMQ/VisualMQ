@@ -46,6 +46,8 @@ public class MouseListener : MonoBehaviour
             return;
         }
 
+        State state = GameObject.Find("State").GetComponent<State>(); //Might be time consuming operation
+
         // Sidebar with details functionality
         if (TryGetComponent(out Queue _))
         {
@@ -65,13 +67,13 @@ public class MouseListener : MonoBehaviour
         {
             string qmgrName = gameObject.transform.name.Substring(QueueManager.QM_NAME_PREFIX.Length + 1);
             sidebarController.ShowQueueManagerDetails(qmgrName);
+            state.BroadcastMessage("DisableHighlight", SendMessageOptions.DontRequireReceiver);
             gameObject.BroadcastMessage("HighlightSelf", gameObject.transform.name);
             // Queue manager does not have any dependencies so just return
             return;
         }
 
         //  Highlight functionality
-        State state = GameObject.Find("State").GetComponent<State>(); //Might be time consuming operation
         List<string> directDependency;
         List<string> indirectDenpendency;
 
