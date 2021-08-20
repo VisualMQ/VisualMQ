@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,9 +11,8 @@ public class AuthenticationController : MonoBehaviour
     // Buttons
     private Button submit, cancel;
 
-    // Notification
-    public GameObject errorNotification, successNotification;
-    private Text successMainText, successTimeText, errorMainText, errorTimeText;
+    // Object for controlling notifications
+    public NotificationController notificationsController;
 
     private readonly string successMessage = "New queue manager added.";
     private readonly string errorMessage = "Failed to add this queue manager. Please try again.";
@@ -45,12 +43,6 @@ public class AuthenticationController : MonoBehaviour
         // Buttons
         submit = transform.Find("ButtonSubmit").GetComponent<Button>();
         cancel = transform.Find("ButtonClose").GetComponent<Button>();
-
-        // Notifications texts
-        successMainText = successNotification.transform.Find("SuccessTextMain").GetComponent<Text>();
-        successTimeText = successNotification.transform.Find("SuccessTextTime").GetComponent<Text>();
-        errorMainText = errorNotification.transform.Find("ErrorTextMain").GetComponent<Text>();
-        errorTimeText = errorNotification.transform.Find("ErrorTextTime").GetComponent<Text>();
     }
 
 
@@ -95,34 +87,16 @@ public class AuthenticationController : MonoBehaviour
         catch
         {
             Debug.Log("Error: Fail to connect to the Queue Manager. Please check your credentials, url, and queue manager's name.");
-            GenerateErrorWindow(errorMessage);
+            notificationsController.ShowErrorNotification(errorMessage);
             gameObject.SetActive(false);
             Reset(); // Reset all input fields & warning labels
             return;
         }
         
         Debug.Log("Authentication succeeded.");
-        GenerateSuccessWindow(successMessage);
+        notificationsController.ShowSuccessNotification(successMessage);
         gameObject.SetActive(false);
         Reset();
-    }
-
-
-    private void GenerateSuccessWindow(string message)
-    {
-        successTimeText.text = (DateTime.Now).ToString();
-        successMainText.text = message;
-        errorNotification.SetActive(false);
-        successNotification.SetActive(true);
-    }
-
-
-    private void GenerateErrorWindow(string message)
-    {
-        errorTimeText.text = (DateTime.Now).ToString();
-        errorMainText.text = message;
-        successNotification.SetActive(false);
-        errorNotification.SetActive(true);
     }
 
 
