@@ -1,6 +1,22 @@
-﻿using System;
+﻿/* 
+ * The Dependency Graph is constructed by iterating through the MQ entities
+ * such as queues, channels, and applications to extract (and sometimes infer)
+ * the "connectedness" amongst those entities. 
+ * 
+ * It is worth noting that the so-called "Dependency Graph" is not actually
+ * represented with a graph data strucutre, but rather dictionaries where 
+ * the key is the name of the entity and the value is a list of entities 
+ * that directly/indirectly relates to the key entity. 
+ * 
+ * We consider entity A to be a directly dependency of entity B if entity B
+ * specifies entity A in some part of the configuration during entity B's
+ * initialization. For example, A transmission queue Q1 is a direct dependency of
+ * a remote queue Q2 if Q2's specified transmission queue is Q1.
+ * 
+ * Indirect Dependency is defined to be the opposite of the direct dependency 
+ * explained above.
+ */
 using System.Collections.Generic;
-using UnityEngine;
 
 public class DependencyGraph
 {
@@ -14,12 +30,13 @@ public class DependencyGraph
     {
         directDependencies = new Dictionary<string, List<string>>();
         indirectDependencies = new Dictionary<string, List<string>>();
-        implicitDependencies = new Dictionary<string, List<string>>();
+        // TODO: Implicit Dependencies (i.e., the connectedness betweeen a sender and receiver channnel pair)
+        // is beyond the scope of the initial release. Consider for future implementation.
+        implicitDependencies = new Dictionary<string, List<string>>(); 
     }
 
     public void CreateDependencyGraph (List<MQ.Queue> queues, List<MQ.Channel> channels, List<MQ.Application> applications, string qmgr)
     {
-
         foreach (MQ.Queue queue in queues)
         {
             if (queue is MQ.AliasQueue)
@@ -34,7 +51,6 @@ public class DependencyGraph
                 indirectDependency.Add(qmgr + QM_NAME_DELIMITER + queue.queueName);
                 AddDependency(indirectDependencies, qmgr, ((MQ.AliasQueue)queue).targetQueueName, indirectDependency);
             }
-
 
             if (queue is MQ.RemoteQueue)
             {
@@ -55,7 +71,6 @@ public class DependencyGraph
             }
         }
 
-
         foreach (MQ.Channel channel in channels)
         {
             if (channel is MQ.SenderChannel)
@@ -72,7 +87,6 @@ public class DependencyGraph
             }
 
         }
-
 
         foreach (MQ.Application application in applications)
         {
@@ -101,8 +115,14 @@ public class DependencyGraph
 
             connectedQueues.Add(qmgr + QM_NAME_DELIMITER + application.channel); // To save space, append the applciaiotn channel to the end of connectedQueues.
             AddDependency(directDependencies, qmgr, application.conn, connectedQueues);
-        }
+        }　　
+    }
 
+    public void ClearDependency()
+    {
+        directDependencies.Clear();
+        indirectDependencies.Clear();
+        implicitDependencies.Clear();
     }
 
     private void AddDependency (Dictionary<string, List<string>> dependencies, string qmName, string entityName, List<string> dependency)

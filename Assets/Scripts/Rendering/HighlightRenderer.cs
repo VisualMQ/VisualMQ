@@ -1,6 +1,12 @@
-﻿using UnityEngine;
+﻿/* 
+ * HighlightRenderer is a component attached to every rendered MQ entities
+ * Whenever an entity is clicked, VisualMQ retrieves the direct and indirect
+ * dependencies for that entity (if any) and broadcast the highlight (outline)
+ * instruction to every MQ entity. It is up to the entity itself to figure out
+ * whether it needs to be highlighted and how.
+ */
+using UnityEngine;
 using System.Collections.Generic;
-
 
 public class HighlightRenderer : MonoBehaviour
 {
@@ -8,7 +14,6 @@ public class HighlightRenderer : MonoBehaviour
     private Color indirectColor = new Color32(56, 160, 231, 200);
     private Color selectedColor = new Color32(56, 95, 231, 255);
     private Outline outline;
-
 
     public void HighlightSelf(string objectName)
     {
@@ -27,7 +32,6 @@ public class HighlightRenderer : MonoBehaviour
         outline.OutlineWidth = 8f;
         outline.enabled = true;
     }
-
 
     public void HighlightDirect(List<string> dependency)
     {
@@ -49,7 +53,6 @@ public class HighlightRenderer : MonoBehaviour
         ChangeApplicationOutline(outline);
     }
 
-
     public void HighlightIndirect(List<string> dependency)
     {
         if (!dependency.Contains(gameObject.name))
@@ -70,7 +73,6 @@ public class HighlightRenderer : MonoBehaviour
         ChangeApplicationOutline(outline);
     }
 
-
     public void DisableHighlight()
     {
         if (outline == null)
@@ -79,7 +81,6 @@ public class HighlightRenderer : MonoBehaviour
         }
         outline.enabled = false;
     }
-
 
     // We added special case of having a thicker outline for applications because
     // the outline was not very visible for them since they are rectangular blocks
@@ -90,5 +91,4 @@ public class HighlightRenderer : MonoBehaviour
             outline.OutlineWidth = 8f;
         }
     }
-
 }

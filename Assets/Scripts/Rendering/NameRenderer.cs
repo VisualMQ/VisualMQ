@@ -1,13 +1,14 @@
-﻿using UnityEngine;
+﻿/* 
+ * NameRenderer is a component attached to every rendered MQ entities
+ * This component is used for rendering names (texts) above objects
+ */
+using UnityEngine;
 
-
-// This component is used for rendering names (texts) above objects
-// like queues, channels and applications
 public class NameRenderer : MonoBehaviour
 {
     public string objectName;
     private TextMesh textMesh;
-
+    private int DISTANCE_VISIBLE = 35; //The max euclidean distance between camera and text for name rendering
 
     // Use this for initialization
     void Start()
@@ -33,12 +34,10 @@ public class NameRenderer : MonoBehaviour
         textMesh.alignment = TextAlignment.Center;
     }
 
-
     // Update is called once per frame
     void Update()
     {
-        // Magic number (TODO) currently hides if euclidean distance between camera and text.
-        if (Vector3.Distance(gameObject.transform.position, Camera.main.transform.position) < 35)
+        if (Vector3.Distance(gameObject.transform.position, Camera.main.transform.position) < DISTANCE_VISIBLE)
         {
             textMesh.gameObject.SetActive(true);
         }
@@ -59,5 +58,4 @@ public class NameRenderer : MonoBehaviour
         // Rotate text to face main camera
         textMesh.transform.rotation = Quaternion.LookRotation(Camera.main.transform.position - textMesh.transform.position) * Quaternion.Euler(0, 180, 0); ;
     }
-
 }

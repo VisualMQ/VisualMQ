@@ -1,17 +1,12 @@
 ﻿using UnityEngine;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
-using MQ;
 
 [RequireComponent(typeof(NameRenderer))]
 [RequireComponent(typeof(HighlightRenderer))]
 [RequireComponent(typeof(MouseListener))]
 public class Queue : MonoBehaviour
 {
-
     public Vector3 position;
     public MQ.Queue queue;
     public GameObject messagePrefab;
@@ -43,7 +38,6 @@ public class Queue : MonoBehaviour
 
     void newQueueDeleted(int rank)
     {
- 
         if(rank < this.rank)
         {
             // If a new queue with a lower rank (position) added. 
@@ -57,7 +51,6 @@ public class Queue : MonoBehaviour
 
     public void repositionSelf(bool start = false)
     {
-
         this.position = this.parent.ComputePosition(this.queue.GetTypeName(), this.rank);
         this.instantiatedQueue.transform.parent = this.transform;
 
@@ -95,7 +88,6 @@ public class Queue : MonoBehaviour
             CancelInvoke();
         }
     }
-
 
 
     void Start()

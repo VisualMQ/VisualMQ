@@ -1,21 +1,19 @@
-using System.Collections;
-using System.Collections.Generic;
 using System;
 using UnityEngine;
 using UnityEngine.UI;
 
+
 public class NotificationController : MonoBehaviour
 {
-    // The Notification Object
+    // The notification objects
     public GameObject successNotification, errorNotification, infoNotification, warningNotification;
-    // The Close Button of the Notification Object
-    public Button closeSuccessNotification, closeErrorNotification, closeinfoNotification, closewarningNotification;
-    // The Time Text Field
+    // The close button of the notification object
+    public Button closeSuccessNotification, closeErrorNotification, closeInfoNotification, closeWarningNotification;
+    // The time text field
     public Text timeSuccessNotification, timeErrorNotification, timeInfoNotification, timeWarningNotification;
-    // The Main Text FIeld
+    // The main text field
     public Text messageSuccess, messageError, messageInfo, messageWarning;
 
-    string currentDate = (DateTime.Now).ToString();
 
     // Start is called before the first frame update
     void Start()
@@ -27,72 +25,66 @@ public class NotificationController : MonoBehaviour
         warningNotification.SetActive(false);
 
         // Listen to close active
-        closeSuccessNotification.onClick.AddListener(closeWindowSuccess);
-        closeErrorNotification.onClick.AddListener(closeWindowError);
-        closeinfoNotification.onClick.AddListener(closeWindowInfo);
-        closewarningNotification.onClick.AddListener(closeWindowWarning);
+        closeSuccessNotification.onClick.AddListener(CloseWindowSuccess);
+        closeErrorNotification.onClick.AddListener(CloseWindowError);
+        closeInfoNotification.onClick.AddListener(CloseWindowInfo);
+        closeWarningNotification.onClick.AddListener(CloseWindowWarning);
     }
 
-    void CloseNotification()
-    {
-        successNotification.SetActive(false);
-    }
 
-    /*
-    * Notification Window Generation for all 4 types of notification window
-    */
-    public void successMessageWindowGenerator(string info)
+    public void ShowSuccessNotification(string text)
     {
         successNotification.SetActive(true);
         timeSuccessNotification.text = (DateTime.Now).ToString();
-        messageSuccess.text = info;
-
+        messageSuccess.text = text;
     }
 
-    public void errorMessageWindowGenerator(string info)
+
+    public void ShowErrorNotification(string text)
     {
         errorNotification.SetActive(true);
         timeErrorNotification.text = (DateTime.Now).ToString();
-        messageError.text = info;
+        messageError.text = text;
     }
 
-    public void infoMessageWindowGenerator(string info)
+
+    public void ShowInfoNotification(string text)
     {
         infoNotification.SetActive(true);
         timeInfoNotification.text = (DateTime.Now).ToString();
-        messageInfo.text = info;
-
+        messageInfo.text = text;
     }
 
-    public void warningMessageWindowGenerator(string info)
+
+    public void ShowWarningNotification(string text)
     {
         warningNotification.SetActive(true);
         timeWarningNotification.text = (DateTime.Now).ToString();
-        messageWarning.text = info;
+        messageWarning.text = text;
     }
 
-    /*
-    * Notification Close Button
-    */
-    void closeWindowSuccess()
+
+    void CloseWindowSuccess()
     {
         successNotification.SetActive(false);
     }
 
-    void closeWindowError()
+
+    void CloseWindowError()
     {
         errorNotification.SetActive(false);
     }
 
-    void closeWindowInfo()
+
+    void CloseWindowInfo()
     {
         infoNotification.SetActive(false);
     }
 
-    void closeWindowWarning()
+
+    void CloseWindowWarning()
     {
         warningNotification.SetActive(false);
     }
     
 }
-

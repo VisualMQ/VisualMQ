@@ -1,32 +1,25 @@
-using System.Collections;
-using System;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using MQ;
+
 
 public class AuthenticationController : MonoBehaviour
 {
-
-    // Transform & Objects
     private Transform containerQMName, containerUserName, containerAPI, containerURL;
-    private InputField userNameInput, apiKey, urlInput, QMInput; // Four Input Fields
-    private Text warningURL, warningAPI, warningUserName, warningQueueName; // Four Warning Text Fields
+    private InputField userNameInput, apiKey, urlInput, QMInput; // Four input fields
+    private Text warningURL, warningAPI, warningUserName, warningQueueName; // Four warning text fields
 
     // Buttons
     private Button submit, cancel;
 
-    // Notification
-    public GameObject errorNotification, successNotification;
-    private Text successMainText, successTimeText, errorMainText, errorTimeText;
+    // Object for controlling notifications
+    public NotificationController notificationsController;
 
-    private string successMessage = "New queue manager added.";
-    private string errorMessage = "Failed to add this queue manager. Please try again.";
+    private readonly string successMessage = "New queue manager added.";
+    private readonly string errorMessage = "Failed to add this queue manager. Please try again.";
 
-    private string userNameT, apiKeyT, MQURLT, QMNameT; // Authentication Info
+    // Variables to hold credentials data
+    private string userNameT, apiKeyT, MQURLT, QMNameT;
 
-    // Reference NotificationController
-    private NotificationController notificationScript;
 
     private void Awake() 
     {
@@ -50,14 +43,8 @@ public class AuthenticationController : MonoBehaviour
         // Buttons
         submit = transform.Find("ButtonSubmit").GetComponent<Button>();
         cancel = transform.Find("ButtonClose").GetComponent<Button>();
-
-
-        // Notifications texts
-        successMainText = successNotification.transform.Find("SuccessTextMain").GetComponent<Text>();
-        successTimeText = successNotification.transform.Find("SuccessTextTime").GetComponent<Text>();
-        errorMainText = errorNotification.transform.Find("ErrorTextMain").GetComponent<Text>();
-        errorTimeText = errorNotification.transform.Find("ErrorTextTime").GetComponent<Text>();
     }
+
 
     // Start is called before the first frame update
     private void Start()
@@ -67,13 +54,12 @@ public class AuthenticationController : MonoBehaviour
         // Listen to button activity
         submit.onClick.AddListener(ConfirmButtonClicked);
         cancel.onClick.AddListener(CancelButtonClicked);
-
     }
 
-    // Confirm Button Clicked
+
     private void ConfirmButtonClicked()
     {
-        // Get Current Input Text and Form Checking
+        // Get current input text and form checking
         userNameT = userNameInput.text;
         apiKeyT = apiKey.text;
         MQURLT = urlInput.text;
@@ -81,16 +67,18 @@ public class AuthenticationController : MonoBehaviour
 
         if (SubmitFormCheck(userNameT, apiKeyT, MQURLT, QMNameT) == false)
         {
-            Debug.Log("ERROR: Form Check Fails");
+            Debug.Log("ERROR: Form check Failed");
             return;
         }
 
         // Connect to Queue Manager
         try
         {
-            MQ.Client qmClient = new MQ.Client(MQURLT, QMNameT, userNameT, apiKeyT); // Throws Exception if username/API key/MQ url dont match
+            // Throws Exception if username/API key/MQ URL don't match
+            MQ.Client qmClient = new MQ.Client(MQURLT, QMNameT, userNameT, apiKeyT);
 
-            qmClient.GetQmgr(); // Throws Exception if QM name is wrong
+            // Throws Exception if QM name is wrong
+            qmClient.GetQmgr();
             
             GameObject stateGameObject = GameObject.Find("State");
             State stateComponent = stateGameObject.GetComponent(typeof(State)) as State;
@@ -99,46 +87,20 @@ public class AuthenticationController : MonoBehaviour
         catch
         {
             Debug.Log("Error: Fail to connect to the Queue Manager. Please check your credentials, url, and queue manager's name.");
-            GenerateErrorWindow(errorMessage);
+            notificationsController.ShowErrorNotification(errorMessage);
             gameObject.SetActive(false);
-            Reset(); // Reset all input fields & Warning Label
+            Reset(); // Reset all input fields & warning labels
             return;
         }
         
         Debug.Log("Authentication succeeded.");
-        GenerateSuccessWindow(successMessage);
+        notificationsController.ShowSuccessNotification(successMessage);
         gameObject.SetActive(false);
         Reset();
     }
 
 
-    /*  
-    * Notification Window Generation as a whole
-    */
-    private void GenerateSuccessWindow(string message)
-    {
-        successTimeText.text = (DateTime.Now).ToString();
-        successMainText.text = message;
-        errorNotification.SetActive(false); //remove previous notifications
-        successNotification.SetActive(true);
-    }
-
-
-    private void GenerateErrorWindow(string message)
-    {
-        errorTimeText.text = (DateTime.Now).ToString();
-        errorMainText.text = message;
-        successNotification.SetActive(false); //remove previous notifications
-        errorNotification.SetActive(true);
-    }
-
-
-    /* ---- submitFormCheck ----
-    * Check the authentication form before submit
-    * Empty check
-    * Return false: exist empty
-    * Could Add more form check conditions in this method
-    */
+    // We could add more form checks conditions to this method
     private bool SubmitFormCheck(string username, string apikey, string url, string qm)
     {
         bool passFormCheck = true;
@@ -149,12 +111,10 @@ public class AuthenticationController : MonoBehaviour
         }
         return passFormCheck;
     }
+    
 
-    /*
-    * Perform Empty Check & Update the warning labels
-    * Return true: exist empty field
-    */
-    private bool EmptyCheck(string username, string apikey, string url, string qm)
+    // Check whether any field is not empty and updates warning labels accordingly
+    private bool EmptyCheck(string username, string apikey, string url, string qmgr)
     {
         bool existEmpty = false;
         string warningText = "Please fill this out.";
@@ -164,76 +124,65 @@ public class AuthenticationController : MonoBehaviour
             warningURL.text = warningText;
             warningURL.color = Color.red;
             existEmpty = true;
+        } else
+        {
+            warningURL.text = "";
         }
         if (string.IsNullOrEmpty(apikey))
         {
             warningAPI.text = warningText;
             warningAPI.color = Color.red;
             existEmpty = true;
+        } else
+        {
+            warningAPI.text = "";
         }
         if (string.IsNullOrEmpty(username))
         {
             warningUserName.text = warningText;
             warningUserName.color = Color.red;
             existEmpty = true;
+        } else
+        {
+            warningUserName.text = "";
         }
-        if (string.IsNullOrEmpty(qm))
+        if (string.IsNullOrEmpty(qmgr))
         {
             warningQueueName.text = warningText;
             warningQueueName.color = Color.red;
             existEmpty = true;
+        } else
+        {
+            warningQueueName.text = "";
         }
         return existEmpty;
     }
 
 
-    /* 
-    * Cancel Button Clicked
-    * 1. Clear All Input fields
-    * 2. Reset the labels to initial status
-    * 3. Hide Window
-    */
     private void CancelButtonClicked()
     {
         Reset();
-        gameObject.SetActive(false); // Hide the authentication window
+        gameObject.SetActive(false);
     }
 
 
-    // Reset: Includes below two functions
     private void Reset()
     {
-        CleanAllInputField();
-        WarningLabelsInitStatus();
-    }
-
-
-    // Clean all input fields
-    private void CleanAllInputField()
-    {
+        // Clear all input fields
         userNameInput.text = "";
         apiKey.text = "";
         urlInput.text = "";
         QMInput.text = "";
-    }
 
-
-    // The Initial state of all warning labels
-    private void WarningLabelsInitStatus()
-    {
-
+        // Reset all labels to default
         warningAPI.text = "E.g. I69H42WwUy2fQBbsGvKwFdBBj3ZgtuHEr3vs2xyr0oJ";
         warningAPI.color = Color.gray;
-
         warningQueueName.text = "E.g. QM1";
         warningQueueName.color = Color.gray;
-
         warningURL.text = "E.g. https://web-qm1-8543.qm.eu-gb.mq.appdomain.cloud";
         warningURL.color = Color.gray;
-
         warningUserName.text = "E.g. lillyjohnson";
         warningUserName.color = Color.gray;
-
     }
 
 }

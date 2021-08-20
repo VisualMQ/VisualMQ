@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
-
-/**
+﻿/*
  * The Application class is used to parse the JSON reponse from 
  * the MQSC command "DISPLAY CONN"
  * Reference: https://www.ibm.com/docs/en/ibm-mq/9.2?topic=reference-display-conn-display-application-connection-information
  */
+
+using System.Collections.Generic;
+
 namespace MQ
 {
     public class Application

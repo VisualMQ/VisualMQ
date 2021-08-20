@@ -1,11 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+
 public class QueueDetailsController : MonoBehaviour
 {
-    
     // Different sub-windows of Queue details sidebar
     private GameObject subwindowDetails, subwindowMessages, subwindowConnections;
 
@@ -22,8 +20,8 @@ public class QueueDetailsController : MonoBehaviour
     private Transform tabButtonsGroups;
     private Button toQueueDetail, toMessageList, toConnections;
 
+    // State & Queue
     private MQ.Queue currentQueue;
-
     private State stateComponent;
 
     private GameObject messageRowTemplate;
@@ -63,7 +61,6 @@ public class QueueDetailsController : MonoBehaviour
         detailsDepth = subwindowDetails.transform.Find("Depth/TextDepth").GetComponent<Text>();
         detailsType = subwindowDetails.transform.Find("Type/TextType").GetComponent<Text>();
 
-
         // Connections sub-window
         connectionsOpenInputCount = subwindowConnections.transform.Find("OpenInputCount/TextOpenInputCount").GetComponent<Text>();
         connectionsOpenOutputCount = subwindowConnections.transform.Find("OpenOutputCount/TextOpenOutputCount").GetComponent<Text>();
@@ -87,12 +84,11 @@ public class QueueDetailsController : MonoBehaviour
             currentQueue.messages = stateComponent.GetAllMessages(qmgrName, queueName);
         }
         
-
         ToQueueDetails();
     }
 
 
-    // Display Queue details sub-window
+    // Display queue Details sub-window
     private void ToQueueDetails()
     {
         subwindowDetails.SetActive(true);
@@ -114,7 +110,7 @@ public class QueueDetailsController : MonoBehaviour
     }
 
 
-    // Switch to Message List Window
+    // Display queue Messages sub-window
     private void ToMessages()
     {
         subwindowDetails.SetActive(false);
@@ -139,13 +135,12 @@ public class QueueDetailsController : MonoBehaviour
             item.transform.Find("Text").GetComponent<Text>().text = message.messageId;
 
             Button button = item.GetComponent<Button>();
-            // TODO: pretty nasty solution when we have to change the queue name
             button.onClick.AddListener(() => GUIUtility.systemCopyBuffer = message.messageId);
         }
     }
 
 
-    // Switch to Connection Window
+    // Display queue Connections sub-window
     private void ToConnections()
     {
         subwindowDetails.SetActive(false);
@@ -156,37 +151,37 @@ public class QueueDetailsController : MonoBehaviour
 
         // Display appropriate information based on what queue it is, because
         // not all types of queues will have all information
-        if (currentQueue is MQ.LocalQueue)
+        if (currentQueue is MQ.LocalQueue localQueue)
         {
-            connectionsOpenInputCount.text = ((MQ.LocalQueue)currentQueue).openInputCount.ToString();
-            connectionsOpenOutputCount.text = ((MQ.LocalQueue)currentQueue).openOutputCount.ToString();
+            connectionsOpenInputCount.text = localQueue.openInputCount.ToString();
+            connectionsOpenOutputCount.text = localQueue.openOutputCount.ToString();
             connectionsTargetQueue.text = "N/A";
             connectionsTargetQueueManager.text = "N/A";
             connectionsTransmissionQueue.text = "N/A";
         }
-        else if (currentQueue is MQ.TransmissionQueue)
+        else if (currentQueue is MQ.TransmissionQueue transmissionQueue)
         {
-            connectionsOpenInputCount.text = ((MQ.TransmissionQueue)currentQueue).openInputCount.ToString();
-            connectionsOpenOutputCount.text = ((MQ.TransmissionQueue)currentQueue).openOutputCount.ToString();
+            connectionsOpenInputCount.text = transmissionQueue.openInputCount.ToString();
+            connectionsOpenOutputCount.text = transmissionQueue.openOutputCount.ToString();
             connectionsTargetQueue.text = "N/A";
             connectionsTargetQueueManager.text = "N/A";
             connectionsTransmissionQueue.text = "N/A";
         }
-        else if (currentQueue is MQ.AliasQueue)
+        else if (currentQueue is MQ.AliasQueue aliasQueue)
         {
             connectionsOpenInputCount.text = "N/A";
             connectionsOpenOutputCount.text = "N/A";
-            connectionsTargetQueue.text = ((MQ.AliasQueue)currentQueue).targetQueueName;
+            connectionsTargetQueue.text = aliasQueue.targetQueueName;
             connectionsTargetQueueManager.text = "N/A";
             connectionsTransmissionQueue.text = "N/A";
         }
-        else if (currentQueue is MQ.RemoteQueue)
+        else if (currentQueue is MQ.RemoteQueue remoteQueue)
         {
             connectionsOpenInputCount.text = "N/A";
             connectionsOpenOutputCount.text = "N/A";
-            connectionsTargetQueue.text = ((MQ.RemoteQueue)currentQueue).targetQueueName;
-            connectionsTargetQueueManager.text = ((MQ.RemoteQueue)currentQueue).targetQmgrName;
-            connectionsTransmissionQueue.text = ((MQ.RemoteQueue)currentQueue).transmissionQueueName;
+            connectionsTargetQueue.text = remoteQueue.targetQueueName;
+            connectionsTargetQueueManager.text = remoteQueue.targetQmgrName;
+            connectionsTransmissionQueue.text = remoteQueue.transmissionQueueName;
         }
     }
 
