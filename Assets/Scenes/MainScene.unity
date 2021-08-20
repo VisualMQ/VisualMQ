@@ -11527,6 +11527,7 @@ MonoBehaviour:
   maxShift: 1000
   camSens: 0.25
   lastMouse: {x: 255, y: 255, z: 255}
+  authenticationWindow: {fileID: 1013310829}
 --- !u!45 &1704685307
 Skybox:
   m_ObjectHideFlags: 0
