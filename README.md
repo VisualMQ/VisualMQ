@@ -167,7 +167,7 @@ We would like to express our gratitude towards the IBM supervisors: [John McNama
 <!-- LICENSE -->
 ## License
 
-Distributed under the TBA License. See `LICENSE` for more information.
+Distributed under the Apache 2.0 License. See `LICENSE` for more information.
 
 
 
